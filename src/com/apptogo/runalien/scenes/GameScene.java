@@ -6,6 +6,7 @@ import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.entity.Entity;
 import org.andengine.entity.modifier.MoveXModifier;
+import org.andengine.entity.modifier.MoveYModifier;
 import org.andengine.entity.primitive.TexturedPolygon;
 import org.andengine.entity.scene.IOnSceneTouchListener;
 import org.andengine.entity.scene.Scene;
@@ -18,6 +19,7 @@ import org.andengine.extension.physics.box2d.FixedStepPhysicsWorld;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
 import org.andengine.input.touch.TouchEvent;
+import org.andengine.util.modifier.ease.EaseBounceInOut;
 import org.andengine.util.modifier.ease.EaseElasticInOut;
 
 import android.content.Context;
@@ -73,6 +75,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	Sprite sGameOver;
 	Sprite sReplay;
 	Sprite sMenu;
+	Sprite sSubmit;
 
 	//local highscore 
 	private static final String HIGHSCORE_DB_NAME = "MyGameHighscores";
@@ -253,9 +256,16 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 			@Override
 			public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
 				ResourcesManager.getInstance().clickSound.play();
-				//sceneManager.loadMenuScene();
+				sceneManager.loadMenuScene();
 				
-				//ten kod ma byc podpiety pod przycisk do submitu
+				return true;
+			}
+		};
+		sSubmit = new Sprite(0, 0, ResourcesManager.getInstance().submit_region, vbom) {
+			@Override
+			public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
+				ResourcesManager.getInstance().clickSound.play();
+
 				if(((GoogleBaseGameActivity)activity).isSignedIn()){
 					Games.Leaderboards.submitScore(ResourcesManager.getInstance().activity.getGoogleApiClient(), activity.getResources().getString(R.string.leaderboard_highscores), score);
 					((GoogleBaseGameActivity)activity).startActivityForResult(Games.Leaderboards.getLeaderboardIntent(((GoogleBaseGameActivity)activity).getApiClient(), activity.getResources().getString(R.string.leaderboard_highscores)), 0);
@@ -264,7 +274,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 					resourcesManager.gameHelper.manualConnect();
 					//Games.Leaderboards.submitScore(ResourcesManager.getInstance().activity.getGoogleApiClient(), activity.getResources().getString(R.string.leaderboard_highscores), score);
 				}
-				//az dotad
+
 				return true;
 			}
 		};
@@ -274,19 +284,27 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				resourcesManager.engine.unregisterUpdateHandler(pTimerHandler);
 				SceneManager.getInstance().getCurrentScene().unregisterUpdateHandler(pTimerHandler);
 
-				sGameOver.setPosition(camera.getCenterX() - 5000, camera.getCenterY() - 100);
-				sReplay.setPosition(camera.getCenterX() - 2000, camera.getCenterY());
-				sMenu.setPosition(camera.getCenterX() + 2300, camera.getCenterY());
+//				sGameOver.setPosition(camera.getCenterX() - 5000, camera.getCenterY() - 100);
+//				sReplay.setPosition(camera.getCenterX() - 2000, camera.getCenterY());
+//				sMenu.setPosition(camera.getCenterX() + 2300, camera.getCenterY());
 
-				sGameOver.registerEntityModifier(new MoveXModifier(2.0f, sGameOver.getX(), camera.getCenterX(), EaseElasticInOut.getInstance()));
-				sReplay.registerEntityModifier(new MoveXModifier(3.9f, sReplay.getX(), camera.getCenterX() - 50, EaseElasticInOut.getInstance()));
-				sMenu.registerEntityModifier(new MoveXModifier(3.9f, sMenu.getX(), camera.getCenterX() + 290, EaseElasticInOut.getInstance()));
+				sGameOver.setPosition(camera.getCenterX(), camera.getCenterY() + 1000);
+				sMenu.setPosition(camera.getCenterX() + 115, camera.getCenterY() + 1100);
+				sSubmit.setPosition(camera.getCenterX() + 100, camera.getCenterY() + 1100);
+				sReplay.setPosition(camera.getCenterX() + 100, camera.getCenterY() + 1250);
+				
+				sGameOver.registerEntityModifier(new MoveYModifier(0.5f, sGameOver.getY(), camera.getCenterY() - 110, org.andengine.util.modifier.ease.EaseBounceInOut.getInstance()));
+				sMenu.registerEntityModifier(new MoveYModifier(0.7f, sMenu.getY(), camera.getCenterY() - 10, EaseBounceInOut.getInstance()));
+				sSubmit.registerEntityModifier(new MoveYModifier(0.7f, sMenu.getY(), camera.getCenterY() + 45, EaseBounceInOut.getInstance()));
+				sReplay.registerEntityModifier(new MoveYModifier(0.7f, sReplay.getY(), camera.getCenterY() + 110, EaseBounceInOut.getInstance()));
 
 				SceneManager.getInstance().getCurrentScene().registerTouchArea(sMenu);
+				SceneManager.getInstance().getCurrentScene().registerTouchArea(sSubmit);
 				SceneManager.getInstance().getCurrentScene().registerTouchArea(sReplay);
 				foregroundLayer.attachChild(sGameOver);
 				foregroundLayer.attachChild(sReplay);
 				foregroundLayer.attachChild(sMenu);
+				foregroundLayer.attachChild(sSubmit);
 			}
 		}));
 		this.registerUpdateHandler(new TimerHandler(2f, new ITimerCallback() {
