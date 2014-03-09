@@ -201,7 +201,7 @@ public abstract class Player extends AnimatedSprite {
 	    }
 	    runSound.pause();
 	    screamSound.pause();
-	    jumpSound.play();
+	    slideSound.play();
 	    sliding = true;
 	    long[] PLAYER_ANIMATE = new long[7];
 		for(int i=0; i<7; i++)
