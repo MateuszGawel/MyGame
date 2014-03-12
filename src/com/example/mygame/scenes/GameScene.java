@@ -32,6 +32,7 @@ import org.xml.sax.Attributes;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.view.MotionEvent;
 
@@ -70,6 +71,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	private AutoParallaxBackground autoParallaxBackground;
 	private ParallaxEntity frontParallaxBackground;
 	private boolean firstUpdate = true;
+	private long holdTime;
 
 	private static final String HIGHSCORE_DB_NAME = "MyGameHighscores";
 	private static final String HIGHSCORE_LABEL = "score";
@@ -186,7 +188,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		mChainBody.createFixture(mFixtureDef);
 		
 		//center = (int)((myV2[2].x - myV2[1].x) / 2);
-		System.out.println("LOG:CENTER"+center);
 		myChain.dispose();
 
 		// TEXTURED POLYGON 2 - DIRT - TEXTURE REGION MUST BE FROM A REPEATING ATLAS
@@ -202,8 +203,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		ground = new TexturedPolygon(0, 0, vertexX2, vertexY2, resourcesManager.dirt_texture_region, vbom);
 		backgroundLayer.attachChild(ground);
 		ground.setUserData("ground");
-		
-		System.out.println("DZIECI: "+backgroundLayer.getChildCount());
+	
 		//backgroundLayer.attachChild(new DebugRenderer(physicsWorld, vbom));
 	}
 
@@ -230,7 +230,10 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 			{
 				score = (int) Math.round(player.getBody().getPosition().x);
 				setScore(score);
-
+				
+				if(holdTime != 0 && (SystemClock.uptimeMillis() - holdTime > 400)){
+					physicsWorld.setGravity(new Vector2(0, 10.0f));
+				}
 				if (player.getBody().getPosition().x > center2) 
 				{					
 					createGround();
@@ -241,6 +244,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 					}
 
 				}
+				
 			}
 		});
 	}
@@ -256,7 +260,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				attachChild(gameOverText);
 				gameOverDisplayed = true;
 				player.stopRunning();
-				physicsWorld.setGravity(new Vector2(0, 20f));
+				physicsWorld.setGravity(new Vector2(0, 40f));
 				saveHighScore();
 				autoParallaxBackground.stop();
 				// System.out.println("NAJLEPSZY WYNIK TO: " + loadHighScore());
@@ -292,7 +296,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	@Override
 	public boolean onSceneTouchEvent(Scene pScene, TouchEvent pSceneTouchEvent) {
 		if (pSceneTouchEvent.isActionDown()) {
-			System.out.println("POBRA£EM: " + pSceneTouchEvent.getX());
+			holdTime = SystemClock.uptimeMillis();
 			if (!firstTouch) {
 				player.setRunning();
 				firstTouch = true;
@@ -303,8 +307,11 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				player.slide();
 			}
 		}
+		if (pSceneTouchEvent.isActionUp())
+			holdTime = 0;
 		return false;
 	}
+	
 
 	private ContactListener contactListener() {
 		ContactListener contactListener = new ContactListener() {
@@ -314,11 +321,17 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				final Fixture x2 = contact.getFixtureB();
 
 				if ("player".equals(x1.getBody().getUserData()) || "ground".equals(x2.getBody().getUserData())) {
-					if (player.isJumping())
+					if (player.isJumping()){
+						holdTime = 0;
+						physicsWorld.setGravity(new Vector2(0, 100.0f));
 						player.land();
+					}
 				} else if ("player".equals(x2.getBody().getUserData()) || "ground".equals(x1.getBody().getUserData())) {
-					if (player.isJumping())
+					if (player.isJumping()){
+						holdTime = 0;
+						physicsWorld.setGravity(new Vector2(0, 100.0f));
 						player.land();
+					}
 				}
 			}
 

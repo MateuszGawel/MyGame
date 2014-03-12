@@ -24,6 +24,7 @@ public abstract class Player extends AnimatedSprite {
 	private boolean jumping = false;
 	private boolean alive = true;
 	private boolean sliding = false;
+	private boolean longJumped = false;
 	public Music runSound;
 	public Music screamSound;
 	public Music jumpSound;
@@ -48,7 +49,6 @@ public abstract class Player extends AnimatedSprite {
 		body = PhysicsFactory.createBoxBody(physicsWorld, 0, -50, 40, 90, BodyType.DynamicBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0));
 		body.setUserData("player");
 		body.setFixedRotation(true);
-
 		physicsWorld.registerPhysicsConnector(new PhysicsConnector(this, body, true, false) {
 			@Override
 			public void onUpdate(float pSecondsElapsed) {
@@ -171,8 +171,14 @@ public abstract class Player extends AnimatedSprite {
 		body.setLinearVelocity(new Vector2(body.getLinearVelocity().x, -35));
 	}
 	
+	public void longJump(){
+		body.setLinearVelocity(new Vector2(body.getLinearVelocity().x+10, -5));
+		longJumped = true;
+	}
+	
 	public void land(){
 		landingSound.play();
+		longJumped = false;
 		long[] PLAYER_ANIMATE = new long[13];
 		for(int i=0; i<13; i++)
 			PLAYER_ANIMATE[i]=20;
@@ -269,5 +275,14 @@ public abstract class Player extends AnimatedSprite {
 	public void setBody(Body body) {
 		this.body = body;
 	}
+
+	public boolean isLongJumped() {
+		return longJumped;
+	}
+
+	public void setLongJumped(boolean longJumped) {
+		this.longJumped = longJumped;
+	}
+
 	
 }
