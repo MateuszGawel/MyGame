@@ -66,7 +66,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	private boolean gameOverDisplayed = false;
 	private int center=0, center2;
 	final int LEVEL_BLOCK_LENGTH = 5;
-	private TexturedPolygon ground;
+	private TexturedPolygon ground, obstacle;
 	private int groundBlockCounter = 10;
 	private AutoParallaxBackground autoParallaxBackground;
 	private ParallaxEntity frontParallaxBackground;
@@ -79,6 +79,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	private SharedPreferences.Editor mScoreDbEditor = this.mScoreDb.edit();
 
 	private Vector2[] levelCoordinates;
+	private Vector2[] obstacleCoordinates;
 
 	Entity backgroundLayer;
 	Entity foregroundLayer;
@@ -100,7 +101,8 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 
 	@Override
 	public void onBackKeyPressed() {
-		sceneManager.loadMenuScene();
+		//sceneManager.loadMenuScene();
+		System.exit(0);
 	}
 
 	@Override
@@ -203,9 +205,55 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		ground = new TexturedPolygon(0, 0, vertexX2, vertexY2, resourcesManager.dirt_texture_region, vbom);
 		backgroundLayer.attachChild(ground);
 		ground.setUserData("ground");
+		
+		createObstacles();
 	
 		//backgroundLayer.attachChild(new DebugRenderer(physicsWorld, vbom));
 	}
+	
+	///////////////////////
+	private void createObstacles() {
+
+		Vector2[] myV2 = new Vector2[4];
+		
+		myV2[0] = new Vector2( (center-10) / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, 240 / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
+		myV2[1] = new Vector2( (center-10) / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, 200 / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
+		myV2[2] = new Vector2( (center+10) / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, 200 / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
+		myV2[3] = new Vector2( (center+10) / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, 240 / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
+		
+		ChainShape myChain = new ChainShape();
+		myChain.createChain(myV2);
+						
+		FixtureDef mFixtureDef = new FixtureDef();
+		mFixtureDef.shape = myChain;
+		
+		BodyDef mBodyDef = new BodyDef();
+		mBodyDef.type = BodyType.StaticBody;
+		
+		Body mChainBody;
+		mChainBody = physicsWorld.createBody(mBodyDef);
+		mChainBody.createFixture(mFixtureDef);
+		
+		//center = (int)((myV2[2].x - myV2[1].x) / 2);
+		myChain.dispose();
+
+		// TEXTURED POLYGON 2 - DIRT - TEXTURE REGION MUST BE FROM A REPEATING ATLAS
+		float[] vertexX2 = new float[myV2.length];
+		float[] vertexY2 = new float[myV2.length];
+
+		for (int i = 0; i < myV2.length; i++) 
+		{
+			vertexX2[i] = myV2[i].x * PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT;
+			vertexY2[i] = myV2[i].y * PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT;
+		}
+
+		obstacle = new TexturedPolygon(0, 0, vertexX2, vertexY2, resourcesManager.dirt_texture_region, vbom);
+		backgroundLayer.attachChild(obstacle);
+		obstacle.setUserData("obstacle");
+			
+		//backgroundLayer.attachChild(new DebugRenderer(physicsWorld, vbom));
+	}
+	///////////////////////
 
 	private void createHUD() {
 		gameHUD = new HUD();
