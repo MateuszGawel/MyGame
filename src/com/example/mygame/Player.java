@@ -47,7 +47,7 @@ public abstract class Player extends AnimatedSprite {
 	public abstract void onDie();
 
 	private void createPhysics(final Camera camera, PhysicsWorld physicsWorld) {
-		body = PhysicsFactory.createBoxBody(physicsWorld, 0, -50, 40, 90, BodyType.DynamicBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0));
+		body = PhysicsFactory.createBoxBody(physicsWorld, 0, -50, 40, 90, BodyType.DynamicBody, PhysicsFactory.createFixtureDef(10.0f, 0, 3.0f));
 		body.setUserData("player");
 		body.setFixedRotation(true);
 		physicsWorld.registerPhysicsConnector(new PhysicsConnector(this, body, true, false) {
@@ -55,6 +55,7 @@ public abstract class Player extends AnimatedSprite {
 			public void onUpdate(float pSecondsElapsed) {
 				super.onUpdate(pSecondsElapsed);
 				camera.onUpdate(0.1f);
+				camera.setCenter(camera.getCenterX()+200, camera.getCenterY());
 				if (canRun) {
 					body.setLinearVelocity(new Vector2(15, body.getLinearVelocity().y));
 				}
@@ -173,8 +174,10 @@ public abstract class Player extends AnimatedSprite {
 	}
 	
 	public void longJump(){
-		body.setLinearVelocity(new Vector2(body.getLinearVelocity().x+10, -5));
-		longJumped = true;
+		if(!longJumped){
+			body.setLinearVelocity(new Vector2(body.getLinearVelocity().x+10, -5));
+			longJumped = true;
+		}
 	}
 	
 	public void land(){
@@ -253,6 +256,19 @@ public abstract class Player extends AnimatedSprite {
 	    });
 	}
 	
+	public void dieBottom(){
+		alive = false;
+		canRun = false;
+		body.setLinearVelocity(new Vector2(10f, -35.0f));
+		screamSound.stop();
+		runSound.stop();
+		long[] PLAYER_ANIMATE = new long[13];
+		for(int i=0; i<13; i++)
+			PLAYER_ANIMATE[i]=20;
+		animate(PLAYER_ANIMATE, 24, 36, false);
+		//onDie();
+	}
+	
 	public boolean isJumping() {
 		return jumping;
 	}
@@ -283,6 +299,14 @@ public abstract class Player extends AnimatedSprite {
 
 	public void setLongJumped(boolean longJumped) {
 		this.longJumped = longJumped;
+	}
+
+	public boolean isSliding() {
+		return sliding;
+	}
+
+	public void setSliding(boolean sliding) {
+		this.sliding = sliding;
 	}
 
 	

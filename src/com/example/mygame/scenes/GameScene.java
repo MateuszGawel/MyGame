@@ -1,6 +1,8 @@
 package com.example.mygame.scenes;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.andengine.engine.camera.hud.HUD;
@@ -19,6 +21,7 @@ import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
 import org.andengine.extension.debugdraw.DebugRenderer;
 import org.andengine.extension.physics.box2d.FixedStepPhysicsWorld;
+import org.andengine.extension.physics.box2d.PhysicsConnector;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
@@ -72,6 +75,9 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	private ParallaxEntity frontParallaxBackground;
 	private boolean firstUpdate = true;
 	private long holdTime;
+	Body crateBody;
+	List<Body> cratesTop;
+	List<Body> cratesBottom;
 
 	private static final String HIGHSCORE_DB_NAME = "MyGameHighscores";
 	private static final String HIGHSCORE_LABEL = "score";
@@ -87,6 +93,8 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	public void createScene() {
 		backgroundLayer = new Entity();
 		foregroundLayer = new Entity();
+		cratesTop = new ArrayList<Body>();
+		cratesBottom = new ArrayList<Body>();
 		createHUD();
 		createPhysics();
 		createPlayer();
@@ -120,11 +128,10 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	private void createBackground() {
 		// setBackground(new Background(Color.CYAN));
 		autoParallaxBackground = new AutoParallaxBackground(0, 0, 0, 5);
-		autoParallaxBackground.attachParallaxEntity(new ParallaxEntity(0.0f, new Sprite(0, 320 - resourcesManager.mParallaxLayerBack.getHeight(),
-				resourcesManager.mParallaxLayerBack, resourcesManager.vbom)));
-		autoParallaxBackground.attachParallaxEntity(new ParallaxEntity(-5.0f, new Sprite(0, 80, resourcesManager.mParallaxLayerMid, resourcesManager.vbom)));
+		autoParallaxBackground.attachParallaxEntity(new ParallaxEntity(0.0f, new Sprite(0, 0, resourcesManager.mParallaxLayerBack, resourcesManager.vbom)));
+		autoParallaxBackground.attachParallaxEntity(new ParallaxEntity(-2.0f, new Sprite(0, 10, resourcesManager.mParallaxLayerMid, resourcesManager.vbom)));
 
-		frontParallaxBackground = new ParallaxEntity(-20.0f, new Sprite(0, 320 - resourcesManager.mParallaxLayerFront.getHeight(), resourcesManager.mParallaxLayerFront,
+		frontParallaxBackground = new ParallaxEntity(-20.0f, new Sprite(0, 150, resourcesManager.mParallaxLayerFront,
 				resourcesManager.vbom));
 		autoParallaxBackground.attachParallaxEntity(frontParallaxBackground);
 
@@ -151,11 +158,44 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	private void generateLevelCoordinates() {
 		levelCoordinates = null;
 		levelCoordinates = new Vector2[4];
-		levelCoordinates[0] = new Vector2( center - 400 , 480 );
-		levelCoordinates[1] = new Vector2( center - 400 , 240 );
-		levelCoordinates[2] = new Vector2( center , 240 );
-		levelCoordinates[3] = new Vector2( center , 480 );	
+		levelCoordinates[0] = new Vector2( center - 200 , 480 );
+		levelCoordinates[1] = new Vector2( center - 200 , 240 );
+		levelCoordinates[2] = new Vector2( center + 400, 240 );
+		levelCoordinates[3] = new Vector2( center + 400, 480 );	
 		center += 400;
+		if(new Random().nextInt(100)>30){
+			Sprite crate;
+			if(new Random().nextInt(100)>=50){
+				crate = new Sprite(center, 190, ResourcesManager.getInstance().obstacle_bottom_region, vbom);
+				crateBody = PhysicsFactory.createBoxBody(physicsWorld, crate, BodyType.StaticBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0));
+				crateBody.setUserData("obstacleBottom");
+				cratesBottom.add(crateBody);
+			}
+			else{
+				crate = new Sprite(center, 155, ResourcesManager.getInstance().obstacle_bottom_region, vbom);
+				crateBody = PhysicsFactory.createBoxBody(physicsWorld, crate, BodyType.StaticBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0));
+				crateBody.setUserData("obstacleTop");
+				cratesTop.add(crateBody);
+			}
+			
+			foregroundLayer.attachChild(crate);		    
+		    physicsWorld.registerPhysicsConnector(new PhysicsConnector(crate, crateBody, true, false) {
+				@Override
+				public void onUpdate(float pSecondsElapsed) {
+					super.onUpdate(pSecondsElapsed);
+					for(int j=0; j<cratesTop.size(); j++){
+						Body newCrate = (Body)cratesTop.get(j);
+						for(int i=0; i<newCrate.getFixtureList().size();i++){
+							if(player.isSliding() && player.isAlive())
+								newCrate.getFixtureList().get(i).setSensor(true);
+							else
+								newCrate.getFixtureList().get(i).setSensor(false);
+					    }
+					}
+				}
+			});
+		}
+			
 	}
 
 	private void createGround() {
@@ -204,7 +244,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		backgroundLayer.attachChild(ground);
 		ground.setUserData("ground");
 	
-		//backgroundLayer.attachChild(new DebugRenderer(physicsWorld, vbom));
+		backgroundLayer.attachChild(new DebugRenderer(physicsWorld, vbom));
 	}
 
 	private void createHUD() {
@@ -232,7 +272,8 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				setScore(score);
 				
 				if(holdTime != 0 && (SystemClock.uptimeMillis() - holdTime > 400)){
-					physicsWorld.setGravity(new Vector2(0, 10.0f));
+					physicsWorld.setGravity(new Vector2(165.0f, 5.0f));
+					//player.longJump();
 				}
 				if (player.getBody().getPosition().x > center2) 
 				{					
@@ -253,14 +294,14 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		player = new Player(0, -50, vbom, camera, physicsWorld) {
 			@Override
 			public void onDie() {
-				player.setAlive(false);
-				gameOverText = new Text(0, 0, ResourcesManager.getInstance().font, "Game Over!", ResourcesManager.getInstance().vbom);
-				gameOverText.setPosition(camera.getCenterX(), camera.getCenterY());
-				camera.setChaseEntity(null);
-				attachChild(gameOverText);
-				gameOverDisplayed = true;
-				player.stopRunning();
-				physicsWorld.setGravity(new Vector2(0, 40f));
+				//player.setAlive(false);
+				//gameOverText = new Text(0, 0, ResourcesManager.getInstance().font, "Game Over!", ResourcesManager.getInstance().vbom);
+				//gameOverText.setPosition(camera.getCenterX(), camera.getCenterY());
+				//camera.setChaseEntity(null);
+				//attachChild(gameOverText);
+				//gameOverDisplayed = true;
+				//player.stopRunning();
+				//physicsWorld.setGravity(new Vector2(0, 40f));
 				saveHighScore();
 				autoParallaxBackground.stop();
 				// System.out.println("NAJLEPSZY WYNIK TO: " + loadHighScore());
@@ -296,14 +337,14 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	@Override
 	public boolean onSceneTouchEvent(Scene pScene, TouchEvent pSceneTouchEvent) {
 		if (pSceneTouchEvent.isActionDown()) {
-			holdTime = SystemClock.uptimeMillis();
 			if (!firstTouch) {
 				player.setRunning();
 				firstTouch = true;
 				autoParallaxBackground.start();
-			} else if (pSceneTouchEvent.getX() > player.getX()) {
+			} else if (pSceneTouchEvent.getX() > player.getX()+200) {
+				holdTime = SystemClock.uptimeMillis();
 				player.jump();
-			} else if (pSceneTouchEvent.getX() <= player.getX()) {
+			} else if (pSceneTouchEvent.getX() <= player.getX()+200) {
 				player.slide();
 			}
 		}
@@ -333,6 +374,28 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 						player.land();
 					}
 				}
+				
+				if (player.isAlive() && ("player".equals(x1.getBody().getUserData()) && "obstacleBottom".equals(x2.getBody().getUserData()))
+					|| ("player".equals(x1.getBody().getUserData()) && "obstacleBottom".equals(x2.getBody().getUserData()))){
+					
+					player.dieBottom();
+					for(int j=0; j<cratesTop.size(); j++){
+						if(cratesTop.size()>0){
+							Body newCrate = (Body)cratesTop.get(j);
+							for(int i=0; i<newCrate.getFixtureList().size();i++){
+								newCrate.getFixtureList().get(i).setSensor(true);
+						    }
+						}
+					}
+					for(int j=0; j<cratesBottom.size(); j++){
+						if(cratesBottom.size()>0){
+							Body newCrate = (Body)cratesBottom.get(j);
+							for(int i=0; i<newCrate.getFixtureList().size();i++){
+								newCrate.getFixtureList().get(i).setSensor(true);
+						    }
+						}
+					}
+				} 
 			}
 
 			@Override
