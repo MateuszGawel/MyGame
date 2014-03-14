@@ -1,6 +1,6 @@
 package com.example.mygame;
 
-import java.io.IOException;//sdfsdf
+import java.io.IOException;
 
 import org.andengine.engine.Engine;
 import org.andengine.engine.LimitedFPSEngine;
