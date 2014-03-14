@@ -30,6 +30,8 @@ public abstract class Player extends AnimatedSprite {
 	public Music jumpSound;
 	public Music landingSound;
 	public Music slideSound;
+	private boolean flag = true;
+	private boolean flag2 = true;
 
 	public Player(float pX, float pY, VertexBufferObjectManager vbo, Camera camera, PhysicsWorld physicsWorld) {
 		super(pX, pY, ResourcesManager.getInstance().player_region, vbo);
@@ -46,7 +48,7 @@ public abstract class Player extends AnimatedSprite {
 	public abstract void onDie();
 
 	private void createPhysics(final Camera camera, PhysicsWorld physicsWorld) {
-		body = PhysicsFactory.createBoxBody(physicsWorld, 0, -50, 40, 90, BodyType.DynamicBody, PhysicsFactory.createFixtureDef(10.0f, 0, 3.0f));
+		body = PhysicsFactory.createBoxBody(physicsWorld, 0, -50, 40, 90, BodyType.DynamicBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0.07f));
 		body.setUserData("player");
 		body.setFixedRotation(true);
 		physicsWorld.registerPhysicsConnector(new PhysicsConnector(this, body, true, false) {
@@ -57,6 +59,10 @@ public abstract class Player extends AnimatedSprite {
 				camera.setCenter(camera.getCenterX()+200, camera.getCenterY());
 				if (canRun) {
 					body.setLinearVelocity(new Vector2(15, body.getLinearVelocity().y));
+				}
+				else if(!alive && !canRun && flag){
+					body.setLinearVelocity(new Vector2(15, body.getLinearVelocity().y));
+					flag = false;
 				}
 			}
 		});
@@ -257,14 +263,25 @@ public abstract class Player extends AnimatedSprite {
 	
 	public void dieBottom(){
 		alive = false;
-		//canRun = false;
-		//body.setLinearVelocity(new Vector2(10.0f, -35.0f));
+		canRun = false;
 		screamSound.stop();
 		runSound.stop();
 		long[] PLAYER_ANIMATE = new long[13];
 		for(int i=0; i<13; i++)
 			PLAYER_ANIMATE[i]=20;
 		animate(PLAYER_ANIMATE, 24, 36, false);
+		//onDie();
+	}
+	
+	public void dieTop(){
+		alive = false;
+		canRun = false;
+		screamSound.stop();
+		runSound.stop();
+		long[] PLAYER_ANIMATE = new long[13];
+		for(int i=0; i<13; i++)
+			PLAYER_ANIMATE[i]=20;
+		animate(PLAYER_ANIMATE, 36, 48, false);
 		//onDie();
 	}
 	

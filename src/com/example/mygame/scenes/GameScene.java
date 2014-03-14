@@ -189,7 +189,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 						for(int i=0; i<newCrate.getFixtureList().size();i++){
 							if(player.isSliding() && player.isAlive())
 								newCrate.getFixtureList().get(i).setSensor(true);
-							else
+							else if(player.isAlive())
 								newCrate.getFixtureList().get(i).setSensor(false);
 					    }
 					}
@@ -355,7 +355,22 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		return false;
 	}
 	
-
+	public void ignoreCratesCollision(){
+		for(int j=0; j<cratesTop.size(); j++){
+			Body newCrate = (Body)cratesTop.get(j);
+			for(int i=0; i<newCrate.getFixtureList().size();i++){
+				newCrate.getFixtureList().get(i).setSensor(true);
+				System.out.println("sensor top: "+i);
+		    }
+		}
+		for(int j=0; j<cratesBottom.size(); j++){
+			Body newCrate = (Body)cratesBottom.get(j);
+			for(int i=0; i<newCrate.getFixtureList().size();i++){
+				newCrate.getFixtureList().get(i).setSensor(true);
+				System.out.println("sensor bottom: "+i);
+		    }
+		}
+	}
 	private ContactListener contactListener() {
 		ContactListener contactListener = new ContactListener() {
 			@Override
@@ -377,26 +392,16 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 					}
 				}
 				
-				if (player.isAlive() && ("player".equals(x1.getBody().getUserData()) && "obstacleBottom".equals(x2.getBody().getUserData()))
-					|| ("player".equals(x1.getBody().getUserData()) && "obstacleBottom".equals(x2.getBody().getUserData()))){
-					
+				if (player.isAlive() && (("player".equals(x1.getBody().getUserData()) && "obstacleBottom".equals(x2.getBody().getUserData()))
+					|| ("player".equals(x2.getBody().getUserData()) && "obstacleBottom".equals(x1.getBody().getUserData())))){
+					ignoreCratesCollision();
 					player.dieBottom();
-					for(int j=0; j<cratesTop.size(); j++){
-						if(cratesTop.size()>0){
-							Body newCrate = (Body)cratesTop.get(j);
-							for(int i=0; i<newCrate.getFixtureList().size();i++){
-								newCrate.getFixtureList().get(i).setSensor(true);
-						    }
-						}
-					}
-					for(int j=0; j<cratesBottom.size(); j++){
-						if(cratesBottom.size()>0){
-							Body newCrate = (Body)cratesBottom.get(j);
-							for(int i=0; i<newCrate.getFixtureList().size();i++){
-								newCrate.getFixtureList().get(i).setSensor(true);
-						    }
-						}
-					}
+				}
+				if (player.isAlive() && !player.isSliding() && (("player".equals(x1.getBody().getUserData()) && "obstacleTop".equals(x2.getBody().getUserData()))
+					|| ("player".equals(x2.getBody().getUserData()) && "obstacleTop".equals(x1.getBody().getUserData())))){
+					ignoreCratesCollision();
+					player.dieTop();
+					System.out.println("contaclist");
 				} 
 			}
 
