@@ -246,9 +246,9 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		backgroundLayer.attachChild(ground);
 		ground.setUserData("ground");
 		
-		createObstacles();
+		//createObstacles();
 	
-		backgroundLayer.attachChild(new DebugRenderer(physicsWorld, vbom));
+		//backgroundLayer.attachChild(new DebugRenderer(physicsWorld, vbom));
 	}
 	
 	///////////////////////
@@ -423,10 +423,10 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 					}
 				}
 				
-				if (player.isAlive() && ("player".equals(x1.getBody().getUserData()) && "obstacleBottom".equals(x2.getBody().getUserData()))
-					|| ("player".equals(x1.getBody().getUserData()) && "obstacleBottom".equals(x2.getBody().getUserData()))){
+				if (player.isAlive() && (("player".equals(x1.getBody().getUserData()) && "obstacleBottom".equals(x2.getBody().getUserData()))
+					|| ("player".equals(x1.getBody().getUserData()) && "obstacleBottom".equals(x2.getBody().getUserData())))){
 					
-					player.dieBottom();
+
 					for(int j=0; j<cratesTop.size(); j++){
 						if(cratesTop.size()>0){
 							Body newCrate = (Body)cratesTop.get(j);
@@ -443,6 +443,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 						    }
 						}
 					}
+					player.dieBottom();
 				} 
 			}
 

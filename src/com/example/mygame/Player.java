@@ -257,8 +257,8 @@ public abstract class Player extends AnimatedSprite {
 	
 	public void dieBottom(){
 		alive = false;
-		canRun = false;
-		body.setLinearVelocity(new Vector2(10f, -35.0f));
+		//canRun = false;
+		//body.setLinearVelocity(new Vector2(10.0f, -35.0f));
 		screamSound.stop();
 		runSound.stop();
 		long[] PLAYER_ANIMATE = new long[13];
