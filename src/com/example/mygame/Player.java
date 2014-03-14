@@ -100,18 +100,6 @@ public abstract class Player extends AnimatedSprite {
             }
 		});
 	}
-
-	public void stopRunning() {
-		canRun = false;
-		runSound.stop();
-		screamSound.stop();
-		this.stopAnimation();
-		body.setLinearVelocity(new Vector2(0, -10));
-		registerEntityModifier(new RotationModifier(0.3f, 0, 180));
-		for(int i=0; i<body.getFixtureList().size();i++){
-	        body.getFixtureList().get(i).setSensor(true);
-	    }
-	}
 	
 	public void run(){
 		runSound.resume();
@@ -162,7 +150,7 @@ public abstract class Player extends AnimatedSprite {
 	}
 
 	public void jump() {
-	    if (jumping || sliding) 
+	    if (jumping || sliding || !alive) 
 	    {
 	        return; 
 	    }
@@ -176,13 +164,6 @@ public abstract class Player extends AnimatedSprite {
 		PLAYER_ANIMATE[12]=5000;
 		animate(PLAYER_ANIMATE, 49, 61, false);
 		body.setLinearVelocity(new Vector2(body.getLinearVelocity().x, -35));
-	}
-	
-	public void longJump(){
-		if(!longJumped){
-			body.setLinearVelocity(new Vector2(body.getLinearVelocity().x+10, -5));
-			longJumped = true;
-		}
 	}
 	
 	public void land(){
@@ -210,7 +191,7 @@ public abstract class Player extends AnimatedSprite {
 	}
 	
 	public void slide() {
-	    if (sliding || jumping) 
+	    if (sliding || jumping || !alive) 
 	    {
 	        return; 
 	    }
@@ -270,7 +251,7 @@ public abstract class Player extends AnimatedSprite {
 		for(int i=0; i<13; i++)
 			PLAYER_ANIMATE[i]=20;
 		animate(PLAYER_ANIMATE, 24, 36, false);
-		//onDie();
+		onDie();
 	}
 	
 	public void dieTop(){
@@ -282,7 +263,7 @@ public abstract class Player extends AnimatedSprite {
 		for(int i=0; i<13; i++)
 			PLAYER_ANIMATE[i]=20;
 		animate(PLAYER_ANIMATE, 36, 48, false);
-		//onDie();
+		onDie();
 	}
 	
 	public boolean isJumping() {

@@ -138,7 +138,7 @@ public class ResourcesManager {
 	    sign_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "sign.png");
 	    player_region = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(gameTextureAtlas, activity, "player.png", 12, 11);
 	        
-        dirtRepeatingAtlas = new BitmapTextureAtlas(activity.getTextureManager(), 311, 310, TextureOptions.REPEATING_BILINEAR_PREMULTIPLYALPHA);
+        dirtRepeatingAtlas = new BitmapTextureAtlas(activity.getTextureManager(), 311, 388, TextureOptions.REPEATING_BILINEAR_PREMULTIPLYALPHA);
         dirt_texture_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(dirtRepeatingAtlas, activity, "dirt.png", 0, 0);
         
 		mAutoParallaxBackgroundTexture = new BitmapTextureAtlas(activity.getTextureManager(), 2048, 2048);

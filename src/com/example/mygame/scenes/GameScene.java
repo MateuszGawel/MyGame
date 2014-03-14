@@ -63,18 +63,13 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	private PhysicsWorld physicsWorld;
 	private Player player;
 	private boolean firstTouch = false;
-	private Text gameOverText;
 	private Text bestScoreText;
-	private int bestScore;
-	private boolean gameOverDisplayed = false;
 	private int center=0, center2;
 	final int LEVEL_BLOCK_LENGTH = 5;
-	private TexturedPolygon ground, obstacle;
-	private int groundBlockCounter = 10;
+	private TexturedPolygon ground;
 	private AutoParallaxBackground autoParallaxBackground;
 	private ParallaxEntity frontParallaxBackground;
 	private boolean firstUpdate = true;
-	private long holdTime;
 	Body crateBody;
 	List<Body> cratesTop;
 	List<Body> cratesBottom;
@@ -127,7 +122,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	// ADDITIONAL METHODS
 
 	private void createBackground() {
-		// setBackground(new Background(Color.CYAN));
 		autoParallaxBackground = new AutoParallaxBackground(0, 0, 0, 5);
 		autoParallaxBackground.attachParallaxEntity(new ParallaxEntity(0.0f, new Sprite(0, 0, resourcesManager.mParallaxLayerBack, resourcesManager.vbom)));
 		autoParallaxBackground.attachParallaxEntity(new ParallaxEntity(-2.0f, new Sprite(0, 10, resourcesManager.mParallaxLayerMid, resourcesManager.vbom)));
@@ -143,27 +137,21 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		Sprite sSign = new Sprite(600, 50, resourcesManager.sign_region, resourcesManager.vbom);
 		foregroundLayer.attachChild(sSign);
 		bestScoreText = new Text(0, 0, ResourcesManager.getInstance().font, "012345679", ResourcesManager.getInstance().vbom);
-		bestScoreText.setPosition(-230, -115);
+		bestScoreText.setPosition(660, 130);
 		foregroundLayer.attachChild(bestScoreText);
-	}
-
-	private void generateFirstLevelCoordinates() {
-		levelCoordinates = new Vector2[4];
-		center = 0;
-		levelCoordinates[0] = new Vector2( center - 400 , 480 );
-		levelCoordinates[1] = new Vector2( center - 400 , 240 );
-		levelCoordinates[2] = new Vector2( center , 240 );
-		levelCoordinates[3] = new Vector2( center , 480 );
 	}
 
 	private void generateLevelCoordinates() {
 		levelCoordinates = null;
 		levelCoordinates = new Vector2[4];
-		levelCoordinates[0] = new Vector2( center - 200 , 480 );
-		levelCoordinates[1] = new Vector2( center - 200 , 240 );
+		levelCoordinates[0] = new Vector2( center - 200 , 300 );
+		levelCoordinates[1] = new Vector2( center - 200 , 480 );
 		levelCoordinates[2] = new Vector2( center + 400, 240 );
 		levelCoordinates[3] = new Vector2( center + 400, 480 );	
-		center += 400;
+		center += 400;	
+	}
+
+	private void generateObstacle(){
 		if(new Random().nextInt(100)>30){
 			Sprite crate;
 			if(new Random().nextInt(100)>=50){
@@ -196,16 +184,11 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				}
 			});
 		}
-			
 	}
-
 	private void createGround() {
-		//if (first)
-		//	generateFirstLevelCoordinates();
-		//else
-			generateLevelCoordinates();
-		//{}
-
+		generateLevelCoordinates();
+		generateObstacle();
+		
 		// CHAIN SHAPES - DRAW LINES BETWEEN ALL COORDINATES
 		ChainShape myChain = new ChainShape();
 		Vector2[] myV2 = new Vector2[levelCoordinates.length];
@@ -227,8 +210,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		Body mChainBody;
 		mChainBody = physicsWorld.createBody(mBodyDef);
 		mChainBody.createFixture(mFixtureDef);
-		
-		//center = (int)((myV2[2].x - myV2[1].x) / 2);
 		myChain.dispose();
 
 		// TEXTURED POLYGON 2 - DIRT - TEXTURE REGION MUST BE FROM A REPEATING ATLAS
@@ -272,11 +253,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 			{
 				score = (int) Math.round(player.getBody().getPosition().x);
 				setScore(score);
-				
-				if(holdTime != 0 && (SystemClock.uptimeMillis() - holdTime > 400)){
-					physicsWorld.setGravity(new Vector2(165.0f, 5.0f));
-					//player.longJump();
-				}
+
 				if (player.getBody().getPosition().x > center2) 
 				{					
 					createGround();
@@ -296,17 +273,8 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		player = new Player(0, -50, vbom, camera, physicsWorld) {
 			@Override
 			public void onDie() {
-				//player.setAlive(false);
-				//gameOverText = new Text(0, 0, ResourcesManager.getInstance().font, "Game Over!", ResourcesManager.getInstance().vbom);
-				//gameOverText.setPosition(camera.getCenterX(), camera.getCenterY());
-				//camera.setChaseEntity(null);
-				//attachChild(gameOverText);
-				//gameOverDisplayed = true;
-				//player.stopRunning();
-				//physicsWorld.setGravity(new Vector2(0, 40f));
 				saveHighScore();
 				autoParallaxBackground.stop();
-				// System.out.println("NAJLEPSZY WYNIK TO: " + loadHighScore());
 			}
 		};
 		player.setUserData("player");
@@ -344,14 +312,11 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				firstTouch = true;
 				autoParallaxBackground.start();
 			} else if (pSceneTouchEvent.getX() > player.getX()+200) {
-				holdTime = SystemClock.uptimeMillis();
 				player.jump();
 			} else if (pSceneTouchEvent.getX() <= player.getX()+200) {
 				player.slide();
 			}
 		}
-		if (pSceneTouchEvent.isActionUp())
-			holdTime = 0;
 		return false;
 	}
 	
@@ -380,13 +345,11 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 
 				if ("player".equals(x1.getBody().getUserData()) || "ground".equals(x2.getBody().getUserData())) {
 					if (player.isJumping()){
-						holdTime = 0;
 						physicsWorld.setGravity(new Vector2(0, 100.0f));
 						player.land();
 					}
 				} else if ("player".equals(x2.getBody().getUserData()) || "ground".equals(x1.getBody().getUserData())) {
 					if (player.isJumping()){
-						holdTime = 0;
 						physicsWorld.setGravity(new Vector2(0, 100.0f));
 						player.land();
 					}
