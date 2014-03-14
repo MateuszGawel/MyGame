@@ -1,4 +1,3 @@
-//dupa
 package com.example.mygame;
 
 import org.andengine.audio.music.Music;
