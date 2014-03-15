@@ -126,7 +126,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		autoParallaxBackground.attachParallaxEntity(new ParallaxEntity(0.0f, new Sprite(0, 0, resourcesManager.mParallaxLayerBack, resourcesManager.vbom)));
 		autoParallaxBackground.attachParallaxEntity(new ParallaxEntity(-2.0f, new Sprite(0, 10, resourcesManager.mParallaxLayerMid, resourcesManager.vbom)));
 
-		frontParallaxBackground = new ParallaxEntity(-20.0f, new Sprite(0, 150, resourcesManager.mParallaxLayerFront,
+		frontParallaxBackground = new ParallaxEntity(-20.0f, new Sprite(0, 0, resourcesManager.mParallaxLayerFront,
 				resourcesManager.vbom));
 		autoParallaxBackground.attachParallaxEntity(frontParallaxBackground);
 
@@ -144,10 +144,10 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	private void generateLevelCoordinates() {
 		levelCoordinates = null;
 		levelCoordinates = new Vector2[4];
-		levelCoordinates[0] = new Vector2( center - 200 , 300 );
-		levelCoordinates[1] = new Vector2( center - 200 , 480 );
+		levelCoordinates[0] = new Vector2( center - 200 , 360 );
+		levelCoordinates[1] = new Vector2( center - 200 , 240 );
 		levelCoordinates[2] = new Vector2( center + 400, 240 );
-		levelCoordinates[3] = new Vector2( center + 400, 480 );	
+		levelCoordinates[3] = new Vector2( center + 400, 360 );	
 		center += 400;	
 	}
 

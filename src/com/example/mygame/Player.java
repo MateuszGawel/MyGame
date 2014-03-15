@@ -1,6 +1,7 @@
 package com.example.mygame;
 
 import org.andengine.audio.music.Music;
+import org.andengine.engine.camera.BoundCamera;
 import org.andengine.engine.camera.Camera;
 import org.andengine.engine.handler.IUpdateHandler;
 import org.andengine.engine.handler.timer.ITimerCallback;
@@ -33,7 +34,7 @@ public abstract class Player extends AnimatedSprite {
 	private boolean flag = true;
 	private boolean flag2 = true;
 
-	public Player(float pX, float pY, VertexBufferObjectManager vbo, Camera camera, PhysicsWorld physicsWorld) {
+	public Player(float pX, float pY, VertexBufferObjectManager vbo, BoundCamera camera, PhysicsWorld physicsWorld) {
 		super(pX, pY, ResourcesManager.getInstance().player_region, vbo);
 		createPhysics(camera, physicsWorld);
 		camera.setChaseEntity(this);
@@ -47,7 +48,7 @@ public abstract class Player extends AnimatedSprite {
 
 	public abstract void onDie();
 
-	private void createPhysics(final Camera camera, PhysicsWorld physicsWorld) {
+	private void createPhysics(final BoundCamera camera, PhysicsWorld physicsWorld) {
 		body = PhysicsFactory.createBoxBody(physicsWorld, 0, -50, 40, 90, BodyType.DynamicBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0.07f));
 		body.setUserData("player");
 		body.setFixedRotation(true);
@@ -56,7 +57,9 @@ public abstract class Player extends AnimatedSprite {
 			public void onUpdate(float pSecondsElapsed) {
 				super.onUpdate(pSecondsElapsed);
 				camera.onUpdate(0.1f);
-				camera.setCenter(camera.getCenterX()+200, camera.getCenterY());
+				camera.setCenter(camera.getCenterX()+200, camera.getCenterY()-150);
+				camera.setBounds(-850, 500, 999999, -250);
+		        camera.setBoundsEnabled(true);
 				if (canRun) {
 					body.setLinearVelocity(new Vector2(15, body.getLinearVelocity().y));
 				}
