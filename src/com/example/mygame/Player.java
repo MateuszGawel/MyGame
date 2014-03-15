@@ -31,6 +31,7 @@ public abstract class Player extends AnimatedSprite {
 	public Music jumpSound;
 	public Music landingSound;
 	public Music slideSound;
+	public Music dieSound;
 	private boolean flag = true;
 	private boolean flag2 = true;
 
@@ -43,6 +44,7 @@ public abstract class Player extends AnimatedSprite {
 		jumpSound = ResourcesManager.getInstance().jumpSound;
 		landingSound = ResourcesManager.getInstance().landingSound;
 		slideSound = ResourcesManager.getInstance().slideSound;
+		dieSound = ResourcesManager.getInstance().dieSound;
 		breathe();
 	}
 
@@ -58,7 +60,7 @@ public abstract class Player extends AnimatedSprite {
 				super.onUpdate(pSecondsElapsed);
 				camera.onUpdate(0.1f);
 				camera.setCenter(camera.getCenterX()+200, camera.getCenterY()-150);
-				camera.setBounds(-850, 500, 999999, -250);
+				camera.setBounds(-850, 500, 100000000, -250);
 		        camera.setBoundsEnabled(true);
 				if (canRun) {
 					body.setLinearVelocity(new Vector2(15, body.getLinearVelocity().y));
@@ -74,7 +76,6 @@ public abstract class Player extends AnimatedSprite {
 
 	public void setRunning() {
 		canRun = true;
-		
 		runSound.setVolume(0.5f);
 		runSound.play();
 		runSound.setLooping(true);
@@ -250,6 +251,7 @@ public abstract class Player extends AnimatedSprite {
 		canRun = false;
 		screamSound.stop();
 		runSound.stop();
+		dieSound.play();
 		long[] PLAYER_ANIMATE = new long[13];
 		for(int i=0; i<13; i++)
 			PLAYER_ANIMATE[i]=20;
@@ -262,6 +264,7 @@ public abstract class Player extends AnimatedSprite {
 		canRun = false;
 		screamSound.stop();
 		runSound.stop();
+		dieSound.play();
 		long[] PLAYER_ANIMATE = new long[13];
 		for(int i=0; i<13; i++)
 			PLAYER_ANIMATE[i]=20;

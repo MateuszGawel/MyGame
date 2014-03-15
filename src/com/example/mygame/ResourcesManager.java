@@ -35,7 +35,8 @@ public class ResourcesManager {
 	public VertexBufferObjectManager vbom;
 
 	//GLOBAL RESOURCES
-	public Font font;
+	public Font mainFont;
+	public Font bestScoreFont;
 	
 	//SPLASH RESOURCES
 	public ITextureRegion splash_region;
@@ -55,6 +56,10 @@ public class ResourcesManager {
 	public ITiledTextureRegion player_slide_region;
 	public BuildableBitmapTextureAtlas gameTextureAtlas;
 	
+	public ITextureRegion game_over_region;
+	public ITextureRegion replay_region;
+	public ITextureRegion menu_region;
+	
 	BitmapTextureAtlas dirtRepeatingAtlas;
 	public ITextureRegion dirt_texture_region;
 	
@@ -68,6 +73,10 @@ public class ResourcesManager {
 	public Music jumpSound;
 	public Music landingSound;
 	public Music slideSound;
+	public Music whooshSound;
+	public Music clickSound;
+	public Music dieSound;
+	public Music fallDownSound;
 	
 	
 	
@@ -89,6 +98,7 @@ public class ResourcesManager {
 	public void loadMenuResources(){
 		loadMenuGraphics();
 		loadMenuFonts();
+		loadMenuSounds();
 	}
 
 	public void loadMenuGraphics(){
@@ -110,13 +120,26 @@ public class ResourcesManager {
 	public void loadMenuFonts(){
 		FontFactory.setAssetBasePath("font/");
 		final ITexture mainFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+		final ITexture bestScoreTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		
-		font = FontFactory.createStrokeFromAsset(activity.getFontManager(), mainFontTexture, activity.getAssets(), "font.ttf", 50, true, Color.WHITE, 2, Color.WHITE);
-		font.load();
+		mainFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), mainFontTexture, activity.getAssets(), "mainFont.ttf", 30, true, Color.WHITE, 2, Color.rgb(22, 144, 189));
+		bestScoreFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), bestScoreTexture, activity.getAssets(), "bestScoreFont.ttf", 50, true, Color.WHITE, 2, Color.WHITE);
+		mainFont.load();
+		bestScoreFont.load();
 	}
 	
 	public void loadMenuTextures(){
 		menuTextureAtlas.load();
+	}
+	
+	public void loadMenuSounds(){
+		try {
+			clickSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/clickSound.ogg");
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void unloadMenuTextures(){
@@ -138,6 +161,10 @@ public class ResourcesManager {
 	    sign_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "sign.png");
 	    player_region = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(gameTextureAtlas, activity, "player.png", 12, 11);
 	        
+	    game_over_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "game_over.png");
+	    replay_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "replay.png");
+	    menu_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "menu.png");
+	    
         dirtRepeatingAtlas = new BitmapTextureAtlas(activity.getTextureManager(), 311, 120, TextureOptions.REPEATING_BILINEAR_PREMULTIPLYALPHA);
         dirt_texture_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(dirtRepeatingAtlas, activity, "dirt.png", 0, 0);
         
@@ -175,6 +202,10 @@ public class ResourcesManager {
 		    landingSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/landingSound.ogg");
 		    jumpSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/jumpSound.ogg");
 		    slideSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/slideSound.ogg");
+		    whooshSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/whooshSound.ogg");
+		    clickSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/clickSound.ogg");
+		    dieSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/dieSound.ogg");
+		    fallDownSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/fallDownSound.ogg");
 		}
 		catch (IOException e)
 		{

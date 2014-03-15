@@ -81,6 +81,11 @@ public class SceneManager {
 		}));
 	}
 	
+	public void replayGameScene(){
+		resourcesManager.loadGameSounds();
+		gameScene = new GameScene();
+		setScene(gameScene);
+	}
 	
 	//SETTERS
 	public void setScene(BaseScene scene){

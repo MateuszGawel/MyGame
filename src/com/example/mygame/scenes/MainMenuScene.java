@@ -79,6 +79,7 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	//LISTENERS
 	@Override
 	public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem, float pMenuItemLocalX, float pMenuItemLocalY) {
+		ResourcesManager.getInstance().clickSound.play();
 		switch(pMenuItem.getID()){
 		case MENU_PLAY:
 			sceneManager.loadGameScene();
