@@ -126,7 +126,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		autoParallaxBackground.attachParallaxEntity(new ParallaxEntity(0.0f, new Sprite(0, 0, resourcesManager.mParallaxLayerBack, resourcesManager.vbom)));
 		autoParallaxBackground.attachParallaxEntity(new ParallaxEntity(-2.0f, new Sprite(0, 10, resourcesManager.mParallaxLayerMid, resourcesManager.vbom)));
 
-		frontParallaxBackground = new ParallaxEntity(-20.0f, new Sprite(0, 0, resourcesManager.mParallaxLayerFront,
+		frontParallaxBackground = new ParallaxEntity(-20.0f, new Sprite(0, 280, resourcesManager.mParallaxLayerFront,
 				resourcesManager.vbom));
 		autoParallaxBackground.attachParallaxEntity(frontParallaxBackground);
 
