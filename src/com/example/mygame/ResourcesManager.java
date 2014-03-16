@@ -52,6 +52,7 @@ public class ResourcesManager {
 	public ITextureRegion obstacle_top_region;
 	public ITextureRegion obstacle_bottom_region;
 	public ITextureRegion sign_region;
+	public ITextureRegion pig_region;
 	public ITiledTextureRegion player_region;
 	public ITiledTextureRegion player_slide_region;
 	public BuildableBitmapTextureAtlas gameTextureAtlas;
@@ -78,6 +79,7 @@ public class ResourcesManager {
 	public Music clickSound;
 	public Music dieSound;
 	public Music fallDownSound;
+	public Music pigSound;
 	
 
 	
@@ -162,7 +164,7 @@ public class ResourcesManager {
 	public void loadGameGraphics(){
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/game/");
 	    gameTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 512, 512, TextureOptions.DEFAULT);
-	    playerTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 2048, 1024, TextureOptions.BILINEAR);
+	    playerTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 2048, 2048, TextureOptions.BILINEAR);
 	    
 	    //obstacle_top_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "obstacle_top.png");
 	    obstacle_bottom_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "obstacle_bottom.png");
@@ -170,6 +172,7 @@ public class ResourcesManager {
 	    game_over_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "game_over.png");
 	    replay_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "replay.png");
 	    menu_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "menu.png");
+	    pig_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "pig.png");
 	    
 	    player_region = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(playerTextureAtlas, activity, "player.png", 12, 11);
 	    
@@ -186,6 +189,8 @@ public class ResourcesManager {
 	    {
 	        this.gameTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 0));
 	        this.gameTextureAtlas.load();
+	        this.playerTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 0));
+	        this.playerTextureAtlas.load();
 	        this.dirtRepeatingAtlas.load();
 	    } 
 	    catch (final TextureAtlasBuilderException e)
@@ -215,6 +220,7 @@ public class ResourcesManager {
 		    clickSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/clickSound.ogg");
 		    dieSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/dieSound.ogg");
 		    fallDownSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/fallDownSound.ogg");
+		    pigSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/pigSound.ogg");
 		}
 		catch (IOException e)
 		{
@@ -231,6 +237,7 @@ public class ResourcesManager {
 		slideSound.stop();
 		dieSound.stop();
 		fallDownSound.stop();
+		pigSound.stop();
 
 		
 		runSound.release();
@@ -240,6 +247,7 @@ public class ResourcesManager {
 		whooshSound.release();
 		dieSound.release();
 		fallDownSound.release();
+		pigSound.release();
 	}
 	
 	//OTHERS

@@ -77,8 +77,10 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	private ParallaxEntity frontParallaxBackground;
 	private boolean firstUpdate = true;
 	Body crateBody;
+	Body pigBody;
 	List<Body> cratesTop;
 	List<Body> cratesBottom;
+	List<Body> pigs;
 
 	Sprite sGameOver;
 	Sprite sReplay;
@@ -100,6 +102,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		foregroundLayer = new Entity();
 		cratesTop = new ArrayList<Body>();
 		cratesBottom = new ArrayList<Body>();
+		pigs = new ArrayList<Body>();
 		createHUD();
 		createPhysics();
 		createPlayer();
@@ -175,6 +178,9 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				crateBody.setUserData("obstacleTop");
 				cratesTop.add(crateBody);
 			}
+			if (new Random().nextInt(100) >= 80) {
+				createPig();
+			}
 
 			foregroundLayer.attachChild(crate);
 			physicsWorld.registerPhysicsConnector(new PhysicsConnector(crate, crateBody, true, false) {
@@ -195,6 +201,30 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		}
 	}
 
+	private void createPig(){
+		Sprite sPig = new Sprite(center, 155, ResourcesManager.getInstance().pig_region, vbom);
+		pigBody = PhysicsFactory.createBoxBody(physicsWorld, sPig, BodyType.KinematicBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0));
+		
+		physicsWorld.registerPhysicsConnector(new PhysicsConnector(sPig, pigBody, true, false) {
+			boolean pigSoundPlayed = false;
+			@Override
+			public void onUpdate(float pSecondsElapsed) {
+				super.onUpdate(pSecondsElapsed);
+				if(pigBody.getPosition().x < player.getBody().getPosition().x + 600 && !pigSoundPlayed){
+					ResourcesManager.getInstance().pigSound.play();
+					System.out.println("TST");
+					pigSoundPlayed = true;
+				}
+				else if(pigBody.getPosition().x < player.getBody().getPosition().x - 40)
+					ResourcesManager.getInstance().pigSound.pause();
+			}
+		});
+		
+		pigBody.setLinearVelocity(-5, 0);
+		foregroundLayer.attachChild(sPig);
+		pigBody.setUserData("pig");
+		pigs.add(pigBody);
+	}
 	private void createGround() {
 		generateLevelCoordinates();
 		generateObstacle();
@@ -257,8 +287,10 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 
 			@Override
 			public void onUpdate(float pSecondsElapsed) {
-				score = (int) Math.round(player.getBody().getPosition().x/10);
-				setScore(score);
+				if(player.isAlive()){
+					score = (int) Math.round(player.getBody().getPosition().x/10);
+					setScore(score);
+				}
 
 				if (player.getBody().getPosition().x > center2) {
 					createGround();
@@ -377,19 +409,23 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		return false;
 	}
 
-	public void ignoreCratesCollision() {
+	public void ignoreObstaclesCollision() {
 		for (int j = 0; j < cratesTop.size(); j++) {
 			Body newCrate = (Body) cratesTop.get(j);
 			for (int i = 0; i < newCrate.getFixtureList().size(); i++) {
 				newCrate.getFixtureList().get(i).setSensor(true);
-				System.out.println("sensor top: " + i);
 			}
 		}
 		for (int j = 0; j < cratesBottom.size(); j++) {
 			Body newCrate = (Body) cratesBottom.get(j);
 			for (int i = 0; i < newCrate.getFixtureList().size(); i++) {
 				newCrate.getFixtureList().get(i).setSensor(true);
-				System.out.println("sensor bottom: " + i);
+			}
+		}
+		for (int j = 0; j < pigs.size(); j++) {
+			Body pig = (Body) pigs.get(j);
+			for (int i = 0; i < pig.getFixtureList().size(); i++) {
+				pig.getFixtureList().get(i).setSensor(true);
 			}
 		}
 	}
@@ -419,19 +455,19 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 					}
 				}
 
-				if (player.isAlive()
-						&& (("player".equals(x1.getBody().getUserData()) && "obstacleBottom".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "obstacleBottom"
-								.equals(x1.getBody().getUserData())))) {
-					ignoreCratesCollision();
+				if (player.isAlive()&& (("player".equals(x1.getBody().getUserData()) && "obstacleBottom".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "obstacleBottom".equals(x1.getBody().getUserData())))) {
+					ignoreObstaclesCollision();
 					player.dieBottom();
 				}
-				if (player.isAlive()
-						&& !player.isSliding()
-						&& (("player".equals(x1.getBody().getUserData()) && "obstacleTop".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "obstacleTop"
-								.equals(x1.getBody().getUserData())))) {
-					ignoreCratesCollision();
+				if (player.isAlive()&& !player.isSliding()&& (("player".equals(x1.getBody().getUserData()) && "obstacleTop".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "obstacleTop".equals(x1.getBody().getUserData())))) {
+					ignoreObstaclesCollision();
 					player.dieTop();
 					System.out.println("contaclist");
+				}
+				
+				if (player.isAlive() && (("player".equals(x1.getBody().getUserData()) && "pig".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "pig".equals(x1.getBody().getUserData())))) {
+					ignoreObstaclesCollision();
+					player.dieBottom();
 				}
 			}
 

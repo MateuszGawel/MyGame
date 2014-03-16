@@ -34,6 +34,8 @@ public abstract class Player extends AnimatedSprite {
 	public Music dieSound;
 	private boolean flag = true;
 	private boolean flag2 = true;
+	private float runningSpeed = 13;
+	private float nextSpeedUp = 200;
 
 	public Player(float pX, float pY, VertexBufferObjectManager vbo, BoundCamera camera, PhysicsWorld physicsWorld) {
 		super(pX, pY, ResourcesManager.getInstance().player_region, vbo);
@@ -64,11 +66,15 @@ public abstract class Player extends AnimatedSprite {
 				camera.setBounds(-850, 500, 100000000, -250);
 		        camera.setBoundsEnabled(true);
 				if (canRun) {
-					body.setLinearVelocity(new Vector2(15, body.getLinearVelocity().y));
+					body.setLinearVelocity(new Vector2(runningSpeed, body.getLinearVelocity().y));
 				}
 				else if(!alive && !canRun && flag){
-					body.setLinearVelocity(new Vector2(15, body.getLinearVelocity().y));
+					body.setLinearVelocity(new Vector2(runningSpeed, body.getLinearVelocity().y));
 					flag = false;
+				}
+				if(body.getPosition().x > nextSpeedUp){
+					nextSpeedUp+=200;
+					runningSpeed++;
 				}
 			}
 		});
@@ -169,15 +175,17 @@ public abstract class Player extends AnimatedSprite {
 	    	runSound.pause();
 	    if(screamSound.isPlaying())
 	    	screamSound.pause();
-	    if(!jumpSound.isPlaying())
+	    if(!jumpSound.isPlaying()){
+	    	jumpSound.setVolume(0.5f);
 	    	jumpSound.play();
+	    }
 	    jumping = true;
 	    long[] PLAYER_ANIMATE = new long[13];
 		for(int i=0; i<13; i++)
 			PLAYER_ANIMATE[i]=20;
 		PLAYER_ANIMATE[12]=5000;
 		animate(PLAYER_ANIMATE, 49, 61, false);
-		body.setLinearVelocity(new Vector2(body.getLinearVelocity().x, -35));
+		body.setLinearVelocity(new Vector2(body.getLinearVelocity().x, -30));
 	}
 	
 	public void land(){
@@ -338,5 +346,13 @@ public abstract class Player extends AnimatedSprite {
 		this.sliding = sliding;
 	}
 
+	public float getRunningSpeed() {
+		return runningSpeed;
+	}
+
+	public void setRunningSpeed(float runningSpeed) {
+		this.runningSpeed = runningSpeed;
+	}
+	
 	
 }
