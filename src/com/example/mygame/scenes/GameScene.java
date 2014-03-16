@@ -75,6 +75,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	private TexturedPolygon ground;
 	private AutoParallaxBackground autoParallaxBackground;
 	private ParallaxEntity frontParallaxBackground;
+	private ParallaxEntity grassParallaxBackground;
 	private boolean firstUpdate = true;
 	Body crateBody;
 	Body pigBody;
@@ -105,11 +106,11 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		pigs = new ArrayList<Body>();
 		createHUD();
 		createPhysics();
-		createPlayer();
 		createGround();
 		setOnSceneTouchListener(this);
 		createBackground();
 		createBestScoreTable();
+		createPlayer();
 		attachChild(backgroundLayer);
 		attachChild(foregroundLayer);
 	}
@@ -142,7 +143,10 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 
 		frontParallaxBackground = new ParallaxEntity(-20.0f, new Sprite(0, 280, resourcesManager.mParallaxLayerFront, resourcesManager.vbom));
 		autoParallaxBackground.attachParallaxEntity(frontParallaxBackground);
-
+		
+		grassParallaxBackground = new ParallaxEntity(-20.0f, new Sprite(0, 346, resourcesManager.mParallaxLayerGrass, resourcesManager.vbom));
+		autoParallaxBackground.attachParallaxEntity(grassParallaxBackground);
+		
 		setBackground(autoParallaxBackground);
 	}
 
@@ -150,7 +154,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		Sprite sSign = new Sprite(600, 50, resourcesManager.sign_region, resourcesManager.vbom);
 		foregroundLayer.attachChild(sSign);
 		bestScoreText = new Text(0, 0, ResourcesManager.getInstance().bestScoreFont, "012345679", ResourcesManager.getInstance().vbom);
-		bestScoreText.setPosition(660, 130);
+		bestScoreText.setPosition(660, 110);
 		foregroundLayer.attachChild(bestScoreText);
 	}
 

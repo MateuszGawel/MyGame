@@ -69,6 +69,7 @@ public class ResourcesManager {
 	public ITextureRegion mParallaxLayerBack;
 	public ITextureRegion mParallaxLayerMid;
 	public ITextureRegion mParallaxLayerFront;
+	public ITextureRegion mParallaxLayerGrass;
 	
 	public Music runSound;
 	public Music screamSound;
@@ -127,7 +128,7 @@ public class ResourcesManager {
 		final ITexture bestScoreTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		
 		mainFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), mainFontTexture, activity.getAssets(), "mainFont.ttf", 30, true, Color.WHITE, 2, Color.rgb(22, 144, 189));
-		bestScoreFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), bestScoreTexture, activity.getAssets(), "bestScoreFont.ttf", 50, true, Color.WHITE, 2, Color.WHITE);
+		bestScoreFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), bestScoreTexture, activity.getAssets(), "bestScoreFont.ttf", 50, true, Color.GRAY, 2, Color.GRAY);
 		mainFont.load();
 		bestScoreFont.load();
 	}
@@ -163,7 +164,7 @@ public class ResourcesManager {
 	
 	public void loadGameGraphics(){
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/game/");
-	    gameTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 512, 512, TextureOptions.DEFAULT);
+	    gameTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 512, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 	    playerTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 2048, 2048, TextureOptions.BILINEAR);
 	    
 	    //obstacle_top_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "obstacle_top.png");
@@ -179,8 +180,9 @@ public class ResourcesManager {
         dirtRepeatingAtlas = new BitmapTextureAtlas(activity.getTextureManager(), 311, 120, TextureOptions.REPEATING_BILINEAR_PREMULTIPLYALPHA);
         dirt_texture_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(dirtRepeatingAtlas, activity, "dirt.png", 0, 0);
         
-		mAutoParallaxBackgroundTexture = new BitmapTextureAtlas(activity.getTextureManager(), 1024, 1024, TextureOptions.DEFAULT);
-		mParallaxLayerFront = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mAutoParallaxBackgroundTexture, activity, "parallax_background_layer_front.png", 0, 0);
+		mAutoParallaxBackgroundTexture = new BitmapTextureAtlas(activity.getTextureManager(), 1024, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+		mParallaxLayerGrass = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mAutoParallaxBackgroundTexture, activity, "grass.png", 0, 0);
+		mParallaxLayerFront = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mAutoParallaxBackgroundTexture, activity, "parallax_background_layer_front.png", 0, 15);
 		mParallaxLayerBack = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mAutoParallaxBackgroundTexture, activity, "parallax_background_layer_back.png", 0, 200);
 		mParallaxLayerMid = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mAutoParallaxBackgroundTexture, activity, "parallax_background_layer_mid.png", 0, 689);
 		mAutoParallaxBackgroundTexture.load();
