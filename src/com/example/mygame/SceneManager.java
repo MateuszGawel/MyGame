@@ -1,5 +1,8 @@
 package com.example.mygame;
 
+import java.io.IOException;
+import java.io.RandomAccessFile;
+
 import org.andengine.engine.Engine;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
@@ -57,7 +60,7 @@ public class SceneManager {
 			public void onTimePassed(final TimerHandler pTimerHandler)
 			{
 				resourcesManager.engine.unregisterUpdateHandler(pTimerHandler);
-				ResourcesManager.getInstance().loadMenuResources();
+				ResourcesManager.getInstance().loadMenuTextures();
 				menuScene = new MainMenuScene(); 
 				setScene(menuScene);
 			}
@@ -82,6 +85,7 @@ public class SceneManager {
 	}
 	
 	public void replayGameScene(){
+		resourcesManager.unloadGameSounds();
 		resourcesManager.loadGameSounds();
 		gameScene = new GameScene();
 		setScene(gameScene);
@@ -128,4 +132,39 @@ public class SceneManager {
     {
         return currentScene;
     }
+    
+    //DEBUGGER
+    private float readUsage() {
+	    try {
+	        RandomAccessFile reader = new RandomAccessFile("/proc/stat", "r");
+	        String load = reader.readLine();
+
+	        String[] toks = load.split(" ");
+
+	        long idle1 = Long.parseLong(toks[5]);
+	        long cpu1 = Long.parseLong(toks[2]) + Long.parseLong(toks[3]) + Long.parseLong(toks[4])
+	              + Long.parseLong(toks[6]) + Long.parseLong(toks[7]) + Long.parseLong(toks[8]);
+
+	        try {
+	            Thread.sleep(360);
+	        } catch (Exception e) {}
+
+	        reader.seek(0);
+	        load = reader.readLine();
+	        reader.close();
+
+	        toks = load.split(" ");
+
+	        long idle2 = Long.parseLong(toks[5]);
+	        long cpu2 = Long.parseLong(toks[2]) + Long.parseLong(toks[3]) + Long.parseLong(toks[4])
+	            + Long.parseLong(toks[6]) + Long.parseLong(toks[7]) + Long.parseLong(toks[8]);
+
+	        return (float)(cpu2 - cpu1) / ((cpu2 + idle2) - (cpu1 + idle1));
+
+	    } catch (IOException ex) {
+	        ex.printStackTrace();
+	    }
+
+	    return 0;
+	} 
 }

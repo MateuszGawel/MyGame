@@ -55,6 +55,7 @@ public class ResourcesManager {
 	public ITiledTextureRegion player_region;
 	public ITiledTextureRegion player_slide_region;
 	public BuildableBitmapTextureAtlas gameTextureAtlas;
+	public BuildableBitmapTextureAtlas playerTextureAtlas;
 	
 	public ITextureRegion game_over_region;
 	public ITextureRegion replay_region;
@@ -78,6 +79,7 @@ public class ResourcesManager {
 	public Music dieSound;
 	public Music fallDownSound;
 	
+
 	
 	
 	
@@ -152,23 +154,29 @@ public class ResourcesManager {
 		loadGameSounds();
 	}
 	
+	public void unloadGameResources(){
+		unloadGameSounds();
+		unloadGameGraphics();
+	}
+	
 	public void loadGameGraphics(){
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/game/");
-	    gameTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 4096, 4096, TextureOptions.BILINEAR);
+	    gameTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 512, 512, TextureOptions.DEFAULT);
+	    playerTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 2048, 1024, TextureOptions.BILINEAR);
 	    
 	    //obstacle_top_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "obstacle_top.png");
 	    obstacle_bottom_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "obstacle_bottom.png");
-	    sign_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "sign.png");
-	    player_region = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(gameTextureAtlas, activity, "player.png", 12, 11);
-	        
+	    sign_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "sign.png");	        
 	    game_over_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "game_over.png");
 	    replay_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "replay.png");
 	    menu_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "menu.png");
 	    
+	    player_region = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(playerTextureAtlas, activity, "player.png", 12, 11);
+	    
         dirtRepeatingAtlas = new BitmapTextureAtlas(activity.getTextureManager(), 311, 120, TextureOptions.REPEATING_BILINEAR_PREMULTIPLYALPHA);
         dirt_texture_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(dirtRepeatingAtlas, activity, "dirt.png", 0, 0);
         
-		mAutoParallaxBackgroundTexture = new BitmapTextureAtlas(activity.getTextureManager(), 1024, 1024, TextureOptions.REPEATING_BILINEAR_PREMULTIPLYALPHA);
+		mAutoParallaxBackgroundTexture = new BitmapTextureAtlas(activity.getTextureManager(), 1024, 1024, TextureOptions.DEFAULT);
 		mParallaxLayerFront = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mAutoParallaxBackgroundTexture, activity, "parallax_background_layer_front.png", 0, 0);
 		mParallaxLayerBack = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mAutoParallaxBackgroundTexture, activity, "parallax_background_layer_back.png", 0, 200);
 		mParallaxLayerMid = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mAutoParallaxBackgroundTexture, activity, "parallax_background_layer_mid.png", 0, 689);
@@ -186,12 +194,13 @@ public class ResourcesManager {
 	    }
 	}
 	
-	public void unloadGameResources(){
-		runSound.stop();
-		screamSound.stop();
-		landingSound.stop();
-		jumpSound.stop();
-		//do zaimplementowania unload wszystkiego
+	private void unloadGameGraphics(){
+		gameTextureAtlas.unload();
+		dirtRepeatingAtlas.unload();
+		mAutoParallaxBackgroundTexture.unload();
+		activity.getTextureManager().unloadTexture(gameTextureAtlas);
+		activity.getTextureManager().unloadTexture(dirtRepeatingAtlas);
+		activity.getTextureManager().unloadTexture(mAutoParallaxBackgroundTexture);
 	}
 	
 	public void loadGameSounds(){
@@ -212,7 +221,26 @@ public class ResourcesManager {
 		    e.printStackTrace();
 		}
 	}
+	
+	public void unloadGameSounds(){
+		runSound.stop();
+		screamSound.stop();
+		landingSound.stop();
+		jumpSound.stop();
+		whooshSound.stop();
+		slideSound.stop();
+		dieSound.stop();
+		fallDownSound.stop();
 
+		
+		runSound.release();
+		screamSound.release();
+		landingSound.release();
+		jumpSound.release();
+		whooshSound.release();
+		dieSound.release();
+		fallDownSound.release();
+	}
 	
 	//OTHERS
 	public static void prepareManager(Engine engine, GameActivity activity, BoundCamera camera, VertexBufferObjectManager vbom){

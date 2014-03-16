@@ -11,6 +11,7 @@ import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.entity.Entity;
 import org.andengine.entity.IEntity;
+
 import org.andengine.entity.modifier.MoveXModifier;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.primitive.TexturedPolygon;
@@ -256,7 +257,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 
 			@Override
 			public void onUpdate(float pSecondsElapsed) {
-				score = (int) Math.round(player.getBody().getPosition().x);
+				score = (int) Math.round(player.getBody().getPosition().x/10);
 				setScore(score);
 
 				if (player.getBody().getPosition().x > center2) {
@@ -273,7 +274,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	}
 
 	private void createPlayer() {
-		player = new Player(0, 200, vbom, camera, physicsWorld) {
+		player = new Player(0, 0, vbom, camera, physicsWorld) {
 			@Override
 			public void onDie() {
 				saveHighScore();

@@ -37,6 +37,7 @@ public abstract class Player extends AnimatedSprite {
 
 	public Player(float pX, float pY, VertexBufferObjectManager vbo, BoundCamera camera, PhysicsWorld physicsWorld) {
 		super(pX, pY, ResourcesManager.getInstance().player_region, vbo);
+		
 		createPhysics(camera, physicsWorld);
 		camera.setChaseEntity(this);
 		runSound = ResourcesManager.getInstance().runSound;
@@ -51,7 +52,7 @@ public abstract class Player extends AnimatedSprite {
 	public abstract void onDie();
 
 	private void createPhysics(final BoundCamera camera, PhysicsWorld physicsWorld) {
-		body = PhysicsFactory.createBoxBody(physicsWorld, 0, -50, 40, 90, BodyType.DynamicBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0.07f));
+		body = PhysicsFactory.createBoxBody(physicsWorld, 0, 190, 40, 90, BodyType.DynamicBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0.07f));
 		body.setUserData("player");
 		body.setFixedRotation(true);
 		physicsWorld.registerPhysicsConnector(new PhysicsConnector(this, body, true, false) {
@@ -77,9 +78,11 @@ public abstract class Player extends AnimatedSprite {
 	public void setRunning() {
 		canRun = true;
 		runSound.setVolume(0.5f);
-		runSound.play();
+		if(!runSound.isPlaying())
+			runSound.play();
 		runSound.setLooping(true);
-		screamSound.play();
+		if(!screamSound.isPlaying())
+			screamSound.play();
 		screamSound.setLooping(true);
 		
 		long[] PLAYER_ANIMATE = new long[13];
@@ -106,12 +109,16 @@ public abstract class Player extends AnimatedSprite {
 	}
 	
 	public void run(){
-		runSound.resume();
-		screamSound.resume();
-		long[] PLAYER_ANIMATE = new long[31];
-		for(int i=0; i<31; i++)
-			PLAYER_ANIMATE[i]=14;
-		animate(PLAYER_ANIMATE, 75, 105, true);
+		if(alive){
+			if(!runSound.isPlaying())
+				runSound.resume();
+			if(!screamSound.isPlaying())
+				screamSound.resume();
+			long[] PLAYER_ANIMATE = new long[31];
+			for(int i=0; i<31; i++)
+				PLAYER_ANIMATE[i]=14;
+			animate(PLAYER_ANIMATE, 75, 105, true);
+		}
 	}
 	
 	public void breathe(){
@@ -158,9 +165,12 @@ public abstract class Player extends AnimatedSprite {
 	    {
 	        return; 
 	    }
-	    runSound.pause();
-	    screamSound.pause();
-	    jumpSound.play();
+	    if(runSound.isPlaying())
+	    	runSound.pause();
+	    if(screamSound.isPlaying())
+	    	screamSound.pause();
+	    if(!jumpSound.isPlaying())
+	    	jumpSound.play();
 	    jumping = true;
 	    long[] PLAYER_ANIMATE = new long[13];
 		for(int i=0; i<13; i++)
@@ -171,27 +181,30 @@ public abstract class Player extends AnimatedSprite {
 	}
 	
 	public void land(){
-		landingSound.play();
-		longJumped = false;
-		long[] PLAYER_ANIMATE = new long[13];
-		for(int i=0; i<13; i++)
-			PLAYER_ANIMATE[i]=20;
-		animate(PLAYER_ANIMATE, 62, 74, false, new IAnimationListener() {
-			
-            public void onAnimationStarted(AnimatedSprite pAnimatedSprite, int pInitialLoopCount) {
-
-            }
-            public void onAnimationLoopFinished(AnimatedSprite pAnimatedSprite, int pRemainingLoopCount, int pInitialLoopCount) {
-
-            }
-            public void onAnimationFrameChanged(AnimatedSprite pAnimatedSprite, int pOldFrameIndex, int pNewFrameIndex) {
-            	
-            }
-            public void onAnimationFinished(AnimatedSprite pAnimatedSprite) {
-                run();
-	        }
-	    });
-		jumping = false;
+		if(alive){
+			if(!landingSound.isPlaying())
+				landingSound.play();
+			longJumped = false;
+			long[] PLAYER_ANIMATE = new long[13];
+			for(int i=0; i<13; i++)
+				PLAYER_ANIMATE[i]=20;
+			animate(PLAYER_ANIMATE, 62, 74, false, new IAnimationListener() {
+				
+	            public void onAnimationStarted(AnimatedSprite pAnimatedSprite, int pInitialLoopCount) {
+	
+	            }
+	            public void onAnimationLoopFinished(AnimatedSprite pAnimatedSprite, int pRemainingLoopCount, int pInitialLoopCount) {
+	
+	            }
+	            public void onAnimationFrameChanged(AnimatedSprite pAnimatedSprite, int pOldFrameIndex, int pNewFrameIndex) {
+	            	
+	            }
+	            public void onAnimationFinished(AnimatedSprite pAnimatedSprite) {
+	                run();
+		        }
+		    });
+			jumping = false;
+		}
 	}
 	
 	public void slide() {
@@ -199,9 +212,12 @@ public abstract class Player extends AnimatedSprite {
 	    {
 	        return; 
 	    }
-	    runSound.pause();
-	    screamSound.pause();
-	    slideSound.play();
+	    if(runSound.isPlaying())
+	    	runSound.pause();
+	    if(screamSound.isPlaying())
+	    	screamSound.pause();
+	    if(!slideSound.isPlaying())
+	    	slideSound.play();
 	    sliding = true;
 	    long[] PLAYER_ANIMATE = new long[7];
 		for(int i=0; i<7; i++)
@@ -247,29 +263,39 @@ public abstract class Player extends AnimatedSprite {
 	}
 	
 	public void dieBottom(){
-		alive = false;
-		canRun = false;
-		screamSound.stop();
-		runSound.stop();
-		dieSound.play();
-		long[] PLAYER_ANIMATE = new long[13];
-		for(int i=0; i<13; i++)
-			PLAYER_ANIMATE[i]=20;
-		animate(PLAYER_ANIMATE, 24, 36, false);
-		onDie();
+		if(alive){
+			alive = false;
+			canRun = false;
+			if(screamSound.isPlaying())
+				screamSound.stop();
+			if(runSound.isPlaying())
+				runSound.stop();
+			if(!dieSound.isPlaying())
+				dieSound.play();
+			long[] PLAYER_ANIMATE = new long[13];
+			for(int i=0; i<13; i++)
+				PLAYER_ANIMATE[i]=20;
+			animate(PLAYER_ANIMATE, 24, 36, false);
+			onDie();
+		}
 	}
 	
 	public void dieTop(){
-		alive = false;
-		canRun = false;
-		screamSound.stop();
-		runSound.stop();
-		dieSound.play();
-		long[] PLAYER_ANIMATE = new long[13];
-		for(int i=0; i<13; i++)
-			PLAYER_ANIMATE[i]=20;
-		animate(PLAYER_ANIMATE, 36, 48, false);
-		onDie();
+		if(alive){
+			alive = false;
+			canRun = false;
+			if(screamSound.isPlaying())
+				screamSound.stop();
+			if(runSound.isPlaying())
+				runSound.stop();
+			if(!dieSound.isPlaying())
+				dieSound.play();
+			long[] PLAYER_ANIMATE = new long[13];
+			for(int i=0; i<13; i++)
+				PLAYER_ANIMATE[i]=20;
+			animate(PLAYER_ANIMATE, 36, 48, false);
+			onDie();
+		}
 	}
 	
 	public boolean isJumping() {
