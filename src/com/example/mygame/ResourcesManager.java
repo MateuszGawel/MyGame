@@ -45,7 +45,7 @@ public class ResourcesManager {
 	//MENU RESOURCES
 	public ITextureRegion menu_background_region;
 	public ITextureRegion play_region;
-	public ITextureRegion options_region;
+	public ITextureRegion ranking_region;
 	private BuildableBitmapTextureAtlas menuTextureAtlas;
 	
 	//GAME RESOURCES
@@ -114,7 +114,7 @@ public class ResourcesManager {
 		menuTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 1024, 1024, TextureOptions.BILINEAR);
 		menu_background_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "menu_background.png");
 		play_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "play.png");
-		options_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "options.png");
+		ranking_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "ranking.png");
 		
 		try{
 			this.menuTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 0));
