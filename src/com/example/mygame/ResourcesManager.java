@@ -81,6 +81,9 @@ public class ResourcesManager {
 	public Music dieSound;
 	public Music fallDownSound;
 	public Music pigSound;
+	public Music doubleJumpSound;
+	public Music chargeDownSound;
+	public Music bigLandSound;
 	
 
 	
@@ -164,7 +167,7 @@ public class ResourcesManager {
 	
 	public void loadGameGraphics(){
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/game/");
-	    gameTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 512, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+	    gameTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 512, 512, TextureOptions.DEFAULT);
 	    playerTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 2048, 2048, TextureOptions.BILINEAR);
 	    
 	    //obstacle_top_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "obstacle_top.png");
@@ -223,6 +226,9 @@ public class ResourcesManager {
 		    dieSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/dieSound.ogg");
 		    fallDownSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/fallDownSound.ogg");
 		    pigSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/pigSound.ogg");
+		    doubleJumpSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/doubleJumpSound.ogg");
+		    chargeDownSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/chargeDownSound.ogg");
+		    bigLandSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/bigLandSound.ogg");
 		}
 		catch (IOException e)
 		{
@@ -240,6 +246,9 @@ public class ResourcesManager {
 		dieSound.stop();
 		fallDownSound.stop();
 		pigSound.stop();
+		doubleJumpSound.stop();
+		bigLandSound.stop();
+		chargeDownSound.stop();
 
 		
 		runSound.release();
@@ -250,6 +259,9 @@ public class ResourcesManager {
 		dieSound.release();
 		fallDownSound.release();
 		pigSound.release();
+		doubleJumpSound.release();
+		bigLandSound.release();
+		chargeDownSound.release();
 	}
 	
 	//OTHERS

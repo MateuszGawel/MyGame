@@ -182,9 +182,10 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				crateBody.setUserData("obstacleTop");
 				cratesTop.add(crateBody);
 			}
+			/*
 			if (new Random().nextInt(100) >= 80) {
 				createPig();
-			}
+			}*/
 
 			foregroundLayer.attachChild(crate);
 			physicsWorld.registerPhysicsConnector(new PhysicsConnector(crate, crateBody, true, false) {
@@ -204,7 +205,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 			});
 		}
 	}
-
+/*
 	private void createPig(){
 		Sprite sPig = new Sprite(center, 155, ResourcesManager.getInstance().pig_region, vbom);
 		pigBody = PhysicsFactory.createBoxBody(physicsWorld, sPig, BodyType.KinematicBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0));
@@ -228,7 +229,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		foregroundLayer.attachChild(sPig);
 		pigBody.setUserData("pig");
 		pigs.add(pigBody);
-	}
+	}*/
 	private void createGround() {
 		generateLevelCoordinates();
 		generateObstacle();
@@ -405,9 +406,11 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				firstTouch = true;
 				autoParallaxBackground.start();
 			} else if (pSceneTouchEvent.getX() > player.getX() + 200) {
+				player.doubleJump();
 				player.jump();
 			} else if (pSceneTouchEvent.getX() <= player.getX() + 200) {
 				player.slide();
+				player.chargeDown();
 			}
 		}
 		return false;
@@ -426,12 +429,14 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				newCrate.getFixtureList().get(i).setSensor(true);
 			}
 		}
+		/*
 		for (int j = 0; j < pigs.size(); j++) {
 			Body pig = (Body) pigs.get(j);
 			for (int i = 0; i < pig.getFixtureList().size(); i++) {
 				pig.getFixtureList().get(i).setSensor(true);
 			}
 		}
+		*/
 	}
 
 	private ContactListener contactListener() {
@@ -468,11 +473,12 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 					player.dieTop();
 					System.out.println("contaclist");
 				}
-				
+				/*
 				if (player.isAlive() && (("player".equals(x1.getBody().getUserData()) && "pig".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "pig".equals(x1.getBody().getUserData())))) {
 					ignoreObstaclesCollision();
 					player.dieBottom();
 				}
+				*/
 			}
 
 			@Override

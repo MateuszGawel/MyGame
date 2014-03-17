@@ -25,13 +25,17 @@ public abstract class Player extends AnimatedSprite {
 	private boolean jumping = false;
 	private boolean alive = true;
 	private boolean sliding = false;
-	private boolean longJumped = false;
+	private boolean doubleJumped = false;
+	private boolean chargingDown = false;
 	public Music runSound;
 	public Music screamSound;
 	public Music jumpSound;
 	public Music landingSound;
 	public Music slideSound;
 	public Music dieSound;
+	public Music doubleJumpSound;
+	public Music bigLandSound;
+	public Music chargeDownSound;
 	private boolean flag = true;
 	private boolean flag2 = true;
 	private float runningSpeed = 13;
@@ -48,6 +52,9 @@ public abstract class Player extends AnimatedSprite {
 		landingSound = ResourcesManager.getInstance().landingSound;
 		slideSound = ResourcesManager.getInstance().slideSound;
 		dieSound = ResourcesManager.getInstance().dieSound;
+		doubleJumpSound = ResourcesManager.getInstance().doubleJumpSound;
+		bigLandSound = ResourcesManager.getInstance().bigLandSound;
+		chargeDownSound = ResourcesManager.getInstance().chargeDownSound;
 		breathe();
 	}
 
@@ -176,7 +183,7 @@ public abstract class Player extends AnimatedSprite {
 	    if(screamSound.isPlaying())
 	    	screamSound.pause();
 	    if(!jumpSound.isPlaying()){
-	    	jumpSound.setVolume(0.5f);
+	    	jumpSound.setVolume(0.3f);
 	    	jumpSound.play();
 	    }
 	    jumping = true;
@@ -188,11 +195,39 @@ public abstract class Player extends AnimatedSprite {
 		body.setLinearVelocity(new Vector2(body.getLinearVelocity().x, -30));
 	}
 	
+	public void doubleJump(){
+		if(!alive || sliding || !jumping || doubleJumped || chargingDown)
+			return;
+		if(runSound.isPlaying())
+	    	runSound.pause();
+	    if(screamSound.isPlaying())
+	    	screamSound.pause();
+	    doubleJumpSound.play();
+		body.setLinearVelocity(new Vector2(body.getLinearVelocity().x, -30));
+		doubleJumped = true;
+	}
+	
+	public void chargeDown(){
+		if(!alive || sliding || !jumping)
+			return;
+		if(runSound.isPlaying())
+	    	runSound.pause();
+	    if(screamSound.isPlaying())
+	    	screamSound.pause();
+	    chargeDownSound.setVolume(0.2f);
+	    //chargeDownSound.play();
+		body.setLinearVelocity(new Vector2(body.getLinearVelocity().x-15, 35));
+		chargingDown = true;
+	}
+	
 	public void land(){
 		if(alive){
+			if(chargingDown){
+				bigLandSound.setVolume(0.5f);
+				bigLandSound.play();
+			}
 			if(!landingSound.isPlaying())
 				landingSound.play();
-			longJumped = false;
 			long[] PLAYER_ANIMATE = new long[13];
 			for(int i=0; i<13; i++)
 				PLAYER_ANIMATE[i]=20;
@@ -212,6 +247,8 @@ public abstract class Player extends AnimatedSprite {
 		        }
 		    });
 			jumping = false;
+			doubleJumped = false;
+			chargingDown = false;
 		}
 	}
 	
@@ -328,14 +365,6 @@ public abstract class Player extends AnimatedSprite {
 
 	public void setBody(Body body) {
 		this.body = body;
-	}
-
-	public boolean isLongJumped() {
-		return longJumped;
-	}
-
-	public void setLongJumped(boolean longJumped) {
-		this.longJumped = longJumped;
 	}
 
 	public boolean isSliding() {
