@@ -56,8 +56,8 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 		menuChildScene.buildAnimations();
 		menuChildScene.setBackgroundEnabled(false);
 		
-		playMenuItem.setPosition(281, 250); 
-		rankingMenuItem.setPosition(281, 335); 
+		playMenuItem.setPosition(255, 270); 
+		rankingMenuItem.setPosition(255, 365); 
 		
 		menuChildScene.setOnMenuItemClickListener(this);
 		setChildScene(menuChildScene);
