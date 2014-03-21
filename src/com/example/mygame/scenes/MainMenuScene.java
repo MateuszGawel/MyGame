@@ -13,6 +13,7 @@ import com.example.mygame.BaseScene;
 import com.example.mygame.ResourcesManager;
 import com.example.mygame.SceneManager;
 import com.example.mygame.SceneManager.SceneType;
+import com.example.mygame.scenes.ObstaclesPool;
 
 public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener{
 

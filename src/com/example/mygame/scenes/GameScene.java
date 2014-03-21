@@ -30,6 +30,7 @@ import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
 import org.andengine.input.touch.TouchEvent;
+import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.SAXUtils;
 import org.andengine.util.color.Color;
@@ -62,7 +63,7 @@ import com.example.mygame.SceneManager;
 import com.example.mygame.SceneManager.SceneType;
 
 public class GameScene extends BaseScene implements IOnSceneTouchListener {
-
+	
 	private HUD gameHUD;
 	private Text scoreText;
 	private int score = -2;
@@ -79,13 +80,13 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	private boolean firstUpdate = true;
 	Body crateBody;
 	Body pigBody;
-	List<Body> cratesTop;
-	List<Body> cratesBottom;
-	List<Body> pigs;
+	//List<Body> pigs;
 
 	Sprite sGameOver;
 	Sprite sReplay;
 	Sprite sMenu;
+	
+	ObstaclesPool pool;
 
 	private static final String HIGHSCORE_DB_NAME = "MyGameHighscores";
 	private static final String HIGHSCORE_LABEL = "score";
@@ -101,9 +102,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	public void createScene() {
 		backgroundLayer = new Entity();
 		foregroundLayer = new Entity();
-		cratesTop = new ArrayList<Body>();
-		cratesBottom = new ArrayList<Body>();
-		pigs = new ArrayList<Body>();
+		//pigs = new ArrayList<Body>();
 		createHUD();
 		createPhysics();
 		createGround();
@@ -113,6 +112,13 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		createPlayer();
 		attachChild(backgroundLayer);
 		attachChild(foregroundLayer);
+		
+		//robimy poola
+		pool = new ObstaclesPool(physicsWorld, player, foregroundLayer, resourcesManager, 800f);
+		//dodajemy tekstury
+		pool.AddSprite(new SpriteMeta(ResourcesManager.getInstance().obstacle_bottom_region, vbom), "crate"); //SpriteMeta w zasadzie jak Sprite tylko bez wspó³rzêdnych - to podamy juz w momencie generacji sprite'a
+		//dodajemy obiekt
+		pool.CreateObstacles(5, "crate", "crate", true); //wygenerowalismy sobie na dzien dobry piec skrzynek
 	}
 
 	@Override
@@ -168,43 +174,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		center += 400;
 	}
 
-	private void generateObstacle() {
-		if (new Random().nextInt(100) > 30) {
-			Sprite crate;
-			if (new Random().nextInt(100) >= 50) {
-				crate = new Sprite(center, 190, ResourcesManager.getInstance().obstacle_bottom_region, vbom);
-				crateBody = PhysicsFactory.createBoxBody(physicsWorld, crate, BodyType.StaticBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0));
-				crateBody.setUserData("obstacleBottom");
-				cratesBottom.add(crateBody);
-			} else {
-				crate = new Sprite(center, 155, ResourcesManager.getInstance().obstacle_bottom_region, vbom);
-				crateBody = PhysicsFactory.createBoxBody(physicsWorld, crate, BodyType.StaticBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0));
-				crateBody.setUserData("obstacleTop");
-				cratesTop.add(crateBody);
-			}
-			/*
-			if (new Random().nextInt(100) >= 80) {
-				createPig();
-			}*/
-
-			foregroundLayer.attachChild(crate);
-			physicsWorld.registerPhysicsConnector(new PhysicsConnector(crate, crateBody, true, false) {
-				@Override
-				public void onUpdate(float pSecondsElapsed) {
-					super.onUpdate(pSecondsElapsed);
-					for (int j = 0; j < cratesTop.size(); j++) {
-						Body newCrate = (Body) cratesTop.get(j);
-						for (int i = 0; i < newCrate.getFixtureList().size(); i++) {
-							if (player.isSliding() && player.isAlive())
-								newCrate.getFixtureList().get(i).setSensor(true);
-							else if (player.isAlive())
-								newCrate.getFixtureList().get(i).setSensor(false);
-						}
-					}
-				}
-			});
-		}
-	}
 /*
 	private void createPig(){
 		Sprite sPig = new Sprite(center, 155, ResourcesManager.getInstance().pig_region, vbom);
@@ -232,7 +201,9 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	}*/
 	private void createGround() {
 		generateLevelCoordinates();
-		generateObstacle();
+		
+		//teraz pool
+		if(pool != null) pool.setObstacle("crate", "crate");
 
 		// CHAIN SHAPES - DRAW LINES BETWEEN ALL COORDINATES
 		ChainShape myChain = new ChainShape();
@@ -416,29 +387,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		return false;
 	}
 
-	public void ignoreObstaclesCollision() {
-		for (int j = 0; j < cratesTop.size(); j++) {
-			Body newCrate = (Body) cratesTop.get(j);
-			for (int i = 0; i < newCrate.getFixtureList().size(); i++) {
-				newCrate.getFixtureList().get(i).setSensor(true);
-			}
-		}
-		for (int j = 0; j < cratesBottom.size(); j++) {
-			Body newCrate = (Body) cratesBottom.get(j);
-			for (int i = 0; i < newCrate.getFixtureList().size(); i++) {
-				newCrate.getFixtureList().get(i).setSensor(true);
-			}
-		}
-		/*
-		for (int j = 0; j < pigs.size(); j++) {
-			Body pig = (Body) pigs.get(j);
-			for (int i = 0; i < pig.getFixtureList().size(); i++) {
-				pig.getFixtureList().get(i).setSensor(true);
-			}
-		}
-		*/
-	}
-
 	private ContactListener contactListener() {
 		ContactListener contactListener = new ContactListener() {
 			@Override
@@ -465,11 +413,11 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				}
 
 				if (player.isAlive()&& (("player".equals(x1.getBody().getUserData()) && "obstacleBottom".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "obstacleBottom".equals(x1.getBody().getUserData())))) {
-					ignoreObstaclesCollision();
+					pool.IgnoreCollision();
 					player.dieBottom();
 				}
 				if (player.isAlive()&& !player.isSliding()&& (("player".equals(x1.getBody().getUserData()) && "obstacleTop".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "obstacleTop".equals(x1.getBody().getUserData())))) {
-					ignoreObstaclesCollision();
+					pool.IgnoreCollision();
 					player.dieTop();
 					System.out.println("contaclist");
 				}
