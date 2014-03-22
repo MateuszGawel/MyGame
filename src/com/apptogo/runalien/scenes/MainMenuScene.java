@@ -13,7 +13,7 @@ import com.apptogo.runalien.BaseScene;
 import com.apptogo.runalien.ResourcesManager;
 import com.apptogo.runalien.SceneManager;
 import com.apptogo.runalien.SceneManager.SceneType;
-import com.apptogo.runalien.scenes.ObstaclesPool;
+import com.apptogo.runalien.obstacles.ObstaclesPoolManager;
 
 public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener{
 

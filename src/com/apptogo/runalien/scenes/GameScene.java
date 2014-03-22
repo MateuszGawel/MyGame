@@ -51,6 +51,8 @@ import com.apptogo.runalien.R;
 import com.apptogo.runalien.ResourcesManager;
 import com.apptogo.runalien.SceneManager;
 import com.apptogo.runalien.SceneManager.SceneType;
+import com.apptogo.runalien.obstacles.ObstacleGenerator;
+import com.apptogo.runalien.obstacles.ObstaclesPoolManager;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -66,45 +68,50 @@ import com.google.android.gms.games.Games;
 
 public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	
+	//main objects
 	private HUD gameHUD;
-	private Text scoreText;
-	private int score = -2;
 	private PhysicsWorld physicsWorld;
 	private Player player;
-	private boolean firstTouch = false;
-	private Text bestScoreText;
+	ObstacleGenerator obstacleGenerator;
+	
+	//ground
 	private int center = 0, center2;
 	final int LEVEL_BLOCK_LENGTH = 5;
 	private TexturedPolygon ground;
+	private Vector2[] levelCoordinates;
+	
+	//background
 	private AutoParallaxBackground autoParallaxBackground;
 	private ParallaxEntity frontParallaxBackground;
 	private ParallaxEntity grassParallaxBackground;
+	
+	//flags
 	private boolean firstUpdate = true;
-	Body crateBody;
-	Body pigBody;
-	//List<Body> pigs;
+	private boolean firstTouch = false;
 
+	//gameover sprites
 	Sprite sGameOver;
 	Sprite sReplay;
 	Sprite sMenu;
-	
-	ObstaclesPool pool;
 
+	//local highscore 
 	private static final String HIGHSCORE_DB_NAME = "MyGameHighscores";
 	private static final String HIGHSCORE_LABEL = "score";
 	private SharedPreferences mScoreDb = activity.getSharedPreferences(HIGHSCORE_DB_NAME, Context.MODE_PRIVATE);
 	private SharedPreferences.Editor mScoreDbEditor = this.mScoreDb.edit();
-
-	private Vector2[] levelCoordinates;
-
+	private int score = -2;
+	private Text bestScoreText;
+	private Text scoreText; //actual score top-left corner
+	
+	//layers
 	Entity backgroundLayer;
 	Entity foregroundLayer;
 
+	//OVERRIDEN METHODS
 	@Override
 	public void createScene() {
 		backgroundLayer = new Entity();
 		foregroundLayer = new Entity();
-		//pigs = new ArrayList<Body>();
 		createHUD();
 		createPhysics();
 		createGround();
@@ -114,20 +121,13 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		createPlayer();
 		attachChild(backgroundLayer);
 		attachChild(foregroundLayer);
-		
-		//robimy poola
-		pool = new ObstaclesPool(physicsWorld, player, foregroundLayer, 800f);
-		//dodajemy tekstury
-		pool.AddSprite(new SpriteMeta(ResourcesManager.getInstance().obstacle_bottom_region, "crate") ); //SpriteMeta w zasadzie jak Sprite tylko bez wspó³rzêdnych - to podamy juz w momencie generacji sprite'a
-		//dodajemy obiekt
-		pool.CreateObstacles(5, "crateUpper", "crate", 145); //wygenerowalismy sobie na dzien dobry piec skrzynek
-		pool.CreateObstacles(5, "crateBottom", "crate", 195); //wygenerowalismy sobie na dzien dobry piec skrzynek
+		ObstaclesPoolManager.getInstance().initializePoolManager(physicsWorld);
+		obstacleGenerator = new ObstacleGenerator();
 	}
 
 	@Override
 	public void onBackKeyPressed() {
 		sceneManager.loadMenuScene();
-		// System.exit(0);
 	}
 
 	@Override
@@ -141,12 +141,10 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		camera.setChaseEntity(null);
 		camera.setBoundsEnabled(false);
 		camera.setCenter(400, 240);
-		pool = null;
 		//powywalac reszte 
 	}
 
-	// ADDITIONAL METHODS
-
+	//GROUND AND BACKGROUND
 	private void createBackground() {
 		autoParallaxBackground = new AutoParallaxBackground(0, 0, 0, 5);
 		autoParallaxBackground.attachParallaxEntity(new ParallaxEntity(0.0f, new Sprite(0, 0, resourcesManager.mParallaxLayerBack, resourcesManager.vbom)));
@@ -161,14 +159,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		setBackground(autoParallaxBackground);
 	}
 
-	private void createBestScoreTable() {
-		Sprite sSign = new Sprite(600, 50, resourcesManager.sign_region, resourcesManager.vbom);
-		foregroundLayer.attachChild(sSign);
-		bestScoreText = new Text(0, 0, ResourcesManager.getInstance().bestScoreFont, "012345679", ResourcesManager.getInstance().vbom);
-		bestScoreText.setPosition(660, 110);
-		foregroundLayer.attachChild(bestScoreText);
-	}
-
 	private void generateLevelCoordinates() {
 		levelCoordinates = null;
 		levelCoordinates = new Vector2[4];
@@ -179,38 +169,8 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		center += 400;
 	}
 
-/*
-	private void createPig(){
-		Sprite sPig = new Sprite(center, 155, ResourcesManager.getInstance().pig_region, vbom);
-		pigBody = PhysicsFactory.createBoxBody(physicsWorld, sPig, BodyType.KinematicBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0));
-		
-		physicsWorld.registerPhysicsConnector(new PhysicsConnector(sPig, pigBody, true, false) {
-			boolean pigSoundPlayed = false;
-			@Override
-			public void onUpdate(float pSecondsElapsed) {
-				super.onUpdate(pSecondsElapsed);
-				if(pigBody.getPosition().x < player.getBody().getPosition().x + 600 && !pigSoundPlayed){
-					ResourcesManager.getInstance().pigSound.play();
-					System.out.println("TST");
-					pigSoundPlayed = true;
-				}
-				else if(pigBody.getPosition().x < player.getBody().getPosition().x - 40)
-					ResourcesManager.getInstance().pigSound.pause();
-			}
-		});
-		
-		pigBody.setLinearVelocity(-5, 0);
-		foregroundLayer.attachChild(sPig);
-		pigBody.setUserData("pig");
-		pigs.add(pigBody);
-	}*/
 	private void createGround() {
 		generateLevelCoordinates();
-		
-		//teraz pool
-		//if(pool != null) pool.setObstacle("crateUpper");
-
-		// CHAIN SHAPES - DRAW LINES BETWEEN ALL COORDINATES
 		ChainShape myChain = new ChainShape();
 		Vector2[] myV2 = new Vector2[levelCoordinates.length];
 		for (int i = 0; i < levelCoordinates.length; i++) {
@@ -231,8 +191,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		mChainBody.createFixture(mFixtureDef);
 		myChain.dispose();
 
-		// TEXTURED POLYGON 2 - DIRT - TEXTURE REGION MUST BE FROM A REPEATING
-		// ATLAS
+		// TEXTURED POLYGON 2 - DIRT - TEXTURE REGION MUST BE FROM A REPEATING ATLAS
 		float[] vertexX2 = new float[myV2.length];
 		float[] vertexY2 = new float[myV2.length];
 
@@ -248,6 +207,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		// backgroundLayer.attachChild(new DebugRenderer(physicsWorld, vbom));
 	}
 
+	//MAIN OBJECTS METHODS
 	private void createHUD() {
 		gameHUD = new HUD();
 		scoreText = new Text(0, 0, ResourcesManager.getInstance().mainFont, "score: 0123456789", new TextOptions(), vbom);
@@ -351,6 +311,15 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		}));
 	}
 
+	//SCORE METHODS
+	private void createBestScoreTable() {
+		Sprite sSign = new Sprite(600, 50, resourcesManager.sign_region, resourcesManager.vbom);
+		foregroundLayer.attachChild(sSign);
+		bestScoreText = new Text(0, 0, ResourcesManager.getInstance().bestScoreFont, "012345679", ResourcesManager.getInstance().vbom);
+		bestScoreText.setPosition(660, 110);
+		foregroundLayer.attachChild(bestScoreText);
+	}
+	
 	private void setScore(int score) {
 		scoreText.setText("SCORE: " + score);
 		if (firstUpdate) {
@@ -373,8 +342,8 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 			return this.mScoreDb.getInt(HIGHSCORE_LABEL, 0);
 	}
 
+	
 	// LISTENERS
-
 	@Override
 	public boolean onSceneTouchEvent(Scene pScene, TouchEvent pSceneTouchEvent) {
 		if (pSceneTouchEvent.isActionDown()) {
@@ -382,6 +351,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				player.setRunning();
 				firstTouch = true;
 				autoParallaxBackground.start();
+				obstacleGenerator.startObstacleGenerationAlgorithm();
 			} else if (pSceneTouchEvent.getX() > player.getX() + 200) {
 				player.doubleJump();
 				player.jump();
@@ -419,11 +389,11 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				}
 
 				if (player.isAlive()&& (("player".equals(x1.getBody().getUserData()) && "obstacleBottom".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "obstacleBottom".equals(x1.getBody().getUserData())))) {
-					pool.IgnoreCollision();
+					//pool.IgnoreCollision();
 					player.dieBottom();
 				}
 				if (player.isAlive()&& !player.isSliding()&& (("player".equals(x1.getBody().getUserData()) && "obstacleTop".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "obstacleTop".equals(x1.getBody().getUserData())))) {
-					pool.IgnoreCollision();
+					//pool.IgnoreCollision();
 					player.dieTop();
 					System.out.println("contaclist");
 				}

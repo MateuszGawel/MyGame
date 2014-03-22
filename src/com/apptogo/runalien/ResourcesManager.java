@@ -52,10 +52,8 @@ public class ResourcesManager {
 	private BuildableBitmapTextureAtlas menuTextureAtlas;
 	
 	//GAME RESOURCES
-	public ITextureRegion obstacle_top_region;
-	public ITextureRegion obstacle_bottom_region;
+	public ITextureRegion crate_region;
 	public ITextureRegion sign_region;
-	public ITextureRegion pig_region;
 	public ITiledTextureRegion player_region;
 	public ITiledTextureRegion player_slide_region;
 	public BuildableBitmapTextureAtlas gameTextureAtlas;
@@ -174,12 +172,11 @@ public class ResourcesManager {
 	    playerTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 2048, 2048, TextureOptions.BILINEAR);
 	    
 	    //obstacle_top_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "obstacle_top.png");
-	    obstacle_bottom_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "obstacle_bottom.png");
+	    crate_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "crate_region.png");
 	    sign_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "sign.png");	        
 	    game_over_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "game_over.png");
 	    replay_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "replay.png");
 	    menu_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "menu.png");
-	    pig_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "pig.png");
 	    
 	    player_region = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(playerTextureAtlas, activity, "player.png", 12, 11);
 	    
