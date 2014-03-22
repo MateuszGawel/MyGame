@@ -38,7 +38,7 @@ public class ResourcesManager {
 	public Font mainFont;
 	public Font bestScoreFont;
 	
-	//SPLASH RESOURCES
+	//  RESOURCES
 	public ITextureRegion splash_region;
 	private BitmapTextureAtlas splashTextureAtlas;
 	
