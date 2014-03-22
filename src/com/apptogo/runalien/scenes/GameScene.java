@@ -1,4 +1,4 @@
-package com.example.mygame.scenes;
+package com.apptogo.runalien.scenes;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,6 +45,12 @@ import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.view.MotionEvent;
 
+import com.apptogo.runalien.BaseScene;
+import com.apptogo.runalien.Player;
+import com.apptogo.runalien.R;
+import com.apptogo.runalien.ResourcesManager;
+import com.apptogo.runalien.SceneManager;
+import com.apptogo.runalien.SceneManager.SceneType;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -56,11 +62,7 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.example.mygame.BaseScene;
-import com.example.mygame.Player;
-import com.example.mygame.ResourcesManager;
-import com.example.mygame.SceneManager;
-import com.example.mygame.SceneManager.SceneType;
+import com.google.android.gms.games.Games;
 
 public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	
@@ -355,6 +357,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	}
 
 	public boolean saveHighScore() {
+		Games.Leaderboards.submitScore(ResourcesManager.getInstance().activity.getGoogleApiClient(), activity.getResources().getString(R.string.leaderboard_highscores), this.score);
 		if (score > loadHighScore())
 			this.mScoreDbEditor.putInt(HIGHSCORE_LABEL, this.score);
 		return this.mScoreDbEditor.commit();

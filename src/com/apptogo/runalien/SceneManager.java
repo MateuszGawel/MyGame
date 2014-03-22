@@ -1,4 +1,4 @@
-package com.example.mygame;
+package com.apptogo.runalien;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -7,10 +7,10 @@ import org.andengine.engine.Engine;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
 
-import com.example.mygame.scenes.GameScene;
-import com.example.mygame.scenes.LoadingScene;
-import com.example.mygame.scenes.MainMenuScene;
-import com.example.mygame.scenes.SplashScene;
+import com.apptogo.runalien.scenes.GameScene;
+import com.apptogo.runalien.scenes.LoadingScene;
+import com.apptogo.runalien.scenes.MainMenuScene;
+import com.apptogo.runalien.scenes.SplashScene;
 
 public class SceneManager {
 

@@ -1,4 +1,4 @@
-package com.example.mygame;
+package com.apptogo.runalien;
 
 import java.io.IOException;
 
@@ -23,12 +23,15 @@ import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.debug.Debug;
 
+import com.apptogo.runalien.utils.GameHelper;
+
 import android.graphics.Color;
 
 public class ResourcesManager {
 
 	private static final ResourcesManager INSTANCE = new ResourcesManager();
 	
+	public GameHelper gameHelper;
 	public Engine engine;
 	public GameActivity activity;
 	public BoundCamera camera;
@@ -265,11 +268,12 @@ public class ResourcesManager {
 	}
 	
 	//OTHERS
-	public static void prepareManager(Engine engine, GameActivity activity, BoundCamera camera, VertexBufferObjectManager vbom){
+	public static void prepareManager(Engine engine, GameActivity activity, BoundCamera camera, VertexBufferObjectManager vbom, GameHelper gameHelper){
 		getInstance().engine = engine;
 		getInstance().activity = activity;
 		getInstance().camera = camera;
 		getInstance().vbom = vbom;
+		getInstance().gameHelper = gameHelper;
 	}
 	
 	public static ResourcesManager getInstance(){

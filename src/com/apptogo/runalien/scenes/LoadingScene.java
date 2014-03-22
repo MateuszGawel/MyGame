@@ -1,12 +1,12 @@
-package com.example.mygame.scenes;
+package com.apptogo.runalien.scenes;
 
 import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.text.Text;
 import org.andengine.util.color.Color;
 
-import com.example.mygame.BaseScene;
-import com.example.mygame.ResourcesManager;
-import com.example.mygame.SceneManager.SceneType;
+import com.apptogo.runalien.BaseScene;
+import com.apptogo.runalien.ResourcesManager;
+import com.apptogo.runalien.SceneManager.SceneType;
 
 public class LoadingScene extends BaseScene{
 

@@ -1,4 +1,4 @@
-package com.example.mygame.scenes;
+package com.apptogo.runalien.scenes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,10 +10,10 @@ import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
 
+import com.apptogo.runalien.Player;
+import com.apptogo.runalien.ResourcesManager;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.example.mygame.Player;
-import com.example.mygame.ResourcesManager;
 
 public class ObstaclesPool
 {

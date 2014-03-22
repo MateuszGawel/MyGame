@@ -1,4 +1,4 @@
-package com.example.mygame.scenes;
+package com.apptogo.runalien.scenes;
 
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.opengl.texture.region.ITextureRegion;

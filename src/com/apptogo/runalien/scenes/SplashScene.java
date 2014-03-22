@@ -1,11 +1,11 @@
-package com.example.mygame.scenes;
+package com.apptogo.runalien.scenes;
 
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.opengl.util.GLState;
 import org.andengine.engine.camera.Camera;
 
-import com.example.mygame.BaseScene;
-import com.example.mygame.SceneManager.SceneType;
+import com.apptogo.runalien.BaseScene;
+import com.apptogo.runalien.SceneManager.SceneType;
 
 public class SplashScene extends BaseScene{
 

@@ -1,11 +1,11 @@
-package com.example.mygame;
+package com.apptogo.runalien;
 
 import org.andengine.engine.Engine;
 import org.andengine.engine.camera.BoundCamera;
 import org.andengine.entity.scene.Scene;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
-import com.example.mygame.SceneManager.SceneType;
+import com.apptogo.runalien.SceneManager.SceneType;
 
 import android.app.Activity;
 

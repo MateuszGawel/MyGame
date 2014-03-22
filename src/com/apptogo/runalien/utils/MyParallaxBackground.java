@@ -1,4 +1,4 @@
-package com.example.mygame.utils;
+package com.apptogo.runalien.utils;
 
 import java.util.ArrayList;
 

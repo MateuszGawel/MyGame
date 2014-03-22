@@ -1,4 +1,4 @@
-package com.example.mygame;
+package com.apptogo.runalien;
 
 import org.andengine.audio.music.Music;
 import org.andengine.engine.camera.BoundCamera;
