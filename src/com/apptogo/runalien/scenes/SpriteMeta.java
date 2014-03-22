@@ -8,21 +8,22 @@ import com.apptogo.runalien.ResourcesManager;
 
 public class SpriteMeta 
 {
-	private String userData;
 	private ITextureRegion textureRegion;
 	private VertexBufferObjectManager vertexBuffer;
+	private Object userData;
 	
-	public SpriteMeta(ITextureRegion pTextureRegion)
+	public SpriteMeta(ITextureRegion pTextureRegion, Object pUserData)
 	{
 		textureRegion = pTextureRegion;
 		vertexBuffer = ResourcesManager.getInstance().vbom;
+		userData = pUserData;
 	}
 
-	public void setUserData(String data) {
+	public void setUserData(Object data) {
 		userData = data;
 	}
 
-	public String getUserData() {
+	public Object getUserData() {
 		return userData;
 	}
 

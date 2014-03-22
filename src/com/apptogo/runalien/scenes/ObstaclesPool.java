@@ -19,11 +19,12 @@ public class ObstaclesPool
 {
 	public List<Body> bodiesList;
 	public List<SpriteMeta> spritesList;
-	private List<String> upperObstaclesList;
+
 	private PhysicsWorld physicsWorld;
 	private Player player;
 	private Entity foregroundLayer;
 	private ResourcesManager resourcesManager;
+	private Body body;
 	
 	private float windowWidth;
 	private int characterIndent;
@@ -39,7 +40,7 @@ public class ObstaclesPool
 		
 		bodiesList = new ArrayList<Body>();
 		spritesList = new ArrayList<SpriteMeta>();
-		upperObstaclesList = new ArrayList<String>();
+
 		lastObstacleX = 20;
 	}
 	
@@ -53,14 +54,18 @@ public class ObstaclesPool
 		characterIndent = c;
 	}
 	
-	public int CalculateObstaclePosition()
+	private float getPlayerPositionX()
 	{
-		return (int)(player.getX() + 2000);
+		return player.getX()/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT;
 	}
 	
-	public void AddSprite(SpriteMeta spriteMeta, String spriteName)
+	public int CalculateObstaclePosition()
 	{
-		spriteMeta.setUserData(spriteName);
+		return (int)((player.getX()+800)/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
+	}
+	
+	public void AddSprite(SpriteMeta spriteMeta)
+	{
 		spritesList.add(spriteMeta);
 	}
 	
@@ -68,6 +73,7 @@ public class ObstaclesPool
 	{
 		for(SpriteMeta s: spritesList)
 		{
+			System.out.println("LOG"+spriteName+"     "+s.getUserData());
 			if( spriteName.equals( (String)s.getUserData() ) )
 			{
 				return s.CreateSprite(x,y);
@@ -76,26 +82,19 @@ public class ObstaclesPool
 		
 		return null; //tu ofc powinien byc wyjatek ale to potem ;P
 	}
-	
-	private boolean IsObstacleUpper(String obstacleTypeName)
-	{
-		return upperObstaclesList.contains(obstacleTypeName);
-	}
-	
-	public void CreateObstacles(int amount, String obstacleTypeName, String spriteName, final boolean isUpper)
+		
+	public void CreateObstacles(int amount, String obstacleTypeName, String spriteName, int y)
 	{
 		for(int i=0; i<amount; i++)
 		{			
-			Sprite sprite = GetSprite(spriteName, -1000, 0);
-			
-			final Body body = PhysicsFactory.createBoxBody(physicsWorld, sprite, BodyType.StaticBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0));
-			//Body body = PhysicsFactory.createBoxBody(physicsWorld, new Sprite(-100, 190, ResourcesManager.getInstance().obstacle_bottom_region, resourcesManager.vbom), BodyType.StaticBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0));
-			
-			//--
-			System.out.println("LOG:!!!!!!!!!!! pozycjaX="+body.getPosition().x+" pozycjaY="+body.getPosition().y);
+			Sprite sprite = GetSprite(spriteName, 150, y);
 
+			body = PhysicsFactory.createBoxBody(physicsWorld, sprite, BodyType.StaticBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0));
+			body.setUserData(obstacleTypeName);
+			System.out.println("LOG: UD "+body.getUserData());
 			foregroundLayer.attachChild( sprite ); //attaching sprite
-			
+
+			//doczytac czy ok
 			physicsWorld.registerPhysicsConnector(new PhysicsConnector(sprite, body, true, false) 
 			{
 				@Override
@@ -106,8 +105,9 @@ public class ObstaclesPool
 					//{
 						for (int i = 0; i < body.getFixtureList().size(); i++) 
 						{
-							if (player.isSliding() && player.isAlive() && isUpper )
-								body.getFixtureList().get(i).setSensor(true); 
+							//System.out.println("LOG: GORNA "+body.getUserData().toString());
+							if (player.isSliding() && player.isAlive() && body.getUserData().toString().toLowerCase().contains("upper") )
+								body.getFixtureList().get(i).setSensor(true);
 							else if (player.isAlive())
 								body.getFixtureList().get(i).setSensor(false);
 						}
@@ -115,30 +115,21 @@ public class ObstaclesPool
 				}
 			});
 			
-			
-			body.setUserData(obstacleTypeName);
 			bodiesList.add(body);
-		}
-		
-		if(isUpper)
-		{
-			upperObstaclesList.add(obstacleTypeName);
 		}
 		
 	}
 	
-	public void setObstacle(String obstacleTypeName, String spriteName) //int wrapper
-	{
+	public void setObstacle(String obstacleTypeName) //int wrapper
+	{int ctr = 0;
 		for(Body b: bodiesList)
-		{
-			if( obstacleTypeName.equals( (String)b.getUserData() ) && b.getPosition().x < player.getX() )
-			{System.out.println("LOG: ZNALAZLEM! "+b.getPosition().x+" a player: "+player.getX() );
-
+		{ctr++;
+			int bodyX = (int)b.getPosition().x;
+			int playerX = (int)getPlayerPositionX();
+			
+			if( obstacleTypeName.equals( (String)b.getUserData() ) && bodyX < playerX )
+			{System.out.println("LOG: wzialem numer "+ctr+" player="+playerX+" b position="+bodyX);
 				b.setTransform( CalculateObstaclePosition(), b.getPosition().y, 0);
-
-				
-				
-				System.out.println("LOG: PO = " + b.getPosition().x+" a player: "+player.getX() );
 			}
 			
 			break; //nothing to do here :>
@@ -155,15 +146,6 @@ public class ObstaclesPool
 				b.getFixtureList().get(i).setSensor(true);
 			}
 		}
-		
-		/*
-		for (int j = 0; j < pigs.size(); j++) {
-			Body pig = (Body) pigs.get(j);
-			for (int i = 0; i < pig.getFixtureList().size(); i++) {
-				pig.getFixtureList().get(i).setSensor(true);
-			}
-		}
-		*/
 	}
 	
 }

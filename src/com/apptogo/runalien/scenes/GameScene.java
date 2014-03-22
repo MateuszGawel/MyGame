@@ -118,9 +118,10 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		//robimy poola
 		pool = new ObstaclesPool(physicsWorld, player, foregroundLayer, 800f);
 		//dodajemy tekstury
-		pool.AddSprite(new SpriteMeta(ResourcesManager.getInstance().obstacle_bottom_region), "crate"); //SpriteMeta w zasadzie jak Sprite tylko bez wspó³rzêdnych - to podamy juz w momencie generacji sprite'a
+		pool.AddSprite(new SpriteMeta(ResourcesManager.getInstance().obstacle_bottom_region, "crate") ); //SpriteMeta w zasadzie jak Sprite tylko bez wspó³rzêdnych - to podamy juz w momencie generacji sprite'a
 		//dodajemy obiekt
-		pool.CreateObstacles(5, "crate", "crate", true); //wygenerowalismy sobie na dzien dobry piec skrzynek
+		pool.CreateObstacles(5, "crateUpper", "crate", 145); //wygenerowalismy sobie na dzien dobry piec skrzynek
+		pool.CreateObstacles(5, "crateBottom", "crate", 195); //wygenerowalismy sobie na dzien dobry piec skrzynek
 	}
 
 	@Override
@@ -207,7 +208,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		generateLevelCoordinates();
 		
 		//teraz pool
-		if(pool != null) pool.setObstacle("crate", "crate");
+		//if(pool != null) pool.setObstacle("crateUpper");
 
 		// CHAIN SHAPES - DRAW LINES BETWEEN ALL COORDINATES
 		ChainShape myChain = new ChainShape();
