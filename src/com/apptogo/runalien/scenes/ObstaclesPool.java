@@ -29,12 +29,12 @@ public class ObstaclesPool
 	private int characterIndent;
 	private int lastObstacleX;
 	
-	public ObstaclesPool(PhysicsWorld pw, Player p, Entity f, ResourcesManager r, float ww)
+	public ObstaclesPool(PhysicsWorld pw, Player p, Entity f, float ww)
 	{
 		physicsWorld = pw;
 		player = p;
 		foregroundLayer = f;
-		resourcesManager = r;
+		resourcesManager = ResourcesManager.getInstance();
 		windowWidth = ww;
 		
 		bodiesList = new ArrayList<Body>();

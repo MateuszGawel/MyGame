@@ -116,9 +116,9 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		attachChild(foregroundLayer);
 		
 		//robimy poola
-		pool = new ObstaclesPool(physicsWorld, player, foregroundLayer, resourcesManager, 800f);
+		pool = new ObstaclesPool(physicsWorld, player, foregroundLayer, 800f);
 		//dodajemy tekstury
-		pool.AddSprite(new SpriteMeta(ResourcesManager.getInstance().obstacle_bottom_region, vbom), "crate"); //SpriteMeta w zasadzie jak Sprite tylko bez wspó³rzêdnych - to podamy juz w momencie generacji sprite'a
+		pool.AddSprite(new SpriteMeta(ResourcesManager.getInstance().obstacle_bottom_region), "crate"); //SpriteMeta w zasadzie jak Sprite tylko bez wspó³rzêdnych - to podamy juz w momencie generacji sprite'a
 		//dodajemy obiekt
 		pool.CreateObstacles(5, "crate", "crate", true); //wygenerowalismy sobie na dzien dobry piec skrzynek
 	}
@@ -140,6 +140,8 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		camera.setChaseEntity(null);
 		camera.setBoundsEnabled(false);
 		camera.setCenter(400, 240);
+		pool = null;
+		//powywalac reszte 
 	}
 
 	// ADDITIONAL METHODS
