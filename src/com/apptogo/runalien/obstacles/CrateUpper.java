@@ -19,4 +19,14 @@ public class CrateUpper {
 		body = PhysicsFactory.createBoxBody(physicsWorld, sprite, BodyType.StaticBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0));
 		body.setUserData("crateUpper");
 	}
+	
+	public Sprite GetSprite()
+	{
+		return sprite;
+	}
+	
+	public Body GetBody()
+	{
+		return body;
+	}
 }

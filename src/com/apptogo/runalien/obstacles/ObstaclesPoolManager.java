@@ -18,6 +18,8 @@ public class ObstaclesPoolManager
 
 	public ObstaclesPoolManager(){
 
+		crateBottomPool = new Stack<CrateBottom>();
+		crateUpperPool = new Stack<CrateUpper>();
 	}
 	
 	public void initializePoolManager(PhysicsWorld physicsWorld){

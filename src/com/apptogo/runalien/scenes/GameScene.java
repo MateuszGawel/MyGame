@@ -122,7 +122,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		attachChild(backgroundLayer);
 		attachChild(foregroundLayer);
 		ObstaclesPoolManager.getInstance().initializePoolManager(physicsWorld);
-		obstacleGenerator = new ObstacleGenerator();
+		obstacleGenerator = new ObstacleGenerator(foregroundLayer);
 	}
 
 	@Override
