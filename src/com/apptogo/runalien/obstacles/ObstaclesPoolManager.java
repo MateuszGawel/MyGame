@@ -2,6 +2,7 @@ package com.apptogo.runalien.obstacles;
 
 import java.util.Stack;
 
+import org.andengine.entity.Entity;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 
 import com.badlogic.gdx.physics.box2d.Body;
@@ -22,12 +23,12 @@ public class ObstaclesPoolManager
 		crateUpperPool = new Stack<CrateUpper>();
 	}
 	
-	public void initializePoolManager(PhysicsWorld physicsWorld){
+	public void initializePoolManager(PhysicsWorld physicsWorld, Entity foregroundLayer){
 		for(int i=crateBottomAmmount; i>0; i--){
-			crateBottomPool.push(new CrateBottom(physicsWorld));
+			crateBottomPool.push(new CrateBottom(physicsWorld, foregroundLayer));
 		}
 		for(int i=crateUpperAmmount; i>0; i--){
-			crateUpperPool.push(new CrateUpper(physicsWorld));
+			crateUpperPool.push(new CrateUpper(physicsWorld, foregroundLayer));
 		}
 	}
 	

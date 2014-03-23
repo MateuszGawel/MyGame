@@ -1,49 +1,27 @@
 package com.apptogo.runalien.scenes;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import org.andengine.engine.camera.hud.HUD;
 import org.andengine.engine.handler.IUpdateHandler;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.entity.Entity;
-import org.andengine.entity.IEntity;
-
 import org.andengine.entity.modifier.MoveXModifier;
-import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.primitive.TexturedPolygon;
 import org.andengine.entity.scene.IOnSceneTouchListener;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.scene.background.AutoParallaxBackground;
-import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.scene.background.ParallaxBackground.ParallaxEntity;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
-import org.andengine.extension.debugdraw.DebugRenderer;
 import org.andengine.extension.physics.box2d.FixedStepPhysicsWorld;
-import org.andengine.extension.physics.box2d.PhysicsConnector;
-import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
 import org.andengine.input.touch.TouchEvent;
-import org.andengine.opengl.texture.region.ITextureRegion;
-import org.andengine.opengl.vbo.VertexBufferObjectManager;
-import org.andengine.util.SAXUtils;
-import org.andengine.util.color.Color;
-import org.andengine.util.level.constants.LevelConstants;
 import org.andengine.util.modifier.ease.EaseElasticInOut;
-
-import org.xml.sax.Attributes;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.SystemClock;
-import android.preference.PreferenceManager;
-import android.view.MotionEvent;
 
 import com.apptogo.runalien.BaseScene;
 import com.apptogo.runalien.Player;
@@ -121,8 +99,8 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		createPlayer();
 		attachChild(backgroundLayer);
 		attachChild(foregroundLayer);
-		ObstaclesPoolManager.getInstance().initializePoolManager(physicsWorld);
-		obstacleGenerator = new ObstacleGenerator(foregroundLayer);
+		ObstaclesPoolManager.getInstance().initializePoolManager(physicsWorld, foregroundLayer);
+		obstacleGenerator = new ObstacleGenerator(this, player);
 	}
 
 	@Override
