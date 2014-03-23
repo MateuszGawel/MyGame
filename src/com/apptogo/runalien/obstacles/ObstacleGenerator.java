@@ -30,52 +30,52 @@ public class ObstacleGenerator {
 		return player.getX()/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT;
 	}
 	
-	private void ReleaseUselessObstacles()
+	private void releaseUselessObstacles()
 	{
 		System.out.println("POOL "+"Releasing");
 		int ctr = 0;
-		for(Obstacle o: usedObstacles)
+		for(Obstacle obstacle: usedObstacles)
 		{
-			if( o.getBody().getPosition().x < getPlayerPositionX() - 20 )
+			if( obstacle.getBody().getPosition().x < getPlayerPositionX() - 20 )
 			{ctr++;
-				usedObstacles.remove(o);
-				if( ( (String)(o.getBody().getUserData()) ).equals("crateUpper") )
+				usedObstacles.remove(obstacle);
+				if( ( (String)(obstacle.getBody().getUserData()) ).equals("crateUpper") )
 				{
-					obstaclesPoolManager.crateUpperPool.push( (CrateUpper)o );
+					obstaclesPoolManager.crateUpperPool.push( (CrateUpper)obstacle );
 				}
-				if( ( (String)(o.getBody().getUserData()) ).equals("crateBottom") )
+				if( ( (String)(obstacle.getBody().getUserData()) ).equals("crateBottom") )
 				{
-					obstaclesPoolManager.crateBottomPool.push( (CrateBottom)o );
+					obstaclesPoolManager.crateBottomPool.push( (CrateBottom)obstacle );
 				}
 			}
 		}
 		System.out.println("POOL "+"Released obstacles: "+ctr);
 	}
 	
-	public int CalculateObstaclePosition()
+	public int calculateObstaclePosition()
 	{ 
 		return (int)( (player.getX() + 800)/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT );
 	}
 	
-	private void SetObstacle()
+	private void setObstacle()
 	{
 		System.out.println("POOL "+"Setting obstacles");
-		Obstacle o = null;
+		Obstacle obstacle = null;
 		
 		if( !obstaclesPoolManager.crateBottomPool.isEmpty() )
 		{
-			o = obstaclesPoolManager.crateBottomPool.pop();
+			obstacle = obstaclesPoolManager.crateBottomPool.pop();
 			System.out.println("POOL "+"Getting Bottom obstacle | left: "+obstaclesPoolManager.crateBottomPool.size());
 		}
 		else if( !obstaclesPoolManager.crateUpperPool.isEmpty() )
 		{
-			o = obstaclesPoolManager.crateUpperPool.pop();
+			obstacle = obstaclesPoolManager.crateUpperPool.pop();
 			System.out.println("POOL "+"Getting Upper obstacle | left: "+obstaclesPoolManager.crateUpperPool.size());
 		}
 		
-		o.getBody().setTransform( CalculateObstaclePosition(), 100, 0);
-		usedObstacles.add(o);
-		System.out.println("POOL "+"Obstacle set: "+o.getBody().getPosition().x+" player = "+player.getX());
+		obstacle.getBody().setTransform( calculateObstaclePosition(), 100, 0);
+		usedObstacles.add(obstacle);
+		System.out.println("POOL "+"Obstacle set: "+obstacle.getBody().getPosition().x+" player = "+player.getX());
 		System.out.println("POOL "+"Used obstacles count: "+usedObstacles.size() );
 	}
 	
@@ -87,7 +87,7 @@ public class ObstacleGenerator {
 				//ReleaseUselessObstacles(); - to powoduje ConcurrentModificationEception oO
 				if( obstaclesPoolManager.IsNotEmpty() )
 				{
-					SetObstacle();
+					setObstacle();
 				}
 			    //tutaj metody ktore sprawdzalyby pozycje playera, w celu wstawienia nowego bloku przeszkod lub pojedynczej przeszkody (osobne metody)
 				//oraz usuwalyby te przeszkody z usedObstacles ktore sa poza ekranem robiac im po prostu push();

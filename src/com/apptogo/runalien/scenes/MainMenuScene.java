@@ -10,10 +10,13 @@ import org.andengine.opengl.util.GLState;
 import org.andengine.engine.camera.Camera;
 
 import com.apptogo.runalien.BaseScene;
+import com.apptogo.runalien.R;
 import com.apptogo.runalien.ResourcesManager;
 import com.apptogo.runalien.SceneManager;
 import com.apptogo.runalien.SceneManager.SceneType;
 import com.apptogo.runalien.obstacles.ObstaclesPoolManager;
+import com.apptogo.runalien.utils.GoogleBaseGameActivity;
+import com.google.android.gms.games.Games;
 
 public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener{
 
@@ -86,7 +89,12 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 			sceneManager.loadGameScene();
 			return true;
 		case MENU_OPTIONS:
-			resourcesManager.gameHelper.manualConnect();
+			if(((GoogleBaseGameActivity)activity).isSignedIn())
+				((GoogleBaseGameActivity)activity).startActivityForResult(Games.Leaderboards.getLeaderboardIntent(((GoogleBaseGameActivity)activity).getApiClient(), activity.getResources().getString(R.string.leaderboard_highscores)), 0);
+			else{
+				resourcesManager.gameHelper.manualConnect();
+				//((GoogleBaseGameActivity)activity).startActivityForResult(Games.Leaderboards.getLeaderboardIntent(((GoogleBaseGameActivity)activity).getApiClient(), activity.getResources().getString(R.string.leaderboard_highscores)), 0);
+			}
 			return true;
 		default:
 			return false;

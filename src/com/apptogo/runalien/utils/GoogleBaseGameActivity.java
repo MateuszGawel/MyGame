@@ -124,11 +124,11 @@ public abstract class GoogleBaseGameActivity extends BaseGameActivity implements
         mHelper.onActivityResult(request, response, data);
     }
 
-    protected GoogleApiClient getApiClient() {
+    public GoogleApiClient getApiClient() {
         return mHelper.getApiClient();
     }
 
-    protected boolean isSignedIn() {
+    public boolean isSignedIn() {
         return mHelper.isSignedIn();
     }
 
