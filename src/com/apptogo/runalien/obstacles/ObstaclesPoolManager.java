@@ -38,4 +38,12 @@ public class ObstaclesPoolManager
 	public static ObstaclesPoolManager getInstance(){
 		return INSTANCE;
 	}
+
+	public boolean IsNotEmpty() {
+		if( crateBottomPool.isEmpty() && crateUpperPool.isEmpty() )
+		{
+			return false;
+		}
+		return true;
+	}
 }

@@ -330,12 +330,15 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				firstTouch = true;
 				autoParallaxBackground.start();
 				obstacleGenerator.startObstacleGenerationAlgorithm();
+				System.out.println("POOL "+"Player position at start: " + player.getX());
 			} else if (pSceneTouchEvent.getX() > player.getX() + 200) {
 				player.doubleJump();
 				player.jump();
+				System.out.println("POOL "+"Player position when juping: " + player.getX());
 			} else if (pSceneTouchEvent.getX() <= player.getX() + 200) {
 				player.slide();
 				player.chargeDown();
+				System.out.println("POOL "+"Player position when sliding: " + player.getX());
 			}
 		}
 		return false;
