@@ -22,6 +22,7 @@ import org.andengine.util.modifier.ease.EaseElasticInOut;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.apptogo.runalien.BaseScene;
 import com.apptogo.runalien.Player;
@@ -31,6 +32,7 @@ import com.apptogo.runalien.SceneManager;
 import com.apptogo.runalien.SceneManager.SceneType;
 import com.apptogo.runalien.obstacles.ObstacleGenerator;
 import com.apptogo.runalien.obstacles.ObstaclesPoolManager;
+import com.apptogo.runalien.utils.GoogleBaseGameActivity;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -77,7 +79,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	private static final String HIGHSCORE_LABEL = "score";
 	private SharedPreferences mScoreDb = activity.getSharedPreferences(HIGHSCORE_DB_NAME, Context.MODE_PRIVATE);
 	private SharedPreferences.Editor mScoreDbEditor = this.mScoreDb.edit();
-	private int score = -2;
+	public int score = -2;
 	private Text bestScoreText;
 	private Text scoreText; //actual score top-left corner
 	
@@ -229,7 +231,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 			@Override
 			public void onDie() {
 				saveHighScore();
-				autoParallaxBackground.stop();
+				//autoParallaxBackground.stop();
 				showGameOver();
 			}
 		};
@@ -251,13 +253,25 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 			@Override
 			public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
 				ResourcesManager.getInstance().clickSound.play();
-				sceneManager.loadMenuScene();
+				//sceneManager.loadMenuScene();
+				
+				//ten kod ma byc podpiety pod przycisk do submitu
+				if(((GoogleBaseGameActivity)activity).isSignedIn()){
+					Games.Leaderboards.submitScore(ResourcesManager.getInstance().activity.getGoogleApiClient(), activity.getResources().getString(R.string.leaderboard_highscores), score);
+					((GoogleBaseGameActivity)activity).startActivityForResult(Games.Leaderboards.getLeaderboardIntent(((GoogleBaseGameActivity)activity).getApiClient(), activity.getResources().getString(R.string.leaderboard_highscores)), 0);
+				}
+				else{
+					resourcesManager.gameHelper.manualConnect();
+					//Games.Leaderboards.submitScore(ResourcesManager.getInstance().activity.getGoogleApiClient(), activity.getResources().getString(R.string.leaderboard_highscores), score);
+				}
+				//az dotad
 				return true;
 			}
 		};
 
 		this.registerUpdateHandler(new TimerHandler(1f, new ITimerCallback() {
 			public void onTimePassed(final TimerHandler pTimerHandler) {
+				resourcesManager.engine.unregisterUpdateHandler(pTimerHandler);
 				SceneManager.getInstance().getCurrentScene().unregisterUpdateHandler(pTimerHandler);
 
 				sGameOver.setPosition(camera.getCenterX() - 5000, camera.getCenterY() - 100);
@@ -277,12 +291,14 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		}));
 		this.registerUpdateHandler(new TimerHandler(2f, new ITimerCallback() {
 			public void onTimePassed(final TimerHandler pTimerHandler) {
+				resourcesManager.engine.unregisterUpdateHandler(pTimerHandler);
 				SceneManager.getInstance().getCurrentScene().unregisterUpdateHandler(pTimerHandler);
 				ResourcesManager.getInstance().whooshSound.play();
 			}
 		}));
 		this.registerUpdateHandler(new TimerHandler(3.0f, new ITimerCallback() {
 			public void onTimePassed(final TimerHandler pTimerHandler) {
+				resourcesManager.engine.unregisterUpdateHandler(pTimerHandler);
 				SceneManager.getInstance().getCurrentScene().unregisterUpdateHandler(pTimerHandler);
 				ResourcesManager.getInstance().whooshSound.play();
 			}
@@ -307,7 +323,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	}
 
 	public boolean saveHighScore() {
-		Games.Leaderboards.submitScore(ResourcesManager.getInstance().activity.getGoogleApiClient(), activity.getResources().getString(R.string.leaderboard_highscores), this.score);
 		if (score > loadHighScore())
 			this.mScoreDbEditor.putInt(HIGHSCORE_LABEL, this.score);
 		return this.mScoreDbEditor.commit();
@@ -328,17 +343,17 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 			if (!firstTouch) {
 				player.setRunning();
 				firstTouch = true;
-				autoParallaxBackground.start();
+				//autoParallaxBackground.start();
 				obstacleGenerator.startObstacleGenerationAlgorithm();
-				System.out.println("POOL "+"Player position at start: " + player.getX());
+				System.out.println("POOL "+"Player position at start: " + player.getBody().getPosition().x);
 			} else if (pSceneTouchEvent.getX() > player.getX() + 200) {
 				player.doubleJump();
 				player.jump();
-				System.out.println("POOL "+"Player position when juping: " + player.getX());
+				System.out.println("POOL "+"Player position when juping: " + player.getBody().getPosition().x);
 			} else if (pSceneTouchEvent.getX() <= player.getX() + 200) {
 				player.slide();
 				player.chargeDown();
-				System.out.println("POOL "+"Player position when sliding: " + player.getX());
+				System.out.println("POOL "+"Player position when sliding: " + player.getBody().getPosition().x);
 			}
 		}
 		return false;
@@ -353,7 +368,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 
 				if ("player".equals(x1.getBody().getUserData()) || "ground".equals(x2.getBody().getUserData())) {
 					if (player.isJumping()) {
-						physicsWorld.setGravity(new Vector2(0, 100.0f));
 						player.land();
 					}
 					if(!player.isAlive()){
@@ -361,7 +375,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 					}
 				} else if ("player".equals(x2.getBody().getUserData()) || "ground".equals(x1.getBody().getUserData())) {
 					if (player.isJumping()) {
-						physicsWorld.setGravity(new Vector2(0, 100.0f));
 						player.land();
 					}
 					if(!player.isAlive()){
@@ -369,21 +382,14 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 					}
 				}
 
-				if (player.isAlive()&& (("player".equals(x1.getBody().getUserData()) && "obstacleBottom".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "obstacleBottom".equals(x1.getBody().getUserData())))) {
-					//pool.IgnoreCollision();
+				if (player.isAlive() && (("player".equals(x1.getBody().getUserData()) && "crateBottom".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "crateBottom".equals(x1.getBody().getUserData())))) {
+					//obstacleGenerator.ignoreAllCollisions();
 					player.dieBottom();
 				}
-				if (player.isAlive()&& !player.isSliding()&& (("player".equals(x1.getBody().getUserData()) && "obstacleTop".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "obstacleTop".equals(x1.getBody().getUserData())))) {
-					//pool.IgnoreCollision();
+				if (player.isAlive() && !player.isSliding() && (("player".equals(x1.getBody().getUserData()) && "crateUpper".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "crateUpper".equals(x1.getBody().getUserData())))) {
+					//obstacleGenerator.ignoreAllCollisions();
 					player.dieTop();
-					System.out.println("contaclist");
 				}
-				/*
-				if (player.isAlive() && (("player".equals(x1.getBody().getUserData()) && "pig".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "pig".equals(x1.getBody().getUserData())))) {
-					ignoreObstaclesCollision();
-					player.dieBottom();
-				}
-				*/
 			}
 
 			@Override

@@ -2,6 +2,7 @@ package com.apptogo.runalien.obstacles;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.andengine.engine.handler.IUpdateHandler;
 import org.andengine.entity.Entity;
@@ -9,6 +10,8 @@ import org.andengine.entity.scene.Scene;
 import org.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
 
 import com.apptogo.runalien.Player;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Fixture;
 
 public class ObstacleGenerator {
 	
@@ -16,6 +19,12 @@ public class ObstacleGenerator {
 	private Player player;
 	private Scene scene;
 	private List<Obstacle> usedObstacles;
+	private int nextObstaclePosition = 100;
+	public Random generator = new Random();
+	
+	public void log(String s){
+		System.out.println("POOL " + s);
+	}
 	
 	public ObstacleGenerator(Scene scene, Player player)
 	{
@@ -30,53 +39,10 @@ public class ObstacleGenerator {
 		return player.getX()/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT;
 	}
 	
-	private void releaseUselessObstacles()
-	{
-		System.out.println("POOL "+"Releasing");
-		int ctr = 0;
-		for(Obstacle obstacle: usedObstacles)
-		{
-			if( obstacle.getBody().getPosition().x < getPlayerPositionX() - 20 )
-			{ctr++;
-				usedObstacles.remove(obstacle);
-				if( ( (String)(obstacle.getBody().getUserData()) ).equals("crateUpper") )
-				{
-					obstaclesPoolManager.crateUpperPool.push( (CrateUpper)obstacle );
-				}
-				if( ( (String)(obstacle.getBody().getUserData()) ).equals("crateBottom") )
-				{
-					obstaclesPoolManager.crateBottomPool.push( (CrateBottom)obstacle );
-				}
-			}
-		}
-		System.out.println("POOL "+"Released obstacles: "+ctr);
-	}
 	
 	public int calculateObstaclePosition()
 	{ 
 		return (int)( (player.getX() + 800)/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT );
-	}
-	
-	private void setObstacle()
-	{
-		System.out.println("POOL "+"Setting obstacles");
-		Obstacle obstacle = null;
-		
-		if( !obstaclesPoolManager.crateBottomPool.isEmpty() )
-		{
-			obstacle = obstaclesPoolManager.crateBottomPool.pop();
-			System.out.println("POOL "+"Getting Bottom obstacle | left: "+obstaclesPoolManager.crateBottomPool.size());
-		}
-		else if( !obstaclesPoolManager.crateUpperPool.isEmpty() )
-		{
-			obstacle = obstaclesPoolManager.crateUpperPool.pop();
-			System.out.println("POOL "+"Getting Upper obstacle | left: "+obstaclesPoolManager.crateUpperPool.size());
-		}
-		
-		obstacle.getBody().setTransform( calculateObstaclePosition(), 100, 0);
-		usedObstacles.add(obstacle);
-		System.out.println("POOL "+"Obstacle set: "+obstacle.getBody().getPosition().x+" player = "+player.getX());
-		System.out.println("POOL "+"Used obstacles count: "+usedObstacles.size() );
 	}
 	
 	public void startObstacleGenerationAlgorithm(){	
@@ -84,16 +50,19 @@ public class ObstacleGenerator {
 		scene.registerUpdateHandler(new IUpdateHandler() {
 			@Override
 			public void onUpdate(float pSecondsElapsed) {
-				//ReleaseUselessObstacles(); - to powoduje ConcurrentModificationEception oO
-				if( obstaclesPoolManager.IsNotEmpty() )
-				{
-					setObstacle();
+				if(player.getBody().getPosition().x + 20 > nextObstaclePosition && player.isAlive()){
+					log("pozycja playera: " + player.getBody().getPosition().x + " +20 jest wieksza niz " + nextObstaclePosition);
+					
+					if(generator.nextInt(100)>50)
+						setSingleBottomObstacle();
+					else
+						setSingleUpperObstacle(5); //wysokosc playera wynosi troche mniej niz 2. Taka jest jednostka
 				}
-			    //tutaj metody ktore sprawdzalyby pozycje playera, w celu wstawienia nowego bloku przeszkod lub pojedynczej przeszkody (osobne metody)
-				//oraz usuwalyby te przeszkody z usedObstacles ktore sa poza ekranem robiac im po prostu push();
-				//jakies losowanie czy cos latwo jest robic randem, z reszta wiesz:)
-				
-				//usunalem foregorundlayer bo one sa attachowane od razu w kopsntruktorze przeszkody
+				else if(!player.isAlive())
+					ignoreAllCollisions();
+				if(player.isAlive())
+					setProperSlidingCollisions();
+				releaseUselessObstacles();
 			}
 
 			@Override
@@ -104,7 +73,36 @@ public class ObstacleGenerator {
 		});
 	}
 	
+	
 	//Obstacle block methods
+	
+	private void setSingleBottomObstacle()
+	{
+		Obstacle obstacle = null;
+		
+		if(!obstaclesPoolManager.crateBottomPool.isEmpty())
+		{
+			log("stawiam przeszkode bottom na " + nextObstaclePosition);
+			obstacle = obstaclesPoolManager.crateBottomPool.pop();
+			obstacle.getBody().setTransform(nextObstaclePosition, 7, 0);
+			usedObstacles.add(obstacle);
+			nextObstaclePosition += 100; //to oznacza ze nastepna przeszkoda pojawi sie za 100 jednostek. Trzeba to wyliczac na podstawie predkosci playera (mozna tez dodawac zmienna losowa)
+		}
+	}
+	
+	private void setSingleUpperObstacle(int yPos)
+	{
+		Obstacle obstacle = null;
+		
+		if(!obstaclesPoolManager.crateBottomPool.isEmpty())
+		{
+			log("stawiam przeszkode upper na " + nextObstaclePosition);
+			obstacle = obstaclesPoolManager.crateUpperPool.pop();
+			obstacle.getBody().setTransform(nextObstaclePosition, yPos, 0);
+			usedObstacles.add(obstacle);
+			nextObstaclePosition += 60;
+		}
+	}
 	
 	private void generateBlockOne(){
 		//ta metoda odpowiadalaby tylko za ustawienie listy obiektow w odpowiedni schemat
@@ -118,4 +116,51 @@ public class ObstacleGenerator {
 	}
 	
 	
+	//Others
+	
+	private void ignoreAllCollisions(){
+		for(Obstacle obstacle : usedObstacles){
+			List<Fixture> fixtureList = obstacle.getBody().getFixtureList();
+			for(Fixture fixture : fixtureList){
+				fixture.setSensor(true);
+		    }
+		}
+	}
+	
+	private void setProperSlidingCollisions(){
+		for(Obstacle obstacle : usedObstacles){
+			if(!obstacle.getBody().getUserData().equals("crateBottom")){
+				List<Fixture> fixtureList = obstacle.getBody().getFixtureList();
+				for(Fixture fixture : fixtureList){
+					if(player.isSliding())
+						fixture.setSensor(true);
+					else
+						fixture.setSensor(false);
+			    }
+			}
+		}
+	}
+	
+	private void releaseUselessObstacles()
+	{
+		for(Obstacle obstacle: usedObstacles)
+		{
+			if( obstacle.getBody().getPosition().x < player.getBody().getPosition().x )
+			{
+				usedObstacles.remove(obstacle);
+				if( ( (String)(obstacle.getBody().getUserData()) ).equals("crateUpper") )
+				{
+					log("Releasing upper: before " + obstaclesPoolManager.crateBottomPool.size());
+					obstaclesPoolManager.crateUpperPool.push( (CrateUpper)obstacle );
+					log("Releasing upper: after " + obstaclesPoolManager.crateBottomPool.size());
+				}
+				if( ( (String)(obstacle.getBody().getUserData()) ).equals("crateBottom") )
+				{
+					log("Releasing bottom: before " + obstaclesPoolManager.crateBottomPool.size());
+					obstaclesPoolManager.crateBottomPool.push( (CrateBottom)obstacle );
+					log("Releasing bottom: after " + obstaclesPoolManager.crateBottomPool.size());
+				}
+			}
+		}
+	}
 }
