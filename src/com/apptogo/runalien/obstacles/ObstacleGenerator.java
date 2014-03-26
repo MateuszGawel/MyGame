@@ -19,8 +19,9 @@ public class ObstacleGenerator {
 	private Player player;
 	private Scene scene;
 	private List<Obstacle> usedObstacles;
-	private int nextObstaclePosition = 30;
+	private float nextObstaclePosition = 30;
 	public Random generator = new Random();
+	private boolean firstObstacleFlag = true;
 	
 	public void log(String s){
 		System.out.println("POOL " + s);
@@ -46,15 +47,15 @@ public class ObstacleGenerator {
 		int minSpace = 5;
 		
 		int playerVelocityX = (int)player.getBody().getLinearVelocity().x; 
-		
+		System.out.println("POOL VELOCIT " + 0.8*playerVelocityX);
 		int difficulty = 10;
 		
 		if( playerVelocityX > 0)
-			difficulty = (int)( 200 / playerVelocityX ); //podobnie jak tu ;) 
+			difficulty = (int) playerVelocityX ; //podobnie jak tu ;) 
 
 		int randomFactor = (int)( Math.random() * (difficulty + 1) ); //im wyzsze difficulty tym latwiej grac - wieksze odstepy
 		
-		return (int)( (nextObstaclePosition + minSpace + difficulty ));
+		return (int)( (nextObstaclePosition + difficulty ));
 	}
 	
 	public void startObstacleGenerationAlgorithm(){	
@@ -62,16 +63,38 @@ public class ObstacleGenerator {
 		scene.registerUpdateHandler(new IUpdateHandler() {
 			@Override
 			public void onUpdate(float pSecondsElapsed) {
-				if(obstaclesPoolManager.IsNotEmpty())
+				if(obstaclesPoolManager.isNotEmpty())
 				{
 					if(player.getBody().getPosition().x + 50 > nextObstaclePosition && player.isAlive())
 					{
 						log("pozycja playera: " + player.getBody().getPosition().x + " +50 jest wieksza niz " + nextObstaclePosition);
-						
-						if(generator.nextInt(100)>50)
-							setSingleBottomObstacle();
-						else
-							setSingleUpperObstacle(5); //wysokosc playera wynosi troche mniej niz 2. Taka jest jednostka
+						int random = generator.nextInt(6);
+						log("LALALA WYLOSOWA£EM: " + random);
+						switch(random){
+						case 0:
+							if(!firstObstacleFlag)
+								generateBottomUpperSegment(); //z jakiegos powodu jezeli ten segment generuje sie jako pierwszy to nie ma odstepu miedzy nimi
+							firstObstacleFlag = false;
+							break;
+						case 1:
+							generateUpperWall(false);
+							break;
+						case 2:
+							generateBottomWall(false);
+							break;
+						case 3:
+							generateBigWall();
+							break;
+						case 4:
+							generatePyramid();
+							break;
+						case 5:
+							generateSingleBottomObstacle();
+							break;
+						case 6:
+							generateSingleUpperObstacle(5.5f);
+							break;
+						}
 					}
 					else if(!player.isAlive())
 						ignoreAllCollisions();
@@ -91,9 +114,9 @@ public class ObstacleGenerator {
 	}
 	
 	
-	//Obstacle block methods
+	//Obstacle block methods (wysokosc skrzynki to 1.3f)
 	
-	private void setSingleBottomObstacle()
+	private void generateSingleBottomObstacle()
 	{
 		Obstacle obstacle = null;
 		
@@ -101,13 +124,13 @@ public class ObstacleGenerator {
 		{
 			log("stawiam przeszkode bottom na " + nextObstaclePosition);
 			obstacle = obstaclesPoolManager.crateBottomPool.pop();
-			obstacle.getBody().setTransform(nextObstaclePosition, 7, 0);
+			obstacle.getBody().setTransform(nextObstaclePosition, 6.8f, 0);
 			usedObstacles.add(obstacle);
 			nextObstaclePosition = calculateObstaclePosition(); 
 		}
 	}
 	
-	private void setSingleUpperObstacle(int yPos)
+	private void generateSingleUpperObstacle(float yPos)
 	{
 		Obstacle obstacle = null;
 		
@@ -121,15 +144,108 @@ public class ObstacleGenerator {
 		}
 	}
 	
-	private void generateBlockOne(){
-		//ta metoda odpowiadalaby tylko za ustawienie listy obiektow w odpowiedni schemat
-		//widze to tak ze np pobiera sobie popem z poola jedna crateBottom oraz trzy crate Upper i ustawia je tak: (liczac od dolu)
-		//bottom,upper,przerwa,przerwa,przerwa,upper,upper
-		//czyli taka sciana z luk¹ do przeskoczenia wysokosci trzech szkyrnek
-		//tylko taki przyklad.
+	private void generatePyramid(){
+		List<Obstacle> obstacles = new ArrayList<Obstacle>();
+		Obstacle obstacle;
 		
-		//ona by sobie pobrala popem wszystkie niezbedne elementy do utworzenia bloku przeszkod
-		//te elementy powinny byc zapisane do listy usedObstacles zeby wiedziec jakie zwolnic pushem
+		if(!obstaclesPoolManager.crateBottomPool.isEmpty())
+		{
+			for(int i=0; i<4; i++){
+				obstacle = obstaclesPoolManager.crateBottomPool.pop();
+				obstacles.add(obstacle);
+				usedObstacles.add(obstacle);
+			}
+			obstacles.get(0).getBody().setTransform(nextObstaclePosition, 6.8f, 0);
+			obstacles.get(1).getBody().setTransform(nextObstaclePosition+1.40f, 6.8f, 0);
+			obstacles.get(2).getBody().setTransform(nextObstaclePosition+2.8f, 6.8f, 0);
+			obstacles.get(3).getBody().setTransform(nextObstaclePosition+1.40f, 5.5f, 0);
+			nextObstaclePosition = calculateObstaclePosition(); //to oznacza ze nastepna przeszkoda pojawi sie za 100 jednostek. Trzeba to wyliczac na podstawie predkosci playera (mozna tez dodawac zmienna losowa)
+		}
+	}
+	
+	private void generateBigWall(){
+		List<Obstacle> obstacles = new ArrayList<Obstacle>();
+		Obstacle obstacle;
+		
+		if(!obstaclesPoolManager.crateBottomPool.isEmpty())
+		{
+			for(int i=0; i<2; i++){
+				obstacle = obstaclesPoolManager.crateBottomPool.pop();
+				obstacles.add(obstacle);
+				usedObstacles.add(obstacle);
+			}
+			for(int i=0; i<2; i++){
+				obstacle = obstaclesPoolManager.crateUpperPool.pop();
+				obstacles.add(obstacle);
+				usedObstacles.add(obstacle);
+			}
+
+			
+			obstacles.get(0).getBody().setTransform(nextObstaclePosition, 6.8f, 0);
+			obstacles.get(1).getBody().setTransform(nextObstaclePosition, 5.5f, 0);
+			obstacles.get(2).getBody().setTransform(nextObstaclePosition, -1.5f, 0);
+			obstacles.get(3).getBody().setTransform(nextObstaclePosition, -2.8f, 0);
+			nextObstaclePosition = calculateObstaclePosition(); //to oznacza ze nastepna przeszkoda pojawi sie za 100 jednostek. Trzeba to wyliczac na podstawie predkosci playera (mozna tez dodawac zmienna losowa)
+		}
+	}
+	
+	private void generateBottomWall(boolean customMargin){
+		List<Obstacle> obstacles = new ArrayList<Obstacle>();
+		Obstacle obstacle;
+		
+		if(!obstaclesPoolManager.crateBottomPool.isEmpty())
+		{
+			for(int i=0; i<4; i++){
+				obstacle = obstaclesPoolManager.crateBottomPool.pop();
+				obstacles.add(obstacle);
+				usedObstacles.add(obstacle);
+			}
+			obstacles.get(0).getBody().setTransform(nextObstaclePosition, 6.8f, 0);
+			obstacles.get(1).getBody().setTransform(nextObstaclePosition, 5.5f, 0);
+			obstacles.get(2).getBody().setTransform(nextObstaclePosition, 4.2f, 0);
+			obstacles.get(3).getBody().setTransform(nextObstaclePosition, 2.9f, 0);
+			
+			if(!customMargin)
+				nextObstaclePosition = calculateObstaclePosition(); //to oznacza ze nastepna przeszkoda pojawi sie za 100 jednostek. Trzeba to wyliczac na podstawie predkosci playera (mozna tez dodawac zmienna losowa)
+		}
+	}
+	
+	private void generateUpperWall(boolean customMargin){
+		List<Obstacle> obstacles = new ArrayList<Obstacle>();
+		Obstacle obstacle;
+		
+		if(!obstaclesPoolManager.crateBottomPool.isEmpty())
+		{
+			
+			for(int i=0; i<2; i++){
+				obstacle = obstaclesPoolManager.crateUpperPool.pop();
+				obstacles.add(obstacle);
+				usedObstacles.add(obstacle);
+			}
+			
+			for(int i=0; i<6; i++){
+				obstacle = obstaclesPoolManager.crateBottomPool.pop();
+				obstacles.add(obstacle);
+				usedObstacles.add(obstacle);
+			}
+			obstacles.get(0).getBody().setTransform(nextObstaclePosition, 5.5f, 0);
+			obstacles.get(1).getBody().setTransform(nextObstaclePosition, 4.2f, 0);
+			obstacles.get(2).getBody().setTransform(nextObstaclePosition, 2.9f, 0);
+			obstacles.get(3).getBody().setTransform(nextObstaclePosition, 1.6f, 0);
+			obstacles.get(4).getBody().setTransform(nextObstaclePosition, 0.3f, 0);
+			obstacles.get(5).getBody().setTransform(nextObstaclePosition, -1f, 0);
+			obstacles.get(6).getBody().setTransform(nextObstaclePosition, -2.3f, 0);
+			obstacles.get(7).getBody().setTransform(nextObstaclePosition, -3.6f, 0);
+			if(!customMargin)
+				nextObstaclePosition = calculateObstaclePosition(); //to oznacza ze nastepna przeszkoda pojawi sie za 100 jednostek. Trzeba to wyliczac na podstawie predkosci playera (mozna tez dodawac zmienna losowa)
+		}
+	}
+	
+	private void generateBottomUpperSegment(){
+		generateBottomWall(true);
+		nextObstaclePosition += 0.5f*player.getBody().getLinearVelocity().x; 
+		generateUpperWall(true);
+		nextObstaclePosition = calculateObstaclePosition();
 	}
 	
 	
