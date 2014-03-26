@@ -19,7 +19,7 @@ public class ObstacleGenerator {
 	private Player player;
 	private Scene scene;
 	private List<Obstacle> usedObstacles;
-	private int nextObstaclePosition = 100;
+	private int nextObstaclePosition = 30;
 	public Random generator = new Random();
 	
 	public void log(String s){
@@ -41,8 +41,20 @@ public class ObstacleGenerator {
 	
 	
 	public int calculateObstaclePosition()
-	{ 
-		return (int)( (player.getX() + 800)/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT );
+	{   //System.out.println("POOL : obstacleCalc = "+(nextObstaclePosition + 20 ) );
+		//return (int)( (player.getBody().getPosition().x + 20 )); bo tak naprawde kolejne przeszkody chcemy planowac wzgledem siebie, a nie playera, ktory dopiero gdzies tam biegnie	
+		int minSpace = 5;
+		
+		int playerVelocityX = (int)player.getBody().getLinearVelocity().x; 
+		
+		int difficulty = 10;
+		
+		if( playerVelocityX > 0)
+			difficulty = (int)( 200 / playerVelocityX ); //podobnie jak tu ;) 
+
+		int randomFactor = (int)( Math.random() * (difficulty + 1) ); //im wyzsze difficulty tym latwiej grac - wieksze odstepy
+		
+		return (int)( (nextObstaclePosition + minSpace + difficulty ));
 	}
 	
 	public void startObstacleGenerationAlgorithm(){	
@@ -50,18 +62,23 @@ public class ObstacleGenerator {
 		scene.registerUpdateHandler(new IUpdateHandler() {
 			@Override
 			public void onUpdate(float pSecondsElapsed) {
-				if(player.getBody().getPosition().x + 20 > nextObstaclePosition && player.isAlive()){
-					log("pozycja playera: " + player.getBody().getPosition().x + " +20 jest wieksza niz " + nextObstaclePosition);
-					
-					if(generator.nextInt(100)>50)
-						setSingleBottomObstacle();
-					else
-						setSingleUpperObstacle(5); //wysokosc playera wynosi troche mniej niz 2. Taka jest jednostka
+				if(obstaclesPoolManager.IsNotEmpty())
+				{
+					if(player.getBody().getPosition().x + 50 > nextObstaclePosition && player.isAlive())
+					{
+						log("pozycja playera: " + player.getBody().getPosition().x + " +50 jest wieksza niz " + nextObstaclePosition);
+						
+						if(generator.nextInt(100)>50)
+							setSingleBottomObstacle();
+						else
+							setSingleUpperObstacle(5); //wysokosc playera wynosi troche mniej niz 2. Taka jest jednostka
+					}
+					else if(!player.isAlive())
+						ignoreAllCollisions();
+					if(player.isAlive())
+						setProperSlidingCollisions();
 				}
-				else if(!player.isAlive())
-					ignoreAllCollisions();
-				if(player.isAlive())
-					setProperSlidingCollisions();
+				//System.out.println("POOL : oooops the pool is empty - waiting for release any");
 				releaseUselessObstacles();
 			}
 
@@ -86,7 +103,7 @@ public class ObstacleGenerator {
 			obstacle = obstaclesPoolManager.crateBottomPool.pop();
 			obstacle.getBody().setTransform(nextObstaclePosition, 7, 0);
 			usedObstacles.add(obstacle);
-			nextObstaclePosition += 100; //to oznacza ze nastepna przeszkoda pojawi sie za 100 jednostek. Trzeba to wyliczac na podstawie predkosci playera (mozna tez dodawac zmienna losowa)
+			nextObstaclePosition = calculateObstaclePosition(); //to oznacza ze nastepna przeszkoda pojawi sie za 100 jednostek. Trzeba to wyliczac na podstawie predkosci playera (mozna tez dodawac zmienna losowa)
 		}
 	}
 	
@@ -100,7 +117,7 @@ public class ObstacleGenerator {
 			obstacle = obstaclesPoolManager.crateUpperPool.pop();
 			obstacle.getBody().setTransform(nextObstaclePosition, yPos, 0);
 			usedObstacles.add(obstacle);
-			nextObstaclePosition += 60;
+			nextObstaclePosition = calculateObstaclePosition();
 		}
 	}
 	
@@ -143,9 +160,11 @@ public class ObstacleGenerator {
 	
 	private void releaseUselessObstacles()
 	{
-		for(Obstacle obstacle: usedObstacles)
-		{
-			if( obstacle.getBody().getPosition().x < player.getBody().getPosition().x )
+		for(int u = 0; u < usedObstacles.size(); u++) //tu byl problem z concurrency - uzywalismy foreach z iteratorem i on robil problemy UWAGA NA TO MOZE BYC DZIURAWE
+		{                                             //nawet nie probowac synchronizowac :P probowalem synchronizowac metody/bloki ponad godzine i lipa a tak dziala
+			Obstacle obstacle = usedObstacles.get(u);
+			
+			if( obstacle.getBody().getPosition().x < (player.getBody().getPosition().x - 10) ) //- 10 zeby znikaly juz poza ekranem
 			{
 				usedObstacles.remove(obstacle);
 				if( ( (String)(obstacle.getBody().getUserData()) ).equals("crateUpper") )
