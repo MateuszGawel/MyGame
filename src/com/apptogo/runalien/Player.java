@@ -39,7 +39,7 @@ public abstract class Player extends AnimatedSprite {
 	private boolean flag = true;
 	private boolean flag2 = true;
 	private float runningSpeed = 13;
-	private float nextSpeedUp = 200;
+	private float nextSpeedUp = 300;
 
 	public Player(float pX, float pY, VertexBufferObjectManager vbo, BoundCamera camera, PhysicsWorld physicsWorld) {
 		super(pX, pY, ResourcesManager.getInstance().player_region, vbo);
@@ -80,7 +80,7 @@ public abstract class Player extends AnimatedSprite {
 					flag = false;
 				}
 				if(body.getPosition().x > nextSpeedUp){
-					nextSpeedUp+=200;
+					nextSpeedUp+=300;
 					runningSpeed++;
 				}
 			}

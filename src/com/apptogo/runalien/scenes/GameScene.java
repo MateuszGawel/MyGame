@@ -231,7 +231,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 			@Override
 			public void onDie() {
 				saveHighScore();
-				//autoParallaxBackground.stop();
+				autoParallaxBackground.stop();
 				showGameOver();
 			}
 		};
@@ -343,7 +343,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 			if (!firstTouch) {
 				player.setRunning();
 				firstTouch = true;
-				//autoParallaxBackground.start();
+				autoParallaxBackground.start();
 				obstacleGenerator.startObstacleGenerationAlgorithm();
 				System.out.println("POOL "+"Player position at start: " + player.getBody().getPosition().x);
 			} else if (pSceneTouchEvent.getX() > player.getX() + 200) {
@@ -383,11 +383,9 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				}
 
 				if (player.isAlive() && (("player".equals(x1.getBody().getUserData()) && "crateBottom".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "crateBottom".equals(x1.getBody().getUserData())))) {
-					//obstacleGenerator.ignoreAllCollisions();
 					player.dieBottom();
 				}
 				if (player.isAlive() && !player.isSliding() && (("player".equals(x1.getBody().getUserData()) && "crateUpper".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "crateUpper".equals(x1.getBody().getUserData())))) {
-					//obstacleGenerator.ignoreAllCollisions();
 					player.dieTop();
 				}
 			}

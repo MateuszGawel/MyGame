@@ -10,8 +10,8 @@ import com.badlogic.gdx.physics.box2d.Body;
 public class ObstaclesPoolManager
 {
 	//Obstacles ammount
-	private final int crateBottomAmmount = 5;
-	private final int crateUpperAmmount = 5;
+	private final int crateBottomAmmount = 30;
+	private final int crateUpperAmmount = 30;
 	
 	//Pools
 	public Stack<CrateBottom> crateBottomPool;
@@ -39,7 +39,7 @@ public class ObstaclesPoolManager
 		return INSTANCE;
 	}
 
-	public boolean IsNotEmpty() {
+	public boolean isNotEmpty() {
 		if( crateBottomPool.isEmpty() && crateUpperPool.isEmpty() )
 		{
 			return false;
