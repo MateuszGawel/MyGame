@@ -131,7 +131,7 @@ public class ObstacleGenerator {
 			obstacle = obstaclesPoolManager.crateBottomPool.pop();
 			obstacle.getBody().setTransform(nextObstaclePosition, 6.8f, 0);
 			usedObstacles.add(obstacle);
-			nextObstaclePosition = calculateObstaclePosition(); //to oznacza ze nastepna przeszkoda pojawi sie za 100 jednostek. Trzeba to wyliczac na podstawie predkosci playera (mozna tez dodawac zmienna losowa)
+			nextObstaclePosition = calculateObstaclePosition(); 
 		}
 	}
 	

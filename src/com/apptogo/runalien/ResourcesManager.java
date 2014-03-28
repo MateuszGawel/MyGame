@@ -63,6 +63,7 @@ public class ResourcesManager {
 	public ITextureRegion game_over_region;
 	public ITextureRegion replay_region;
 	public ITextureRegion menu_region;
+	public ITextureRegion submit_region;
 	
 	BitmapTextureAtlas dirtRepeatingAtlas;
 	public ITextureRegion dirt_texture_region;
@@ -169,7 +170,7 @@ public class ResourcesManager {
 	
 	public void loadGameGraphics(){
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/game/");
-	    gameTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 512, 512, TextureOptions.DEFAULT);
+	    gameTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 1024, 1024, TextureOptions.BILINEAR);
 	    playerTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 2048, 2048, TextureOptions.BILINEAR);
 	    
 	    //obstacle_top_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "obstacle_top.png");
@@ -179,6 +180,7 @@ public class ResourcesManager {
 	    game_over_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "game_over.png");
 	    replay_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "replay.png");
 	    menu_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "menu.png");
+	    submit_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "submit.png");
 	    
 	    player_region = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(playerTextureAtlas, activity, "player.png", 12, 11);
 	    
