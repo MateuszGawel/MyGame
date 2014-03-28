@@ -67,7 +67,7 @@ public class ObstacleGenerator {
 					if(player.getBody().getPosition().x + 50 > nextObstaclePosition && player.isAlive())
 					{
 						log("pozycja playera: " + player.getBody().getPosition().x + " +50 jest wieksza niz " + nextObstaclePosition);
-						int random = generator.nextInt(8);
+						int random = generator.nextInt(9);
 						log("LALALA WYLOSOWA£EM: " + random);
 						switch(random){
 						case 0:
@@ -76,28 +76,28 @@ public class ObstacleGenerator {
 							firstObstacleFlag = false;
 							break;
 						case 1:
-							generateBallTop();
-							//generateUpperWall(false);
+							generateUpperWall(false);
 							break;
 						case 2:
 							generateBottomWall(false);
 							break;
 						case 3:
-							generateBallBottom();
-							///generateBigWall();
+							generateBigWall();
 							break;
 						case 4:
 							generatePyramid();
 							break;
 						case 5:
-							generateBallTop();
-							//generateSingleBottomObstacle();
+							generateSingleBottomObstacle();
 							break;
 						case 6:
 							generateSingleUpperObstacle(5.5f);
 							break;
 						case 7:
 							generateBallBottom();
+							break;
+						case 8:
+							generateBallTop();
 							break;
 						}
 					}
@@ -254,7 +254,7 @@ public class ObstacleGenerator {
 	}
 	
 	private void generateBallTop(){
-		BallTop ball = obstaclesPoolManager.ballTopPool.pop();
+		BallUpper ball = obstaclesPoolManager.ballUpperPool.pop();
 		usedObstacles.add(ball);
 		ball.setTransformX(nextObstaclePosition+10);
 		nextObstaclePosition = calculateObstaclePosition()+10;
@@ -279,7 +279,7 @@ public class ObstacleGenerator {
 	
 	private void setProperSlidingCollisions(){
 		for(Obstacle obstacle : usedObstacles){
-			if(!obstacle.getBody().getUserData().equals("crateBottom")){
+			if(!obstacle.getBody().getUserData().equals("crateBottom") && !obstacle.getBody().getUserData().equals("ballBottom")){
 				List<Fixture> fixtureList = obstacle.getBody().getFixtureList();
 				for(Fixture fixture : fixtureList){
 					if(player.isSliding())
@@ -297,20 +297,24 @@ public class ObstacleGenerator {
 		{                                             //nawet nie probowac synchronizowac :P probowalem synchronizowac metody/bloki ponad godzine i lipa a tak dziala
 			Obstacle obstacle = usedObstacles.get(u);
 			
-			if( obstacle.getBody().getPosition().x < (player.getBody().getPosition().x) ) //- 10 zeby znikaly juz poza ekranem
+			if( obstacle.getBody().getPosition().x < (player.getBody().getPosition().x) -10) //- 10 zeby znikaly juz poza ekranem
 			{
 				usedObstacles.remove(obstacle);
 				if( ( (String)(obstacle.getBody().getUserData()) ).equals("crateUpper") )
 				{
-					log("Releasing upper: before " + obstaclesPoolManager.crateBottomPool.size());
 					obstaclesPoolManager.crateUpperPool.push( (CrateUpper)obstacle );
-					log("Releasing upper: after " + obstaclesPoolManager.crateBottomPool.size());
 				}
 				if( ( (String)(obstacle.getBody().getUserData()) ).equals("crateBottom") )
 				{
-					log("Releasing bottom: before " + obstaclesPoolManager.crateBottomPool.size());
 					obstaclesPoolManager.crateBottomPool.push( (CrateBottom)obstacle );
-					log("Releasing bottom: after " + obstaclesPoolManager.crateBottomPool.size());
+				}
+				if( ( (String)(obstacle.getBody().getUserData()) ).equals("ballUpper") )
+				{
+					obstaclesPoolManager.ballUpperPool.push( (BallUpper)obstacle );
+				}
+				if( ( (String)(obstacle.getBody().getUserData()) ).equals("ballBottom") )
+				{
+					obstaclesPoolManager.ballBottomPool.push( (BallBottom)obstacle );
 				}
 			}
 		}

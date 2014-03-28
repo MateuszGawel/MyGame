@@ -7,6 +7,7 @@ import org.andengine.extension.physics.box2d.PhysicsConnector;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
+import org.andengine.util.color.Color;
 
 import com.apptogo.runalien.ResourcesManager;
 import com.badlogic.gdx.math.Vector2;
@@ -27,10 +28,10 @@ public class BallBottom extends Obstacle{
 		
 		anchorSprite = new Sprite(-1000, -120, ResourcesManager.getInstance().crate_region, ResourcesManager.getInstance().vbom); 
 		//narazie pozycja x jest zero ale ostateznie musi byc minus wpizdu zeby na poczatku ich nie bylo widac
-		anchorSprite.setUserData("ballAnchor");
+		anchorSprite.setUserData("crateUpper");
 		anchorBody = PhysicsFactory.createBoxBody(physicsWorld, anchorSprite, BodyType.StaticBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0));
-		anchorBody.setUserData("ballAnchor");
-		foregroundLayer.attachChild(anchorSprite);
+		anchorBody.setUserData("crateUpper");
+
 		physicsWorld.registerPhysicsConnector(new PhysicsConnector(anchorSprite, anchorBody, true, false) {
 			@Override
 			public void onUpdate(float pSecondsElapsed) {
@@ -41,14 +42,21 @@ public class BallBottom extends Obstacle{
 		});
 		
 		
-		connectionLine = new Line(anchorSprite.getX()+10, -115, anchorSprite.getX()+10, -115, ResourcesManager.getInstance().vbom);
+		connectionLine = new Line(anchorSprite.getX()+50, -115, anchorSprite.getX()+50, -115, ResourcesManager.getInstance().vbom);
+		connectionLine.setColor(new Color(70f/255f, 50f/255f, 10f/255f));
+		connectionLine.setLineWidth(4.0f);
+		
 		sprite = new Sprite(anchorSprite.getX()+lineLength, -115, ResourcesManager.getInstance().ball_region, ResourcesManager.getInstance().vbom);
 		//narazie pozycja x jest zero ale ostateznie musi byc minus wpizdu zeby na poczatku ich nie bylo widac
-		sprite.setUserData("bottom");
-		body = PhysicsFactory.createBoxBody(physicsWorld, sprite, BodyType.DynamicBody, PhysicsFactory.createFixtureDef(200.5f, 0.2f, 0.5f));
-		body.setUserData("bottom");
-		foregroundLayer.attachChild(sprite);
+		sprite.setUserData("ballBottom");
+		body = PhysicsFactory.createCircleBody(physicsWorld, sprite, BodyType.DynamicBody, PhysicsFactory.createFixtureDef(200.5f, 0.2f, 0.5f));
+		body.setUserData("ballBottom");
+		
 		foregroundLayer.attachChild(connectionLine);
+		foregroundLayer.attachChild(anchorSprite);
+		foregroundLayer.attachChild(sprite);
+
+		
 		physicsWorld.registerPhysicsConnector(new PhysicsConnector(sprite, body, true, false) {
 			@Override
 			public void onUpdate(float pSecondsElapsed) {

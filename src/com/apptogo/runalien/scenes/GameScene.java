@@ -15,6 +15,7 @@ import org.andengine.entity.scene.background.ParallaxBackground.ParallaxEntity;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
+import org.andengine.extension.debugdraw.DebugRenderer;
 import org.andengine.extension.physics.box2d.FixedStepPhysicsWorld;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
@@ -173,6 +174,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		mChainBody = physicsWorld.createBody(mBodyDef);
 		mChainBody.createFixture(mFixtureDef);
 		myChain.dispose();
+		mChainBody.setUserData("ground");
 
 		// TEXTURED POLYGON 2 - DIRT - TEXTURE REGION MUST BE FROM A REPEATING ATLAS
 		float[] vertexX2 = new float[myV2.length];
@@ -187,7 +189,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		backgroundLayer.attachChild(ground);
 		ground.setUserData("ground");
 
-		// backgroundLayer.attachChild(new DebugRenderer(physicsWorld, vbom));
+		//backgroundLayer.attachChild(new DebugRenderer(physicsWorld, vbom));
 	}
 
 	//MAIN OBJECTS METHODS
@@ -284,37 +286,30 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				resourcesManager.engine.unregisterUpdateHandler(pTimerHandler);
 				SceneManager.getInstance().getCurrentScene().unregisterUpdateHandler(pTimerHandler);
 
-//				sGameOver.setPosition(camera.getCenterX() - 5000, camera.getCenterY() - 100);
-//				sReplay.setPosition(camera.getCenterX() - 2000, camera.getCenterY());
-//				sMenu.setPosition(camera.getCenterX() + 2300, camera.getCenterY());
-
-				sGameOver.setPosition(camera.getCenterX(), camera.getCenterY() + 1000);
-				sMenu.setPosition(camera.getCenterX() + 115, camera.getCenterY() + 1100);
-				sSubmit.setPosition(camera.getCenterX() + 100, camera.getCenterY() + 1100);
-				sReplay.setPosition(camera.getCenterX() + 100, camera.getCenterY() + 1250);
+				sGameOver.setPosition(400-sGameOver.getWidth()/2, -300);
+				sMenu.setPosition(400-sMenu.getWidth()/2, -300);
+				sSubmit.setPosition(400-sSubmit.getWidth()/2, -300);
+				sReplay.setPosition(400-sReplay.getWidth()/2, -300);
 				
-				sGameOver.registerEntityModifier(new MoveYModifier(0.5f, sGameOver.getY(), camera.getCenterY() - 110, org.andengine.util.modifier.ease.EaseBounceInOut.getInstance()));
-				sMenu.registerEntityModifier(new MoveYModifier(0.7f, sMenu.getY(), camera.getCenterY() - 10, EaseBounceInOut.getInstance()));
-				sSubmit.registerEntityModifier(new MoveYModifier(0.7f, sMenu.getY(), camera.getCenterY() + 45, EaseBounceInOut.getInstance()));
-				sReplay.registerEntityModifier(new MoveYModifier(0.7f, sReplay.getY(), camera.getCenterY() + 110, EaseBounceInOut.getInstance()));
+				gameHUD.registerTouchArea(sMenu);
+				gameHUD.registerTouchArea(sSubmit);
+				gameHUD.registerTouchArea(sReplay);
+				
+				sGameOver.registerEntityModifier(new MoveYModifier(12.5f, sGameOver.getY(), 120, org.andengine.util.modifier.ease.EaseElasticInOut.getInstance()));
+				sMenu.registerEntityModifier(new MoveYModifier(12.5f, sMenu.getY(), 200, EaseElasticInOut.getInstance()));
+				sSubmit.registerEntityModifier(new MoveYModifier(12.5f, sMenu.getY(), 250, EaseElasticInOut.getInstance()));
+				sReplay.registerEntityModifier(new MoveYModifier(12.5f, sReplay.getY(), 310, EaseElasticInOut.getInstance()));
 
-				SceneManager.getInstance().getCurrentScene().registerTouchArea(sMenu);
-				SceneManager.getInstance().getCurrentScene().registerTouchArea(sSubmit);
-				SceneManager.getInstance().getCurrentScene().registerTouchArea(sReplay);
-				foregroundLayer.attachChild(sGameOver);
-				foregroundLayer.attachChild(sReplay);
-				foregroundLayer.attachChild(sMenu);
-				foregroundLayer.attachChild(sSubmit);
+
+				
+				
+				gameHUD.attachChild(sGameOver);
+				gameHUD.attachChild(sReplay);
+				gameHUD.attachChild(sMenu);
+				gameHUD.attachChild(sSubmit);
 			}
 		}));
 		this.registerUpdateHandler(new TimerHandler(2f, new ITimerCallback() {
-			public void onTimePassed(final TimerHandler pTimerHandler) {
-				resourcesManager.engine.unregisterUpdateHandler(pTimerHandler);
-				SceneManager.getInstance().getCurrentScene().unregisterUpdateHandler(pTimerHandler);
-				ResourcesManager.getInstance().whooshSound.play();
-			}
-		}));
-		this.registerUpdateHandler(new TimerHandler(3.0f, new ITimerCallback() {
 			public void onTimePassed(final TimerHandler pTimerHandler) {
 				resourcesManager.engine.unregisterUpdateHandler(pTimerHandler);
 				SceneManager.getInstance().getCurrentScene().unregisterUpdateHandler(pTimerHandler);
@@ -384,14 +379,14 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				final Fixture x1 = contact.getFixtureA();
 				final Fixture x2 = contact.getFixtureB();
 
-				if ("player".equals(x1.getBody().getUserData()) || "ground".equals(x2.getBody().getUserData())) {
+				if ("player".equals(x1.getBody().getUserData()) && "ground".equals(x2.getBody().getUserData())) {
 					if (player.isJumping()) {
 						player.land();
 					}
 					if(!player.isAlive()){
 						resourcesManager.fallDownSound.play();
 					}
-				} else if ("player".equals(x2.getBody().getUserData()) || "ground".equals(x1.getBody().getUserData())) {
+				} else if ("player".equals(x2.getBody().getUserData()) && "ground".equals(x1.getBody().getUserData())) {
 					if (player.isJumping()) {
 						player.land();
 					}
@@ -400,10 +395,16 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 					}
 				}
 
-				if (player.isAlive() && (("player".equals(x1.getBody().getUserData()) && "bottom".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "bottom".equals(x1.getBody().getUserData())))) {
+				if (player.isAlive() && (("player".equals(x1.getBody().getUserData()) && "crateBottom".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "crateBottom".equals(x1.getBody().getUserData())))) {
 					player.dieBottom();
 				}
-				if (player.isAlive() && !player.isSliding() && (("player".equals(x1.getBody().getUserData()) && "upper".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "upper".equals(x1.getBody().getUserData())))) {
+				if (player.isAlive() && !player.isSliding() && (("player".equals(x1.getBody().getUserData()) && "crateUpper".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "crateUpper".equals(x1.getBody().getUserData())))) {
+					player.dieTop();
+				}
+				if (player.isAlive() && (("player".equals(x1.getBody().getUserData()) && "ballBottom".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "ballBottom".equals(x1.getBody().getUserData())))) {
+					player.dieTop();
+				}
+				if (player.isAlive() && !player.isSliding() && (("player".equals(x1.getBody().getUserData()) && "ballUpper".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "ballUpper".equals(x1.getBody().getUserData())))) {
 					player.dieTop();
 				}
 			}

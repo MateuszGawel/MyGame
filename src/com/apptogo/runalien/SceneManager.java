@@ -55,7 +55,7 @@ public class SceneManager {
 		setScene(loadingScene);
 		gameScene.disposeScene();
 		resourcesManager.unloadGameResources();
-		resourcesManager.engine.registerUpdateHandler(new TimerHandler(0.1f, new ITimerCallback()
+		resourcesManager.engine.registerUpdateHandler(new TimerHandler(0.2f, new ITimerCallback()
 		{
 			public void onTimePassed(final TimerHandler pTimerHandler)
 			{

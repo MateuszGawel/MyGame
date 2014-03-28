@@ -12,20 +12,20 @@ public class ObstaclesPoolManager
 	//Obstacles ammount
 	private final int crateBottomAmmount = 30;
 	private final int crateUpperAmmount = 30;
-	private final int ballTopAmmount = 3;
-	private final int ballBottomAmmount = 3;
+	private final int ballUpperAmmount = 2;
+	private final int ballBottomAmmount = 2;
 	
 	//Pools
 	public Stack<CrateBottom> crateBottomPool;
 	public Stack<CrateUpper> crateUpperPool;
-	public Stack<BallTop> ballTopPool;
+	public Stack<BallUpper> ballUpperPool;
 	public Stack<BallBottom> ballBottomPool;
 
 	public ObstaclesPoolManager(){
 
 		crateBottomPool = new Stack<CrateBottom>();
 		crateUpperPool = new Stack<CrateUpper>();
-		ballTopPool = new Stack<BallTop>();
+		ballUpperPool = new Stack<BallUpper>();
 		ballBottomPool = new Stack<BallBottom>();
 	}
 	
@@ -39,8 +39,8 @@ public class ObstaclesPoolManager
 		for(int i=ballBottomAmmount; i>0; i--){
 			ballBottomPool.push(new BallBottom(physicsWorld, foregroundLayer));
 		}
-		for(int i=ballTopAmmount; i>0; i--){
-			ballTopPool.push(new BallTop(physicsWorld, foregroundLayer));
+		for(int i=ballUpperAmmount; i>0; i--){
+			ballUpperPool.push(new BallUpper(physicsWorld, foregroundLayer));
 		}
 		
 	}
