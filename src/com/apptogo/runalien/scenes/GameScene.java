@@ -382,10 +382,10 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 					}
 				}
 
-				if (player.isAlive() && (("player".equals(x1.getBody().getUserData()) && "crateBottom".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "crateBottom".equals(x1.getBody().getUserData())))) {
+				if (player.isAlive() && (("player".equals(x1.getBody().getUserData()) && "bottom".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "bottom".equals(x1.getBody().getUserData())))) {
 					player.dieBottom();
 				}
-				if (player.isAlive() && !player.isSliding() && (("player".equals(x1.getBody().getUserData()) && "crateUpper".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "crateUpper".equals(x1.getBody().getUserData())))) {
+				if (player.isAlive() && !player.isSliding() && (("player".equals(x1.getBody().getUserData()) && "upper".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "upper".equals(x1.getBody().getUserData())))) {
 					player.dieTop();
 				}
 			}

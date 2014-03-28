@@ -59,7 +59,6 @@ public class ObstacleGenerator {
 	}
 	
 	public void startObstacleGenerationAlgorithm(){	
-				
 		scene.registerUpdateHandler(new IUpdateHandler() {
 			@Override
 			public void onUpdate(float pSecondsElapsed) {
@@ -68,7 +67,7 @@ public class ObstacleGenerator {
 					if(player.getBody().getPosition().x + 50 > nextObstaclePosition && player.isAlive())
 					{
 						log("pozycja playera: " + player.getBody().getPosition().x + " +50 jest wieksza niz " + nextObstaclePosition);
-						int random = generator.nextInt(6);
+						int random = generator.nextInt(8);
 						log("LALALA WYLOSOWA£EM: " + random);
 						switch(random){
 						case 0:
@@ -77,22 +76,28 @@ public class ObstacleGenerator {
 							firstObstacleFlag = false;
 							break;
 						case 1:
-							generateUpperWall(false);
+							generateBallTop();
+							//generateUpperWall(false);
 							break;
 						case 2:
 							generateBottomWall(false);
 							break;
 						case 3:
-							generateBigWall();
+							generateBallBottom();
+							///generateBigWall();
 							break;
 						case 4:
 							generatePyramid();
 							break;
 						case 5:
-							generateSingleBottomObstacle();
+							generateBallTop();
+							//generateSingleBottomObstacle();
 							break;
 						case 6:
 							generateSingleUpperObstacle(5.5f);
+							break;
+						case 7:
+							generateBallBottom();
 							break;
 						}
 					}
@@ -248,7 +253,19 @@ public class ObstacleGenerator {
 		nextObstaclePosition = calculateObstaclePosition();
 	}
 	
+	private void generateBallTop(){
+		BallTop ball = obstaclesPoolManager.ballTopPool.pop();
+		usedObstacles.add(ball);
+		ball.setTransformX(nextObstaclePosition+10);
+		nextObstaclePosition = calculateObstaclePosition()+10;
+	}
 	
+	private void generateBallBottom(){
+		BallBottom ball = obstaclesPoolManager.ballBottomPool.pop();
+		usedObstacles.add(ball);
+		ball.setTransformX(nextObstaclePosition+10);
+		nextObstaclePosition = calculateObstaclePosition()+15;
+	}
 	//Others
 	
 	private void ignoreAllCollisions(){
@@ -280,7 +297,7 @@ public class ObstacleGenerator {
 		{                                             //nawet nie probowac synchronizowac :P probowalem synchronizowac metody/bloki ponad godzine i lipa a tak dziala
 			Obstacle obstacle = usedObstacles.get(u);
 			
-			if( obstacle.getBody().getPosition().x < (player.getBody().getPosition().x - 10) ) //- 10 zeby znikaly juz poza ekranem
+			if( obstacle.getBody().getPosition().x < (player.getBody().getPosition().x) ) //- 10 zeby znikaly juz poza ekranem
 			{
 				usedObstacles.remove(obstacle);
 				if( ( (String)(obstacle.getBody().getUserData()) ).equals("crateUpper") )
