@@ -26,7 +26,7 @@ public class BallUpper extends Obstacle{
 	
 	public BallUpper(PhysicsWorld physicsWorld, Entity foregroundLayer){
 		
-		anchorSprite = new Sprite(-1000, -120, ResourcesManager.getInstance().crate_region, ResourcesManager.getInstance().vbom); 
+		anchorSprite = new Sprite(-1000, -140, ResourcesManager.getInstance().crate_region, ResourcesManager.getInstance().vbom); 
 		//narazie pozycja x jest zero ale ostateznie musi byc minus wpizdu zeby na poczatku ich nie bylo widac
 		anchorSprite.setUserData("crateUpper");
 		anchorSprite.setCullingEnabled(false);
@@ -43,12 +43,12 @@ public class BallUpper extends Obstacle{
 		});
 		
 		
-		connectionLine = new Line(anchorSprite.getX()+50, -115, anchorSprite.getX()+50, -115, ResourcesManager.getInstance().vbom);
+		connectionLine = new Line(anchorSprite.getX()+50, -140, anchorSprite.getX()+50, -140, ResourcesManager.getInstance().vbom);
 		connectionLine.setColor(new Color(70f/255f, 50f/255f, 10f/255f));
 		connectionLine.setLineWidth(4.0f);
 		connectionLine.setCullingEnabled(false);
 		
-		sprite = new Sprite(anchorSprite.getX()+lineLength, -115, ResourcesManager.getInstance().ball_region, ResourcesManager.getInstance().vbom);
+		sprite = new Sprite(anchorSprite.getX()+lineLength, -140, ResourcesManager.getInstance().ball_region, ResourcesManager.getInstance().vbom);
 		sprite.setCullingEnabled(false);
 		//narazie pozycja x jest zero ale ostateznie musi byc minus wpizdu zeby na poczatku ich nie bylo widac
 		sprite.setUserData("ballUpper");
@@ -64,7 +64,8 @@ public class BallUpper extends Obstacle{
 			public void onUpdate(float pSecondsElapsed) {
 				super.onUpdate(pSecondsElapsed);
 				final Vector2 movingBodyWorldCenter = body.getWorldCenter();
-				connectionLine.setPosition(anchorSprite.getX()+20, -115, movingBodyWorldCenter.x * PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, movingBodyWorldCenter.y * PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
+				connectionLine.setPosition(anchorSprite.getX()+40, -140, movingBodyWorldCenter.x * PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, movingBodyWorldCenter.y * PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
+				connectionLine.setVisible(true);
 			}
 		});
 		physicsWorld.registerPhysicsConnector(new PhysicsConnector(sprite, body, true, true));
@@ -78,9 +79,8 @@ public class BallUpper extends Obstacle{
 	
 	public void setTransformX(float posX){
 		connectionLine.setVisible(false);
-		body.setTransform(posX+lineLength/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, -115/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, 0);
-		anchorBody.setTransform(posX, -120/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, 0);
-		connectionLine.setVisible(true);
+		body.setTransform(posX+lineLength/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, -140/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, 0);
+		anchorBody.setTransform(posX, -140/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, 0);
 	}
 	
 	

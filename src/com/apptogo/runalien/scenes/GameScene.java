@@ -141,8 +141,8 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		frontParallaxBackground = new ParallaxEntity(-20.0f, new Sprite(0, 280, resourcesManager.mParallaxLayerFront, resourcesManager.vbom));
 		autoParallaxBackground.attachParallaxEntity(frontParallaxBackground);
 		
-		grassParallaxBackground = new ParallaxEntity(-20.0f, new Sprite(0, 346, resourcesManager.mParallaxLayerGrass, resourcesManager.vbom));
-		autoParallaxBackground.attachParallaxEntity(grassParallaxBackground);
+		//grassParallaxBackground = new ParallaxEntity(-30f, new Sprite(0, 346, resourcesManager.mParallaxLayerGrass, resourcesManager.vbom));
+		//autoParallaxBackground.attachParallaxEntity(grassParallaxBackground);
 		
 		setBackground(autoParallaxBackground);
 	}
@@ -154,7 +154,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		levelCoordinates[1] = new Vector2(center - 200, 240);
 		levelCoordinates[2] = new Vector2(center + 600, 240);
 		levelCoordinates[3] = new Vector2(center + 600 , 360);
-		center += 800;
 	}
 
 	private void createGround() {
@@ -190,6 +189,10 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		ground = new TexturedPolygon(0, 0, vertexX2, vertexY2, resourcesManager.dirt_texture_region, vbom);
 		backgroundLayer.attachChild(ground);
 		ground.setUserData("ground");
+		
+		Sprite grass = new Sprite(center - 200, 232, ResourcesManager.getInstance().grass_region, vbom);
+		ground.attachChild(grass);
+		center += 800;
 		//backgroundLayer.attachChild(new DebugRenderer(physicsWorld, vbom));
 	}
 
@@ -222,7 +225,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 
 				if (player.getBody().getPosition().x > center2) {
 					createGround();
-
 					if (backgroundLayer.getChildCount() == 4) {
 						backgroundLayer.detachChild(backgroundLayer.getFirstChild());
 					}
