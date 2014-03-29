@@ -22,50 +22,53 @@ public class BallUpper extends Obstacle{
 	private Sprite anchorSprite;
 	private Body anchorBody;
 	Line connectionLine;
-	int lineLength = 250;
 	
+	int ballY = 110;
+	int ballX = -500;
+	int anchorY = -140;
+	int anchorX = -500;
+
 	public BallUpper(PhysicsWorld physicsWorld, Entity foregroundLayer){
 		
-		anchorSprite = new Sprite(-1000, -140, ResourcesManager.getInstance().crate_region, ResourcesManager.getInstance().vbom); 
-		//narazie pozycja x jest zero ale ostateznie musi byc minus wpizdu zeby na poczatku ich nie bylo widac
-		anchorSprite.setUserData("crateUpper");
+		anchorSprite = new Sprite(anchorX, anchorY, ResourcesManager.getInstance().crate_region, ResourcesManager.getInstance().vbom); 
 		anchorSprite.setCullingEnabled(false);
+		anchorSprite.setUserData("ballUpperAnchor");
 		anchorBody = PhysicsFactory.createBoxBody(physicsWorld, anchorSprite, BodyType.StaticBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0));
-		anchorBody.setUserData("crateUpper");
+		anchorBody.setUserData("ballUpperAnchor");
 
 		physicsWorld.registerPhysicsConnector(new PhysicsConnector(anchorSprite, anchorBody, true, false) {
 			@Override
 			public void onUpdate(float pSecondsElapsed) {
 				super.onUpdate(pSecondsElapsed);
-				final Vector2 movingBodyWorldCenter = body.getWorldCenter();
-				connectionLine.setPosition(connectionLine.getX1(), connectionLine.getY1(), movingBodyWorldCenter.x * PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, movingBodyWorldCenter.y * PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
-			}
+				}
 		});
 		
 		
-		connectionLine = new Line(anchorSprite.getX()+50, -140, anchorSprite.getX()+50, -140, ResourcesManager.getInstance().vbom);
-		connectionLine.setColor(new Color(70f/255f, 50f/255f, 10f/255f));
+		connectionLine = new Line(anchorX, anchorY, ballX, ballY, ResourcesManager.getInstance().vbom);
+		//connectionLine.setColor(new Color(70f/255f, 50f/255f, 10f/255f));
+		connectionLine.setColor(Color.BLUE);
 		connectionLine.setLineWidth(4.0f);
 		connectionLine.setCullingEnabled(false);
+		connectionLine.setVisible(true);
 		
-		sprite = new Sprite(anchorSprite.getX()+lineLength, -140, ResourcesManager.getInstance().ball_region, ResourcesManager.getInstance().vbom);
+		sprite = new Sprite(ballX, ballY, ResourcesManager.getInstance().ball_region, ResourcesManager.getInstance().vbom);
 		sprite.setCullingEnabled(false);
-		//narazie pozycja x jest zero ale ostateznie musi byc minus wpizdu zeby na poczatku ich nie bylo widac
 		sprite.setUserData("ballUpper");
 		body = PhysicsFactory.createCircleBody(physicsWorld, sprite, BodyType.DynamicBody, PhysicsFactory.createFixtureDef(200.5f, 0.2f, 0.5f));
 		body.setUserData("ballUpper");
-		
+
 		foregroundLayer.attachChild(connectionLine);
 		foregroundLayer.attachChild(anchorSprite);
 		foregroundLayer.attachChild(sprite);
+
 		
 		physicsWorld.registerPhysicsConnector(new PhysicsConnector(sprite, body, true, false) {
 			@Override
 			public void onUpdate(float pSecondsElapsed) {
 				super.onUpdate(pSecondsElapsed);
-				final Vector2 movingBodyWorldCenter = body.getWorldCenter();
-				connectionLine.setPosition(anchorSprite.getX()+40, -140, movingBodyWorldCenter.x * PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, movingBodyWorldCenter.y * PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
-				connectionLine.setVisible(true);
+				final Vector2 ballBodyCenter = body.getWorldCenter();
+				final Vector2 anchorBodyCenter = anchorBody.getWorldCenter();
+				connectionLine.setPosition(anchorBodyCenter.x * PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, anchorBodyCenter.y * PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, ballBodyCenter.x * PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, ballBodyCenter.y * PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
 			}
 		});
 		physicsWorld.registerPhysicsConnector(new PhysicsConnector(sprite, body, true, true));
@@ -77,20 +80,9 @@ public class BallUpper extends Obstacle{
 		physicsWorld.createJoint(revoluteJointDef);
 	}
 	
-	public void setTransformX(float posX){
-		connectionLine.setVisible(false);
-		body.setTransform(posX+lineLength/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, -140/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, 0);
-		anchorBody.setTransform(posX, -140/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, 0);
-	}
-	
-	
-	
-	public int getLineLength() {
-		return lineLength;
-	}
-
-	public void setLineLength(int lineLength) {
-		this.lineLength = lineLength;
+	public void setTransformX(float xOffset){
+		body.setTransform(xOffset + 10f, ballY/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, 0);
+		anchorBody.setTransform(xOffset, (anchorY+20)/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, 0);
 	}
 
 	@Override
@@ -102,7 +94,7 @@ public class BallUpper extends Obstacle{
 	@Override
 	public Body getBody()
 	{
-		return body;
+		return anchorBody;
 	}
 
 }

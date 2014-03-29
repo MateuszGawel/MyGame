@@ -207,7 +207,7 @@ public abstract class Player extends AnimatedSprite {
 	    if(screamSound.isPlaying())
 	    	screamSound.pause();
 	    doubleJumpSound.play();
-		body.setLinearVelocity(new Vector2(body.getLinearVelocity().x, -30));
+		body.setLinearVelocity(new Vector2(body.getLinearVelocity().x, -25));
 		doubleJumped = true;
 	}
 	

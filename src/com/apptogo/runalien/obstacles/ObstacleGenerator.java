@@ -238,23 +238,25 @@ public class ObstacleGenerator {
 		nextObstaclePosition = calculateObstaclePosition();
 	}
 	
-	private void generateBallTop(){
+	public void generateBallTop(){
 		if(!obstaclesPoolManager.ballUpperPool.isEmpty()){
+			System.out.println("POOL, generuje upper na x: " + nextObstaclePosition+10);
 			BallUpper ball = obstaclesPoolManager.ballUpperPool.pop();
 			ObstaclesPoolManager.getInstance().setCollisions(ball);
-			usedObstacles.add(ball);
 			ball.setTransformX(nextObstaclePosition+10);
 			nextObstaclePosition = calculateObstaclePosition()+10;
+			usedObstacles.add(ball);
 		}
 	}
 	
 	private void generateBallBottom(){
 		if(!obstaclesPoolManager.ballBottomPool.isEmpty()){
+			System.out.println("POOL, generuje bottom na x: " + nextObstaclePosition+10);
 			BallBottom ball = obstaclesPoolManager.ballBottomPool.pop();
 			ObstaclesPoolManager.getInstance().setCollisions(ball);
-			usedObstacles.add(ball);
 			ball.setTransformX(nextObstaclePosition+10);
 			nextObstaclePosition = calculateObstaclePosition()+15;
+			usedObstacles.add(ball);
 		}
 	}
 	//Others
@@ -288,7 +290,7 @@ public class ObstacleGenerator {
 		{                                             //nawet nie probowac synchronizowac :P probowalem synchronizowac metody/bloki ponad godzine i lipa a tak dziala
 			Obstacle obstacle = usedObstacles.get(u);
 			
-			if( obstacle.getBody().getPosition().x < (player.getBody().getPosition().x) -5) //- 10 zeby znikaly juz poza ekranem
+			if( obstacle.getBody().getPosition().x < (player.getBody().getPosition().x -10)) //- 10 zeby znikaly juz poza ekranem
 			{
 				usedObstacles.remove(obstacle);
 				if( ( (String)(obstacle.getBody().getUserData()) ).equals("crateUpper") )
@@ -311,13 +313,17 @@ public class ObstacleGenerator {
 				{
 					obstaclesPoolManager.bottom_4_Pool.push( (Bottom_4)obstacle );
 				}
-				if( ( (String)(obstacle.getBody().getUserData()) ).equals("ballUpper") )
+				if( ( (String)(obstacle.getBody().getUserData()) ).equals("ballUpperAnchor") )
 				{
+					System.out.println("POOL up " + obstacle.getBody().getPosition().x + " a 10 jednostek za playerem " + (player.getBody().getPosition().x-10));
 					obstaclesPoolManager.ballUpperPool.push( (BallUpper)obstacle );
+					System.out.println("POOL po zwolnieniu na stosie jest upów: " + obstaclesPoolManager.ballUpperPool.size());
 				}
-				if( ( (String)(obstacle.getBody().getUserData()) ).equals("ballBottom") )
+				if( ( (String)(obstacle.getBody().getUserData()) ).equals("ballBottomAnchor") )
 				{
+					System.out.println("POOL bot" + obstacle.getBody().getPosition().x + " a 10 jednostek za playerem " + (player.getBody().getPosition().x-10));
 					obstaclesPoolManager.ballBottomPool.push( (BallBottom)obstacle );
+					System.out.println("POOL po zwolnieniu na stosie jest botów: " + obstaclesPoolManager.ballBottomPool.size());
 				}
 				ObstaclesPoolManager.getInstance().ignoreCollisions(obstacle);
 			}
