@@ -396,7 +396,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 					}
 				}
 
-				if (player.isAlive() && (("player".equals(x1.getBody().getUserData()) && "crateBottom".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "crateBottom".equals(x1.getBody().getUserData())))) {
+				if (player.isAlive() && (("player".equals(x1.getBody().getUserData()) && ( "Bottom1".equals(x1.getBody().getUserData()) || "Bottom2".equals(x1.getBody().getUserData()) || "Bottom3".equals(x1.getBody().getUserData()) || "Bottom4".equals(x1.getBody().getUserData()) )) || ("player".equals(x2.getBody().getUserData()) && ( "Bottom1".equals(x1.getBody().getUserData()) || "Bottom2".equals(x1.getBody().getUserData()) || "Bottom3".equals(x1.getBody().getUserData()) || "Bottom4".equals(x1.getBody().getUserData()) )))) {
 					player.dieBottom();
 				}
 				if (player.isAlive() && !player.isSliding() && (("player".equals(x1.getBody().getUserData()) && "crateUpper".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "crateUpper".equals(x1.getBody().getUserData())))) {
@@ -405,11 +405,11 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				if (player.isAlive() && (("player".equals(x1.getBody().getUserData()) && "ballBottom".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "ballBottom".equals(x1.getBody().getUserData())))) {
 					player.dieTop();
 				}
-				if (player.isAlive() && !player.isSliding() && (("player".equals(x1.getBody().getUserData()) && "ballUpper".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "ballUpper".equals(x1.getBody().getUserData())))) {
+				if (player.isAlive() && !player.isSliding() && (("player".equals(x1.getBody().getUserData()) && "ballUpper".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && ( "Bottom1".equals(x1.getBody().getUserData()) || "Bottom2".equals(x1.getBody().getUserData()) || "Bottom3".equals(x1.getBody().getUserData()) || "Bottom4".equals(x1.getBody().getUserData()) ) ))) {
 					player.dieTop();
 				}
 			}
-
+			
 			@Override
 			public void endContact(Contact contact) {
 

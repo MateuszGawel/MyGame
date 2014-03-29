@@ -23,7 +23,7 @@ public class BallBottom extends Obstacle{
 	private Body anchorBody;
 	Line connectionLine;
 	int lineLength = 300;
-	
+	//koment
 	public BallBottom(PhysicsWorld physicsWorld, Entity foregroundLayer){
 		
 		anchorSprite = new Sprite(-1000, -140, ResourcesManager.getInstance().crate_region, ResourcesManager.getInstance().vbom); 
