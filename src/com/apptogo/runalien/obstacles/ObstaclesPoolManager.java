@@ -13,28 +13,46 @@ public class ObstaclesPoolManager
 {
 	
 	//Obstacles ammount
-	private final int crateBottomAmmount = 40;
-	private final int crateUpperAmmount = 40;
+	private final int bottom_1_Ammount = 10;
+	private final int bottom_2_Ammount = 10;
+	private final int bottom_3_Ammount = 10;
+	private final int bottom_4_Ammount = 10;
+	private final int crateUpperAmmount = 0;
 	private final int ballUpperAmmount = 2;
 	private final int ballBottomAmmount = 2;
 	
 	//Pools
-	public Stack<CrateBottom> crateBottomPool;
+	public Stack<Bottom_1> bottom_1_Pool;
+	public Stack<Bottom_2> bottom_2_Pool;
+	public Stack<Bottom_3> bottom_3_Pool;
+	public Stack<Bottom_4> bottom_4_Pool;
 	public Stack<CrateUpper> crateUpperPool;
 	public Stack<BallUpper> ballUpperPool;
 	public Stack<BallBottom> ballBottomPool;
 
 	public ObstaclesPoolManager(){
 
-		crateBottomPool = new Stack<CrateBottom>();
+		bottom_1_Pool = new Stack<Bottom_1>();
+		bottom_2_Pool = new Stack<Bottom_2>();
+		bottom_3_Pool = new Stack<Bottom_3>();
+		bottom_4_Pool = new Stack<Bottom_4>();
 		crateUpperPool = new Stack<CrateUpper>();
 		ballUpperPool = new Stack<BallUpper>();
 		ballBottomPool = new Stack<BallBottom>();
 	}
 	
 	public void initializePoolManager(PhysicsWorld physicsWorld, Entity foregroundLayer){
-		for(int i=crateBottomAmmount; i>0; i--){
-			crateBottomPool.push(new CrateBottom(physicsWorld, foregroundLayer));
+		for(int i=bottom_1_Ammount; i>0; i--){
+			bottom_1_Pool.push(new Bottom_1(physicsWorld, foregroundLayer));
+		}
+		for(int i=bottom_2_Ammount; i>0; i--){
+			bottom_2_Pool.push(new Bottom_2(physicsWorld, foregroundLayer));
+		}
+		for(int i=bottom_3_Ammount; i>0; i--){
+			bottom_3_Pool.push(new Bottom_3(physicsWorld, foregroundLayer));
+		}
+		for(int i=bottom_4_Ammount; i>0; i--){
+			bottom_4_Pool.push(new Bottom_4(physicsWorld, foregroundLayer));
 		}
 		for(int i=crateUpperAmmount; i>0; i--){
 			crateUpperPool.push(new CrateUpper(physicsWorld, foregroundLayer));
@@ -68,7 +86,7 @@ public class ObstaclesPoolManager
 	}
 
 	public boolean isNotEmpty() {
-		if( crateBottomPool.isEmpty() && crateUpperPool.isEmpty() )
+		if( bottom_1_Pool.isEmpty() && bottom_2_Pool.isEmpty() && bottom_3_Pool.isEmpty() && bottom_4_Pool.isEmpty() && crateUpperPool.isEmpty() )
 		{
 			return false;
 		}

@@ -118,9 +118,9 @@ public class ObstacleGenerator {
 	{
 		Obstacle obstacle = null;
 		
-		if(!obstaclesPoolManager.crateBottomPool.isEmpty())
+		if(!obstaclesPoolManager.bottom_1_Pool.isEmpty())
 		{
-			obstacle = obstaclesPoolManager.crateBottomPool.pop();
+			obstacle = obstaclesPoolManager.bottom_1_Pool.pop();
 			obstacle.getBody().setTransform(nextObstaclePosition, 6.8f, 0);
 			usedObstacles.add(obstacle);
 			nextObstaclePosition = calculateObstaclePosition(); 
@@ -132,9 +132,9 @@ public class ObstacleGenerator {
 	{
 		Obstacle obstacle = null;
 		
-		if(!obstaclesPoolManager.crateUpperPool.isEmpty())
+		if(!obstaclesPoolManager.bottom_1_Pool.isEmpty()) //!
 		{
-			obstacle = obstaclesPoolManager.crateUpperPool.pop();
+			obstacle = obstaclesPoolManager.bottom_1_Pool.pop();
 			obstacle.getBody().setTransform(nextObstaclePosition, yPos, 0);
 			usedObstacles.add(obstacle);
 			nextObstaclePosition = calculateObstaclePosition();
@@ -146,18 +146,27 @@ public class ObstacleGenerator {
 		List<Obstacle> obstacles = new ArrayList<Obstacle>();
 		Obstacle obstacle;
 		
-		if(obstaclesPoolManager.crateBottomPool.size() >= 4)
+		if(obstaclesPoolManager.bottom_1_Pool.size() >= 2 && obstaclesPoolManager.bottom_2_Pool.size() >= 1)
 		{
-			for(int i=0; i<4; i++){
-				obstacle = obstaclesPoolManager.crateBottomPool.pop();
-				obstacles.add(obstacle);
-				usedObstacles.add(obstacle);
-				ObstaclesPoolManager.getInstance().setCollisions(obstacle);
-			}
+
+			obstacle = obstaclesPoolManager.bottom_1_Pool.pop();
+			obstacles.add(obstacle);
+			usedObstacles.add(obstacle);
+			ObstaclesPoolManager.getInstance().setCollisions(obstacle);
+
+			obstacle = obstaclesPoolManager.bottom_2_Pool.pop();
+			obstacles.add(obstacle);
+			usedObstacles.add(obstacle);
+			ObstaclesPoolManager.getInstance().setCollisions(obstacle);
+			
+			obstacle = obstaclesPoolManager.bottom_1_Pool.pop();
+			obstacles.add(obstacle);
+			usedObstacles.add(obstacle);
+			ObstaclesPoolManager.getInstance().setCollisions(obstacle);
+
 			obstacles.get(0).getBody().setTransform(nextObstaclePosition, 6.8f, 0);
 			obstacles.get(1).getBody().setTransform(nextObstaclePosition+1.40f, 6.8f, 0);
 			obstacles.get(2).getBody().setTransform(nextObstaclePosition+2.8f, 6.8f, 0);
-			obstacles.get(3).getBody().setTransform(nextObstaclePosition+1.40f, 5.5f, 0);
 			nextObstaclePosition = calculateObstaclePosition(); //to oznacza ze nastepna przeszkoda pojawi sie za 100 jednostek. Trzeba to wyliczac na podstawie predkosci playera (mozna tez dodawac zmienna losowa)
 		}
 	}
@@ -166,26 +175,17 @@ public class ObstacleGenerator {
 		List<Obstacle> obstacles = new ArrayList<Obstacle>();
 		Obstacle obstacle;
 		
-		if(obstaclesPoolManager.crateBottomPool.size() >= 2 && obstaclesPoolManager.crateUpperPool.size() >= 2 )
+		if(obstaclesPoolManager.bottom_2_Pool.size() >= 2)
 		{
 			for(int i=0; i<2; i++){
-				obstacle = obstaclesPoolManager.crateBottomPool.pop();
-				obstacles.add(obstacle);
-				usedObstacles.add(obstacle);
-				ObstaclesPoolManager.getInstance().setCollisions(obstacle);
-			}
-			for(int i=0; i<2; i++){
-				obstacle = obstaclesPoolManager.crateUpperPool.pop();
+				obstacle = obstaclesPoolManager.bottom_2_Pool.pop();
 				obstacles.add(obstacle);
 				usedObstacles.add(obstacle);
 				ObstaclesPoolManager.getInstance().setCollisions(obstacle);
 			}
 
-			
 			obstacles.get(0).getBody().setTransform(nextObstaclePosition, 6.8f, 0);
-			obstacles.get(1).getBody().setTransform(nextObstaclePosition, 5.5f, 0);
-			obstacles.get(2).getBody().setTransform(nextObstaclePosition, -1.5f, 0);
-			obstacles.get(3).getBody().setTransform(nextObstaclePosition, -2.8f, 0);
+			obstacles.get(1).getBody().setTransform(nextObstaclePosition, -1.5f, 0);
 			nextObstaclePosition = calculateObstaclePosition(); //to oznacza ze nastepna przeszkoda pojawi sie za 100 jednostek. Trzeba to wyliczac na podstawie predkosci playera (mozna tez dodawac zmienna losowa)
 		}
 	}
@@ -194,18 +194,14 @@ public class ObstacleGenerator {
 		List<Obstacle> obstacles = new ArrayList<Obstacle>();
 		Obstacle obstacle;
 		
-		if(obstaclesPoolManager.crateBottomPool.size() >= 4)
+		if(obstaclesPoolManager.bottom_4_Pool.size() >= 1)
 		{
-			for(int i=0; i<4; i++){
-				obstacle = obstaclesPoolManager.crateBottomPool.pop();
-				obstacles.add(obstacle);
-				usedObstacles.add(obstacle);
-				ObstaclesPoolManager.getInstance().setCollisions(obstacle);
-			}
+			obstacle = obstaclesPoolManager.bottom_4_Pool.pop();
+			obstacles.add(obstacle);
+			usedObstacles.add(obstacle);
+			ObstaclesPoolManager.getInstance().setCollisions(obstacle);
+
 			obstacles.get(0).getBody().setTransform(nextObstaclePosition, 6.8f, 0);
-			obstacles.get(1).getBody().setTransform(nextObstaclePosition, 5.5f, 0);
-			obstacles.get(2).getBody().setTransform(nextObstaclePosition, 4.2f, 0);
-			obstacles.get(3).getBody().setTransform(nextObstaclePosition, 2.9f, 0);
 			
 			if(!customMargin)
 				nextObstaclePosition = calculateObstaclePosition(); //to oznacza ze nastepna przeszkoda pojawi sie za 100 jednostek. Trzeba to wyliczac na podstawie predkosci playera (mozna tez dodawac zmienna losowa)
@@ -216,37 +212,26 @@ public class ObstacleGenerator {
 		List<Obstacle> obstacles = new ArrayList<Obstacle>();
 		Obstacle obstacle;
 		
-		if(obstaclesPoolManager.crateBottomPool.size() >= 2 && obstaclesPoolManager.crateUpperPool.size() >= 6)
+		if(obstaclesPoolManager.bottom_4_Pool.size() >= 2)
 		{
 			
 			for(int i=0; i<2; i++){
-				obstacle = obstaclesPoolManager.crateUpperPool.pop();
+				obstacle = obstaclesPoolManager.bottom_4_Pool.pop();
 				obstacles.add(obstacle);
 				usedObstacles.add(obstacle);
 				ObstaclesPoolManager.getInstance().setCollisions(obstacle);
 			}
 			
-			for(int i=0; i<6; i++){
-				obstacle = obstaclesPoolManager.crateBottomPool.pop();
-				obstacles.add(obstacle);
-				usedObstacles.add(obstacle);
-				ObstaclesPoolManager.getInstance().setCollisions(obstacle);
-			}
-			obstacles.get(0).getBody().setTransform(nextObstaclePosition, 5.5f, 0);
-			obstacles.get(1).getBody().setTransform(nextObstaclePosition, 4.2f, 0);
-			obstacles.get(2).getBody().setTransform(nextObstaclePosition, 2.9f, 0);
-			obstacles.get(3).getBody().setTransform(nextObstaclePosition, 1.6f, 0);
-			obstacles.get(4).getBody().setTransform(nextObstaclePosition, 0.3f, 0);
-			obstacles.get(5).getBody().setTransform(nextObstaclePosition, -1f, 0);
-			obstacles.get(6).getBody().setTransform(nextObstaclePosition, -2.3f, 0);
-			obstacles.get(7).getBody().setTransform(nextObstaclePosition, -3.6f, 0);
+			obstacles.get(0).getBody().setTransform(nextObstaclePosition, 1.6f, 0);
+			obstacles.get(1).getBody().setTransform(nextObstaclePosition, -3.6f, 0);
+			
 			if(!customMargin)
 				nextObstaclePosition = calculateObstaclePosition(); //to oznacza ze nastepna przeszkoda pojawi sie za 100 jednostek. Trzeba to wyliczac na podstawie predkosci playera (mozna tez dodawac zmienna losowa)
 		}
 	}
 	
 	private void generateBottomUpperSegment(){
-		if(obstaclesPoolManager.crateBottomPool.size() >= 2 && obstaclesPoolManager.crateUpperPool.size() >= 2 )
+		if(obstaclesPoolManager.bottom_4_Pool.size() >= 3 )
 		generateBottomWall(true);
 		nextObstaclePosition += 0.5f*player.getBody().getLinearVelocity().x; 
 		generateUpperWall(true);
@@ -285,7 +270,7 @@ public class ObstacleGenerator {
 	
 	private void setProperSlidingCollisions(){
 		for(Obstacle obstacle : usedObstacles){
-			if(!obstacle.getBody().getUserData().equals("crateBottom") && !obstacle.getBody().getUserData().equals("ballBottom")){
+			if(!( "Bottom1".equals(obstacle.getBody().getUserData()) || "Bottom2".equals(obstacle.getBody().getUserData()) || "Bottom3".equals(obstacle.getBody().getUserData()) || "Bottom4".equals(obstacle.getBody().getUserData()) ) && !obstacle.getBody().getUserData().equals("ballBottom")){
 				List<Fixture> fixtureList = obstacle.getBody().getFixtureList();
 				for(Fixture fixture : fixtureList){
 					if(player.isSliding())
@@ -310,9 +295,21 @@ public class ObstacleGenerator {
 				{
 					obstaclesPoolManager.crateUpperPool.push( (CrateUpper)obstacle );
 				}
-				if( ( (String)(obstacle.getBody().getUserData()) ).equals("crateBottom") )
+				if(  "Bottom1".equals(obstacle.getBody().getUserData()) )
 				{
-					obstaclesPoolManager.crateBottomPool.push( (CrateBottom)obstacle );
+					obstaclesPoolManager.bottom_1_Pool.push( (Bottom_1)obstacle );
+				}
+				if(  "Bottom2".equals(obstacle.getBody().getUserData()) )
+				{
+					obstaclesPoolManager.bottom_2_Pool.push( (Bottom_2)obstacle );
+				}
+				if(  "Bottom3".equals(obstacle.getBody().getUserData()) )
+				{
+					obstaclesPoolManager.bottom_3_Pool.push( (Bottom_3)obstacle );
+				}
+				if(  "Bottom4".equals(obstacle.getBody().getUserData()) )
+				{
+					obstaclesPoolManager.bottom_4_Pool.push( (Bottom_4)obstacle );
 				}
 				if( ( (String)(obstacle.getBody().getUserData()) ).equals("ballUpper") )
 				{
