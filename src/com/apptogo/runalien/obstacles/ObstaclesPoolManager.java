@@ -1,11 +1,13 @@
 package com.apptogo.runalien.obstacles;
 
+import java.util.List;
 import java.util.Stack;
 
 import org.andengine.entity.Entity;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Fixture;
 
 public class ObstaclesPoolManager
 {
@@ -46,6 +48,19 @@ public class ObstaclesPoolManager
 		
 	}
 	
+	public void ignoreCollisions(Obstacle obstacle){
+		List<Fixture> fixtureList = obstacle.getBody().getFixtureList();
+		for(Fixture fixture : fixtureList){
+				fixture.setSensor(true);
+	    }
+	}
+	
+	public void setCollisions(Obstacle obstacle){
+		List<Fixture> fixtureList = obstacle.getBody().getFixtureList();
+		for(Fixture fixture : fixtureList){
+				fixture.setSensor(false);
+	    }
+	}
 	//Singleton
 	private static final ObstaclesPoolManager INSTANCE = new ObstaclesPoolManager();
 	public static ObstaclesPoolManager getInstance(){

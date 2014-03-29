@@ -23,10 +23,6 @@ public class ObstacleGenerator {
 	public Random generator = new Random();
 	private boolean firstObstacleFlag = true;
 	
-	public void log(String s){
-		System.out.println("POOL " + s);
-	}
-	
 	public ObstacleGenerator(Scene scene, Player player)
 	{
 		this.obstaclesPoolManager = ObstaclesPoolManager.getInstance();
@@ -42,12 +38,11 @@ public class ObstacleGenerator {
 	
 	
 	public int calculateObstaclePosition()
-	{   //System.out.println("POOL : obstacleCalc = "+(nextObstaclePosition + 20 ) );
+	{   
 		//return (int)( (player.getBody().getPosition().x + 20 )); bo tak naprawde kolejne przeszkody chcemy planowac wzgledem siebie, a nie playera, ktory dopiero gdzies tam biegnie	
 		int minSpace = 5;
 		
 		int playerVelocityX = (int)player.getBody().getLinearVelocity().x; 
-		System.out.println("POOL VELOCIT " + 0.8*playerVelocityX);
 		int difficulty = 10;
 		
 		if( playerVelocityX > 0)
@@ -66,9 +61,7 @@ public class ObstacleGenerator {
 				{
 					if(player.getBody().getPosition().x + 50 > nextObstaclePosition && player.isAlive())
 					{
-						log("pozycja playera: " + player.getBody().getPosition().x + " +50 jest wieksza niz " + nextObstaclePosition);
 						int random = generator.nextInt(9);
-						log("LALALA WYLOSOWA£EM: " + random);
 						switch(random){
 						case 0:
 							if(!firstObstacleFlag)
@@ -127,62 +120,65 @@ public class ObstacleGenerator {
 		
 		if(!obstaclesPoolManager.crateBottomPool.isEmpty())
 		{
-			log("stawiam przeszkode bottom na " + nextObstaclePosition);
 			obstacle = obstaclesPoolManager.crateBottomPool.pop();
 			obstacle.getBody().setTransform(nextObstaclePosition, 6.8f, 0);
 			usedObstacles.add(obstacle);
 			nextObstaclePosition = calculateObstaclePosition(); 
-		}else System.out.println("BRAKUJE W POOLU!");
+			ObstaclesPoolManager.getInstance().setCollisions(obstacle);
+		}
 	}
 	
 	private void generateSingleUpperObstacle(float yPos)
 	{
 		Obstacle obstacle = null;
 		
-		if(!obstaclesPoolManager.crateBottomPool.isEmpty())
+		if(!obstaclesPoolManager.crateUpperPool.isEmpty())
 		{
-			log("stawiam przeszkode upper na " + nextObstaclePosition);
 			obstacle = obstaclesPoolManager.crateUpperPool.pop();
 			obstacle.getBody().setTransform(nextObstaclePosition, yPos, 0);
 			usedObstacles.add(obstacle);
 			nextObstaclePosition = calculateObstaclePosition();
-		}else System.out.println("BRAKUJE W POOLU!");
+			ObstaclesPoolManager.getInstance().setCollisions(obstacle);
+		}
 	}
 	
 	private void generatePyramid(){
 		List<Obstacle> obstacles = new ArrayList<Obstacle>();
 		Obstacle obstacle;
 		
-		if(!obstaclesPoolManager.crateBottomPool.isEmpty())
+		if(obstaclesPoolManager.crateBottomPool.size() >= 4)
 		{
 			for(int i=0; i<4; i++){
 				obstacle = obstaclesPoolManager.crateBottomPool.pop();
 				obstacles.add(obstacle);
 				usedObstacles.add(obstacle);
+				ObstaclesPoolManager.getInstance().setCollisions(obstacle);
 			}
 			obstacles.get(0).getBody().setTransform(nextObstaclePosition, 6.8f, 0);
 			obstacles.get(1).getBody().setTransform(nextObstaclePosition+1.40f, 6.8f, 0);
 			obstacles.get(2).getBody().setTransform(nextObstaclePosition+2.8f, 6.8f, 0);
 			obstacles.get(3).getBody().setTransform(nextObstaclePosition+1.40f, 5.5f, 0);
 			nextObstaclePosition = calculateObstaclePosition(); //to oznacza ze nastepna przeszkoda pojawi sie za 100 jednostek. Trzeba to wyliczac na podstawie predkosci playera (mozna tez dodawac zmienna losowa)
-		}else System.out.println("BRAKUJE W POOLU!");
+		}
 	}
 	
 	private void generateBigWall(){
 		List<Obstacle> obstacles = new ArrayList<Obstacle>();
 		Obstacle obstacle;
 		
-		if(!obstaclesPoolManager.crateBottomPool.isEmpty())
+		if(obstaclesPoolManager.crateBottomPool.size() >= 2 && obstaclesPoolManager.crateUpperPool.size() >= 2 )
 		{
 			for(int i=0; i<2; i++){
 				obstacle = obstaclesPoolManager.crateBottomPool.pop();
 				obstacles.add(obstacle);
 				usedObstacles.add(obstacle);
+				ObstaclesPoolManager.getInstance().setCollisions(obstacle);
 			}
 			for(int i=0; i<2; i++){
 				obstacle = obstaclesPoolManager.crateUpperPool.pop();
 				obstacles.add(obstacle);
 				usedObstacles.add(obstacle);
+				ObstaclesPoolManager.getInstance().setCollisions(obstacle);
 			}
 
 			
@@ -191,19 +187,20 @@ public class ObstacleGenerator {
 			obstacles.get(2).getBody().setTransform(nextObstaclePosition, -1.5f, 0);
 			obstacles.get(3).getBody().setTransform(nextObstaclePosition, -2.8f, 0);
 			nextObstaclePosition = calculateObstaclePosition(); //to oznacza ze nastepna przeszkoda pojawi sie za 100 jednostek. Trzeba to wyliczac na podstawie predkosci playera (mozna tez dodawac zmienna losowa)
-		}else System.out.println("BRAKUJE W POOLU!");
+		}
 	}
 	
 	private void generateBottomWall(boolean customMargin){
 		List<Obstacle> obstacles = new ArrayList<Obstacle>();
 		Obstacle obstacle;
 		
-		if(!obstaclesPoolManager.crateBottomPool.isEmpty())
+		if(obstaclesPoolManager.crateBottomPool.size() >= 4)
 		{
 			for(int i=0; i<4; i++){
 				obstacle = obstaclesPoolManager.crateBottomPool.pop();
 				obstacles.add(obstacle);
 				usedObstacles.add(obstacle);
+				ObstaclesPoolManager.getInstance().setCollisions(obstacle);
 			}
 			obstacles.get(0).getBody().setTransform(nextObstaclePosition, 6.8f, 0);
 			obstacles.get(1).getBody().setTransform(nextObstaclePosition, 5.5f, 0);
@@ -212,26 +209,28 @@ public class ObstacleGenerator {
 			
 			if(!customMargin)
 				nextObstaclePosition = calculateObstaclePosition(); //to oznacza ze nastepna przeszkoda pojawi sie za 100 jednostek. Trzeba to wyliczac na podstawie predkosci playera (mozna tez dodawac zmienna losowa)
-		}else System.out.println("BRAKUJE W POOLU!");
+		}
 	}
 	
 	private void generateUpperWall(boolean customMargin){
 		List<Obstacle> obstacles = new ArrayList<Obstacle>();
 		Obstacle obstacle;
 		
-		if(!obstaclesPoolManager.crateBottomPool.isEmpty())
+		if(obstaclesPoolManager.crateBottomPool.size() >= 2 && obstaclesPoolManager.crateUpperPool.size() >= 6)
 		{
 			
 			for(int i=0; i<2; i++){
 				obstacle = obstaclesPoolManager.crateUpperPool.pop();
 				obstacles.add(obstacle);
 				usedObstacles.add(obstacle);
+				ObstaclesPoolManager.getInstance().setCollisions(obstacle);
 			}
 			
 			for(int i=0; i<6; i++){
 				obstacle = obstaclesPoolManager.crateBottomPool.pop();
 				obstacles.add(obstacle);
 				usedObstacles.add(obstacle);
+				ObstaclesPoolManager.getInstance().setCollisions(obstacle);
 			}
 			obstacles.get(0).getBody().setTransform(nextObstaclePosition, 5.5f, 0);
 			obstacles.get(1).getBody().setTransform(nextObstaclePosition, 4.2f, 0);
@@ -244,10 +243,10 @@ public class ObstacleGenerator {
 			if(!customMargin)
 				nextObstaclePosition = calculateObstaclePosition(); //to oznacza ze nastepna przeszkoda pojawi sie za 100 jednostek. Trzeba to wyliczac na podstawie predkosci playera (mozna tez dodawac zmienna losowa)
 		}
-		else System.out.println("BRAKUJE W POOLU!");
 	}
 	
 	private void generateBottomUpperSegment(){
+		if(obstaclesPoolManager.crateBottomPool.size() >= 2 && obstaclesPoolManager.crateUpperPool.size() >= 2 )
 		generateBottomWall(true);
 		nextObstaclePosition += 0.5f*player.getBody().getLinearVelocity().x; 
 		generateUpperWall(true);
@@ -255,17 +254,23 @@ public class ObstacleGenerator {
 	}
 	
 	private void generateBallTop(){
-		BallUpper ball = obstaclesPoolManager.ballUpperPool.pop();
-		usedObstacles.add(ball);
-		ball.setTransformX(nextObstaclePosition+10);
-		nextObstaclePosition = calculateObstaclePosition()+10;
+		if(!obstaclesPoolManager.ballUpperPool.isEmpty()){
+			BallUpper ball = obstaclesPoolManager.ballUpperPool.pop();
+			ObstaclesPoolManager.getInstance().setCollisions(ball);
+			usedObstacles.add(ball);
+			ball.setTransformX(nextObstaclePosition+10);
+			nextObstaclePosition = calculateObstaclePosition()+10;
+		}
 	}
 	
 	private void generateBallBottom(){
-		BallBottom ball = obstaclesPoolManager.ballBottomPool.pop();
-		usedObstacles.add(ball);
-		ball.setTransformX(nextObstaclePosition+10);
-		nextObstaclePosition = calculateObstaclePosition()+15;
+		if(!obstaclesPoolManager.ballBottomPool.isEmpty()){
+			BallBottom ball = obstaclesPoolManager.ballBottomPool.pop();
+			ObstaclesPoolManager.getInstance().setCollisions(ball);
+			usedObstacles.add(ball);
+			ball.setTransformX(nextObstaclePosition+10);
+			nextObstaclePosition = calculateObstaclePosition()+15;
+		}
 	}
 	//Others
 	
@@ -294,7 +299,6 @@ public class ObstacleGenerator {
 	
 	private void releaseUselessObstacles()
 	{
-		System.out.println("UZYTYCH: " + usedObstacles.size());
 		for(int u = 0; u < usedObstacles.size(); u++) //tu byl problem z concurrency - uzywalismy foreach z iteratorem i on robil problemy UWAGA NA TO MOZE BYC DZIURAWE
 		{                                             //nawet nie probowac synchronizowac :P probowalem synchronizowac metody/bloki ponad godzine i lipa a tak dziala
 			Obstacle obstacle = usedObstacles.get(u);
@@ -318,7 +322,9 @@ public class ObstacleGenerator {
 				{
 					obstaclesPoolManager.ballBottomPool.push( (BallBottom)obstacle );
 				}
+				ObstaclesPoolManager.getInstance().ignoreCollisions(obstacle);
 			}
 		}
 	}
+
 }

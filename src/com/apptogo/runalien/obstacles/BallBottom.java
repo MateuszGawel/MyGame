@@ -27,6 +27,7 @@ public class BallBottom extends Obstacle{
 	public BallBottom(PhysicsWorld physicsWorld, Entity foregroundLayer){
 		
 		anchorSprite = new Sprite(-1000, -120, ResourcesManager.getInstance().crate_region, ResourcesManager.getInstance().vbom); 
+		anchorSprite.setCullingEnabled(false);
 		//narazie pozycja x jest zero ale ostateznie musi byc minus wpizdu zeby na poczatku ich nie bylo widac
 		anchorSprite.setUserData("crateUpper");
 		anchorBody = PhysicsFactory.createBoxBody(physicsWorld, anchorSprite, BodyType.StaticBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0));
@@ -45,13 +46,15 @@ public class BallBottom extends Obstacle{
 		connectionLine = new Line(anchorSprite.getX()+50, -115, anchorSprite.getX()+50, -115, ResourcesManager.getInstance().vbom);
 		connectionLine.setColor(new Color(70f/255f, 50f/255f, 10f/255f));
 		connectionLine.setLineWidth(4.0f);
+		connectionLine.setCullingEnabled(false);
 		
 		sprite = new Sprite(anchorSprite.getX()+lineLength, -115, ResourcesManager.getInstance().ball_region, ResourcesManager.getInstance().vbom);
+		sprite.setCullingEnabled(false);
 		//narazie pozycja x jest zero ale ostateznie musi byc minus wpizdu zeby na poczatku ich nie bylo widac
 		sprite.setUserData("ballBottom");
 		body = PhysicsFactory.createCircleBody(physicsWorld, sprite, BodyType.DynamicBody, PhysicsFactory.createFixtureDef(200.5f, 0.2f, 0.5f));
 		body.setUserData("ballBottom");
-		
+
 		foregroundLayer.attachChild(connectionLine);
 		foregroundLayer.attachChild(anchorSprite);
 		foregroundLayer.attachChild(sprite);
@@ -70,13 +73,15 @@ public class BallBottom extends Obstacle{
 
 		final RevoluteJointDef revoluteJointDef = new RevoluteJointDef();
 		revoluteJointDef.initialize(anchorBody, body, anchorBody.getWorldCenter());
-		
+		ObstaclesPoolManager.getInstance().ignoreCollisions(this);
 		physicsWorld.createJoint(revoluteJointDef);
 	}
 	
 	public void setTransformX(float posX){
+		connectionLine.setVisible(false);
 		body.setTransform(posX+lineLength/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, -115/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, 0);
 		anchorBody.setTransform(posX, -120/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, 0);
+		connectionLine.setVisible(true);
 	}
 	
 	

@@ -42,6 +42,7 @@ public abstract class Player extends AnimatedSprite {
 	private float nextSpeedUp = 300;
 	private float cameraShiftY = -150;
 	private float cameraShiftX = 200;
+	private boolean boundsFlag = true;
 
 	public Player(float pX, float pY, VertexBufferObjectManager vbo, BoundCamera camera, PhysicsWorld physicsWorld) {
 		super(pX, pY, ResourcesManager.getInstance().player_region, vbo);
@@ -70,9 +71,8 @@ public abstract class Player extends AnimatedSprite {
 			@Override
 			public void onUpdate(float pSecondsElapsed) {
 				super.onUpdate(pSecondsElapsed);
-				System.out.println("CAMERA playewsfadsdf " + camera.getCenterY());
 				camera.setBounds(-850, 500, 100000000, -250);
-		        camera.setBoundsEnabled(true);
+		        camera.setBoundsEnabled(boundsFlag);
 				camera.onUpdate(0.1f); 
 				camera.setCenter(camera.getCenterX()+cameraShiftX, camera.getCenterY()-cameraShiftY);
 
@@ -87,7 +87,6 @@ public abstract class Player extends AnimatedSprite {
 					nextSpeedUp+=300;
 					runningSpeed++;
 				}
-				System.out.println("CAMERA pdddddsdf " + camera.getCenterY());
 			}
 		});
 	}
@@ -316,16 +315,12 @@ public abstract class Player extends AnimatedSprite {
 		if(alive){
 			alive = false;
 			canRun = false;
-			try{
 			if(screamSound.isPlaying())
 				screamSound.pause();
 			if(runSound.isPlaying())
 				runSound.pause();
 			if(!dieSound.isPlaying())
 				dieSound.play();
-			}catch (IllegalStateException e){
-				System.out.println("PROBLEM Z DZWIEKIEM DIEBOTTOM");
-			}
 			long[] PLAYER_ANIMATE = new long[13];
 			for(int i=0; i<13; i++)
 				PLAYER_ANIMATE[i]=20;
@@ -338,16 +333,12 @@ public abstract class Player extends AnimatedSprite {
 		if(alive){
 			alive = false;
 			canRun = false;
-			try{
 			if(screamSound.isPlaying())
 				screamSound.pause();
 			if(runSound.isPlaying())
 				runSound.pause();
 			if(!dieSound.isPlaying())
 				dieSound.play();
-			} catch (IllegalStateException e){
-				System.out.println("PROBLEM Z DZWIEKIEM DIETOP");
-			}
 			long[] PLAYER_ANIMATE = new long[13];
 			for(int i=0; i<13; i++)
 				PLAYER_ANIMATE[i]=20;
@@ -410,6 +401,14 @@ public abstract class Player extends AnimatedSprite {
 
 	public void setCameraShiftX(float cameraShiftX) {
 		this.cameraShiftX = cameraShiftX;
+	}
+
+	public boolean isBoundsFlag() {
+		return boundsFlag;
+	}
+
+	public void setBoundsFlag(boolean boundsFlag) {
+		this.boundsFlag = boundsFlag;
 	}
 
 	

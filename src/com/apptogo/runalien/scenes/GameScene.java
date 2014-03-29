@@ -95,10 +95,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	//OVERRIDEN METHODS
 	@Override
 	public void createScene() {
-		camera.setCenter(0f, 125f);
-		
-		System.out.println(ResourcesManager.getInstance().counter++ + "CAMERA przed | x:" + camera.getCenterX() + " y:" + camera.getCenterY());
-		
 		backgroundLayer = new Entity();
 		foregroundLayer = new Entity();
 		createHUD();
@@ -112,8 +108,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		attachChild(foregroundLayer);
 		ObstaclesPoolManager.getInstance().initializePoolManager(physicsWorld, foregroundLayer);
 		obstacleGenerator = new ObstacleGenerator(this, player);
-		
-		System.out.println(ResourcesManager.getInstance().counter++ + "CAMERA po | x:" + camera.getCenterX() + " y:" + camera.getCenterY());
 	}
 
 	@Override
@@ -130,6 +124,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	public void disposeScene() {
 		player.setCameraShiftX(0);
 		player.setCameraShiftY(0);
+		player.setBoundsFlag(false);
 		camera.setHUD(null);
 		camera.setChaseEntity(null);
 		camera.setBoundsEnabled(false);
@@ -139,7 +134,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 
 	//GROUND AND BACKGROUND
 	private void createBackground() {
-		System.out.println(ResourcesManager.getInstance().counter++ + "CAMERA back | x:" + camera.getCenterX() + " y:" + camera.getCenterY());
 		autoParallaxBackground = new AutoParallaxBackground(0, 0, 0, 5);
 		autoParallaxBackground.attachParallaxEntity(new ParallaxEntity(0.0f, new Sprite(0, 0, resourcesManager.mParallaxLayerBack, resourcesManager.vbom)));
 		autoParallaxBackground.attachParallaxEntity(new ParallaxEntity(-2.0f, new Sprite(0, 10, resourcesManager.mParallaxLayerMid, resourcesManager.vbom)));
@@ -164,7 +158,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	}
 
 	private void createGround() {
-		System.out.println(ResourcesManager.getInstance().counter++ + "CAMERA ground | x:" + camera.getCenterX() + " y:" + camera.getCenterY());
 		generateLevelCoordinates();
 		ChainShape myChain = new ChainShape();
 		Vector2[] myV2 = new Vector2[levelCoordinates.length];
@@ -172,7 +165,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 			myV2[i] = new Vector2(levelCoordinates[i].x / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, levelCoordinates[i].y / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
 		}
 		myChain.createChain(myV2);
-		System.out.println(ResourcesManager.getInstance().counter++ + "CAMERA ground2 | x:" + camera.getCenterX() + " y:" + camera.getCenterY());
 		center2 = (int) (myV2[0].x);
 
 		FixtureDef mFixtureDef = new FixtureDef();
@@ -180,13 +172,13 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 
 		BodyDef mBodyDef = new BodyDef();
 		mBodyDef.type = BodyType.StaticBody;
-		System.out.println(ResourcesManager.getInstance().counter++ + "CAMERA ground3 | x:" + camera.getCenterX() + " y:" + camera.getCenterY());
+		
 		Body mChainBody;
 		mChainBody = physicsWorld.createBody(mBodyDef);
 		mChainBody.createFixture(mFixtureDef);
 		myChain.dispose();
 		mChainBody.setUserData("ground");
-		System.out.println(ResourcesManager.getInstance().counter++ + "CAMERA ground4 | x:" + camera.getCenterX() + " y:" + camera.getCenterY());
+		
 		// TEXTURED POLYGON 2 - DIRT - TEXTURE REGION MUST BE FROM A REPEATING ATLAS
 		float[] vertexX2 = new float[myV2.length];
 		float[] vertexY2 = new float[myV2.length];
@@ -195,17 +187,14 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 			vertexX2[i] = myV2[i].x * PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT;
 			vertexY2[i] = myV2[i].y * PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT;
 		}
-		System.out.println(ResourcesManager.getInstance().counter++ + "CAMERA ground5 | x:" + camera.getCenterX() + " y:" + camera.getCenterY());
 		ground = new TexturedPolygon(0, 0, vertexX2, vertexY2, resourcesManager.dirt_texture_region, vbom);
 		backgroundLayer.attachChild(ground);
 		ground.setUserData("ground");
-		System.out.println(ResourcesManager.getInstance().counter++ + "CAMERA ground6 | x:" + camera.getCenterX() + " y:" + camera.getCenterY());
 		//backgroundLayer.attachChild(new DebugRenderer(physicsWorld, vbom));
 	}
 
 	//MAIN OBJECTS METHODS
 	private void createHUD() {
-		System.out.println(ResourcesManager.getInstance().counter++ + "CAMERA HUD | x:" + camera.getCenterX() + " y:" + camera.getCenterY());
 		gameHUD = new HUD();
 		scoreText = new Text(0, 0, ResourcesManager.getInstance().mainFont, "score: 0123456789", new TextOptions(), vbom);
 		scoreText.setText("SCORE: 0");
@@ -214,7 +203,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	}
 
 	private void createPhysics() {
-		System.out.println(ResourcesManager.getInstance().counter++ + "CAMERA fizyka | x:" + camera.getCenterX() + " y:" + camera.getCenterY());
 		physicsWorld = new FixedStepPhysicsWorld(60, new Vector2(0, 100.0f), false);
 		physicsWorld.setContactListener(contactListener());
 		registerUpdateHandler(physicsWorld);
@@ -243,11 +231,9 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 
 			}
 		});
-		System.out.println(ResourcesManager.getInstance().counter++ + "CAMERA fizyka2 | x:" + camera.getCenterX() + " y:" + camera.getCenterY());
 	}
 
 	private void createPlayer() {
-		System.out.println(ResourcesManager.getInstance().counter++ + "CAMERA player | x:" + camera.getCenterX() + " y:" + camera.getCenterY());
 		player = new Player(120, 145, vbom, camera, physicsWorld) {
 			@Override
 			public void onDie() {
@@ -265,11 +251,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		sReplay = new Sprite(0, 0, ResourcesManager.getInstance().replay_region, vbom) {
 			@Override
 			public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
-				try{
 				ResourcesManager.getInstance().clickSound.play();
-				}catch (IllegalStateException e){
-					System.out.println("PROBLEM Z DZWIEKIEM click");
-				}
 				sceneManager.replayGameScene();
 				return true;
 			}
@@ -277,11 +259,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		sMenu = new Sprite(0, 0, ResourcesManager.getInstance().menu_region, vbom) {
 			@Override
 			public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
-				try{
-					ResourcesManager.getInstance().clickSound.play();
-					}catch (IllegalStateException e){
-						System.out.println("PROBLEM Z DZWIEKIEM click");
-					}
+				ResourcesManager.getInstance().clickSound.play();
 				sceneManager.loadMenuScene();
 				
 				return true;
@@ -337,18 +315,13 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 			public void onTimePassed(final TimerHandler pTimerHandler) {
 				resourcesManager.engine.unregisterUpdateHandler(pTimerHandler);
 				SceneManager.getInstance().getCurrentScene().unregisterUpdateHandler(pTimerHandler);
-				try{
-					ResourcesManager.getInstance().whooshSound.play();
-					}catch (IllegalStateException e){
-						System.out.println("PROBLEM Z DZWIEKIEM whoosh");
-					}
+				ResourcesManager.getInstance().whooshSound.play();
 			}
 		}));
 	}
 
 	//SCORE METHODS
 	private void createBestScoreTable() {
-		System.out.println(ResourcesManager.getInstance().counter++ + "CAMERA bestscore | x:" + camera.getCenterX() + " y:" + camera.getCenterY());
 		Sprite sSign = new Sprite(600, 50, resourcesManager.sign_region, resourcesManager.vbom);
 		foregroundLayer.attachChild(sSign);
 		bestScoreText = new Text(0, 0, ResourcesManager.getInstance().bestScoreFont, "012345679", ResourcesManager.getInstance().vbom);
@@ -387,15 +360,12 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				firstTouch = true;
 				autoParallaxBackground.start();
 				obstacleGenerator.startObstacleGenerationAlgorithm();
-				System.out.println("POOL "+"Player position at start: " + player.getBody().getPosition().x);
 			} else if (pSceneTouchEvent.getX() > player.getX() + 200) {
 				player.doubleJump();
 				player.jump();
-				System.out.println("POOL "+"Player position when juping: " + player.getBody().getPosition().x);
 			} else if (pSceneTouchEvent.getX() <= player.getX() + 200) {
 				player.slide();
 				player.chargeDown();
-				System.out.println("POOL "+"Player position when sliding: " + player.getBody().getPosition().x);
 			}
 		}
 		return false;
