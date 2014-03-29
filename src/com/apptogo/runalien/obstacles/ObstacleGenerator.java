@@ -132,7 +132,7 @@ public class ObstacleGenerator {
 			obstacle.getBody().setTransform(nextObstaclePosition, 6.8f, 0);
 			usedObstacles.add(obstacle);
 			nextObstaclePosition = calculateObstaclePosition(); 
-		}
+		}else System.out.println("BRAKUJE W POOLU!");
 	}
 	
 	private void generateSingleUpperObstacle(float yPos)
@@ -146,7 +146,7 @@ public class ObstacleGenerator {
 			obstacle.getBody().setTransform(nextObstaclePosition, yPos, 0);
 			usedObstacles.add(obstacle);
 			nextObstaclePosition = calculateObstaclePosition();
-		}
+		}else System.out.println("BRAKUJE W POOLU!");
 	}
 	
 	private void generatePyramid(){
@@ -165,7 +165,7 @@ public class ObstacleGenerator {
 			obstacles.get(2).getBody().setTransform(nextObstaclePosition+2.8f, 6.8f, 0);
 			obstacles.get(3).getBody().setTransform(nextObstaclePosition+1.40f, 5.5f, 0);
 			nextObstaclePosition = calculateObstaclePosition(); //to oznacza ze nastepna przeszkoda pojawi sie za 100 jednostek. Trzeba to wyliczac na podstawie predkosci playera (mozna tez dodawac zmienna losowa)
-		}
+		}else System.out.println("BRAKUJE W POOLU!");
 	}
 	
 	private void generateBigWall(){
@@ -191,7 +191,7 @@ public class ObstacleGenerator {
 			obstacles.get(2).getBody().setTransform(nextObstaclePosition, -1.5f, 0);
 			obstacles.get(3).getBody().setTransform(nextObstaclePosition, -2.8f, 0);
 			nextObstaclePosition = calculateObstaclePosition(); //to oznacza ze nastepna przeszkoda pojawi sie za 100 jednostek. Trzeba to wyliczac na podstawie predkosci playera (mozna tez dodawac zmienna losowa)
-		}
+		}else System.out.println("BRAKUJE W POOLU!");
 	}
 	
 	private void generateBottomWall(boolean customMargin){
@@ -212,7 +212,7 @@ public class ObstacleGenerator {
 			
 			if(!customMargin)
 				nextObstaclePosition = calculateObstaclePosition(); //to oznacza ze nastepna przeszkoda pojawi sie za 100 jednostek. Trzeba to wyliczac na podstawie predkosci playera (mozna tez dodawac zmienna losowa)
-		}
+		}else System.out.println("BRAKUJE W POOLU!");
 	}
 	
 	private void generateUpperWall(boolean customMargin){
@@ -244,6 +244,7 @@ public class ObstacleGenerator {
 			if(!customMargin)
 				nextObstaclePosition = calculateObstaclePosition(); //to oznacza ze nastepna przeszkoda pojawi sie za 100 jednostek. Trzeba to wyliczac na podstawie predkosci playera (mozna tez dodawac zmienna losowa)
 		}
+		else System.out.println("BRAKUJE W POOLU!");
 	}
 	
 	private void generateBottomUpperSegment(){
@@ -293,11 +294,12 @@ public class ObstacleGenerator {
 	
 	private void releaseUselessObstacles()
 	{
+		System.out.println("UZYTYCH: " + usedObstacles.size());
 		for(int u = 0; u < usedObstacles.size(); u++) //tu byl problem z concurrency - uzywalismy foreach z iteratorem i on robil problemy UWAGA NA TO MOZE BYC DZIURAWE
 		{                                             //nawet nie probowac synchronizowac :P probowalem synchronizowac metody/bloki ponad godzine i lipa a tak dziala
 			Obstacle obstacle = usedObstacles.get(u);
 			
-			if( obstacle.getBody().getPosition().x < (player.getBody().getPosition().x) -10) //- 10 zeby znikaly juz poza ekranem
+			if( obstacle.getBody().getPosition().x < (player.getBody().getPosition().x) -5) //- 10 zeby znikaly juz poza ekranem
 			{
 				usedObstacles.remove(obstacle);
 				if( ( (String)(obstacle.getBody().getUserData()) ).equals("crateUpper") )

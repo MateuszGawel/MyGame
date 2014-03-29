@@ -9,9 +9,10 @@ import com.badlogic.gdx.physics.box2d.Body;
 
 public class ObstaclesPoolManager
 {
+	
 	//Obstacles ammount
-	private final int crateBottomAmmount = 30;
-	private final int crateUpperAmmount = 30;
+	private final int crateBottomAmmount = 40;
+	private final int crateUpperAmmount = 40;
 	private final int ballUpperAmmount = 2;
 	private final int ballBottomAmmount = 2;
 	
@@ -44,7 +45,6 @@ public class ObstaclesPoolManager
 		}
 		
 	}
-	
 	
 	//Singleton
 	private static final ObstaclesPoolManager INSTANCE = new ObstaclesPoolManager();

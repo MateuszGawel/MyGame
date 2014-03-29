@@ -30,7 +30,7 @@ import android.graphics.Color;
 public class ResourcesManager {
 
 	private static final ResourcesManager INSTANCE = new ResourcesManager();
-	
+	public int counter = 0;
 	public GameHelper gameHelper;
 	public Engine engine;
 	public GameActivity activity;

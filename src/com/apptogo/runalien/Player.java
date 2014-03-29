@@ -40,10 +40,11 @@ public abstract class Player extends AnimatedSprite {
 	private boolean flag2 = true;
 	private float runningSpeed = 13;
 	private float nextSpeedUp = 300;
+	private float cameraShiftY = -150;
+	private float cameraShiftX = 200;
 
 	public Player(float pX, float pY, VertexBufferObjectManager vbo, BoundCamera camera, PhysicsWorld physicsWorld) {
 		super(pX, pY, ResourcesManager.getInstance().player_region, vbo);
-		
 		createPhysics(camera, physicsWorld);
 		camera.setChaseEntity(this);
 		runSound = ResourcesManager.getInstance().runSound;
@@ -61,17 +62,20 @@ public abstract class Player extends AnimatedSprite {
 	public abstract void onDie();
 
 	private void createPhysics(final BoundCamera camera, PhysicsWorld physicsWorld) {
-		body = PhysicsFactory.createBoxBody(physicsWorld, 0, 190, 40, 90, BodyType.DynamicBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0.07f));
+		body = PhysicsFactory.createBoxBody(physicsWorld, 0, 195, 40, 90, BodyType.DynamicBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0.07f));
 		body.setUserData("player");
 		body.setFixedRotation(true);
+		
 		physicsWorld.registerPhysicsConnector(new PhysicsConnector(this, body, true, false) {
 			@Override
 			public void onUpdate(float pSecondsElapsed) {
 				super.onUpdate(pSecondsElapsed);
-				camera.onUpdate(0.1f);
-				camera.setCenter(camera.getCenterX()+200, camera.getCenterY()-150);
+				System.out.println("CAMERA playewsfadsdf " + camera.getCenterY());
 				camera.setBounds(-850, 500, 100000000, -250);
 		        camera.setBoundsEnabled(true);
+				camera.onUpdate(0.1f); 
+				camera.setCenter(camera.getCenterX()+cameraShiftX, camera.getCenterY()-cameraShiftY);
+
 				if (canRun) {
 					body.setLinearVelocity(new Vector2(runningSpeed, body.getLinearVelocity().y));
 				}
@@ -83,6 +87,7 @@ public abstract class Player extends AnimatedSprite {
 					nextSpeedUp+=300;
 					runningSpeed++;
 				}
+				System.out.println("CAMERA pdddddsdf " + camera.getCenterY());
 			}
 		});
 	}
@@ -311,12 +316,16 @@ public abstract class Player extends AnimatedSprite {
 		if(alive){
 			alive = false;
 			canRun = false;
+			try{
 			if(screamSound.isPlaying())
-				screamSound.stop();
+				screamSound.pause();
 			if(runSound.isPlaying())
-				runSound.stop();
+				runSound.pause();
 			if(!dieSound.isPlaying())
 				dieSound.play();
+			}catch (IllegalStateException e){
+				System.out.println("PROBLEM Z DZWIEKIEM DIEBOTTOM");
+			}
 			long[] PLAYER_ANIMATE = new long[13];
 			for(int i=0; i<13; i++)
 				PLAYER_ANIMATE[i]=20;
@@ -329,12 +338,16 @@ public abstract class Player extends AnimatedSprite {
 		if(alive){
 			alive = false;
 			canRun = false;
+			try{
 			if(screamSound.isPlaying())
-				screamSound.stop();
+				screamSound.pause();
 			if(runSound.isPlaying())
-				runSound.stop();
+				runSound.pause();
 			if(!dieSound.isPlaying())
 				dieSound.play();
+			} catch (IllegalStateException e){
+				System.out.println("PROBLEM Z DZWIEKIEM DIETOP");
+			}
 			long[] PLAYER_ANIMATE = new long[13];
 			for(int i=0; i<13; i++)
 				PLAYER_ANIMATE[i]=20;
@@ -382,6 +395,23 @@ public abstract class Player extends AnimatedSprite {
 	public void setRunningSpeed(float runningSpeed) {
 		this.runningSpeed = runningSpeed;
 	}
+
+	public float getCameraShiftY() {
+		return cameraShiftY;
+	}
+
+	public void setCameraShiftY(float cameraShiftY) {
+		this.cameraShiftY = cameraShiftY;
+	}
+
+	public float getCameraShiftX() {
+		return cameraShiftX;
+	}
+
+	public void setCameraShiftX(float cameraShiftX) {
+		this.cameraShiftX = cameraShiftX;
+	}
+
 	
 	
 }
