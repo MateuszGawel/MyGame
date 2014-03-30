@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import org.andengine.audio.music.Music;
 import org.andengine.audio.music.MusicFactory;
+import org.andengine.audio.sound.Sound;
+import org.andengine.audio.sound.SoundFactory;
 import org.andengine.engine.Engine;
 import org.andengine.engine.camera.BoundCamera;
 //import org.andengine.extension.texturepacker.opengl.texture.util.texturepacker.TexturePack;
@@ -81,17 +83,17 @@ public class ResourcesManager {
 	
 	public Music runSound;
 	public Music screamSound;
-	public Music jumpSound;
-	public Music landingSound;
-	public Music slideSound;
-	public Music whooshSound;
-	public Music clickSound;
-	public Music dieSound;
-	public Music fallDownSound;
-	public Music pigSound;
-	public Music doubleJumpSound;
-	public Music chargeDownSound;
-	public Music bigLandSound;
+	public Sound jumpSound;
+	public Sound landingSound;
+	public Sound slideSound;
+	public Sound whooshSound;
+	public Sound clickSound;
+	public Sound dieSound;
+	public Sound fallDownSound;
+	public Sound pigSound;
+	public Sound doubleJumpSound;
+	public Sound chargeDownSound;
+	public Sound bigLandSound;
 	
 
 	
@@ -150,7 +152,7 @@ public class ResourcesManager {
 	
 	public void loadMenuSounds(){
 		try {
-			clickSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/clickSound.ogg");
+			clickSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/clickSound.ogg");
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -228,21 +230,21 @@ public class ResourcesManager {
 	}
 	
 	public void loadGameSounds(){
-		try
-		{
+		try{
+			
 		    runSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/runSound.ogg");
 		    screamSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/screamSound.ogg");
-		    landingSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/landingSound.ogg");
-		    jumpSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/jumpSound.ogg");
-		    slideSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/slideSound.ogg");
-		    whooshSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/whooshSound.ogg");
-		    clickSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/clickSound.ogg");
-		    dieSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/dieSound.ogg");
-		    fallDownSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/fallDownSound.ogg");
-		    pigSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/pigSound.ogg");
-		    doubleJumpSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/doubleJumpSound.ogg");
-		    chargeDownSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/chargeDownSound.ogg");
-		    bigLandSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/bigLandSound.ogg");
+		    landingSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/landingSound.ogg");
+		    jumpSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/jumpSound.ogg");
+		    slideSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/slideSound.ogg");
+		    whooshSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/whooshSound.ogg");
+		    clickSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/clickSound.ogg");
+		    dieSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/dieSound.ogg");
+		    fallDownSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/fallDownSound.ogg");
+		    pigSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/pigSound.ogg");
+		    doubleJumpSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/doubleJumpSound.ogg");
+		    chargeDownSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/chargeDownSound.ogg");
+		    bigLandSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/bigLandSound.ogg");
 		}
 		catch (IOException e)
 		{

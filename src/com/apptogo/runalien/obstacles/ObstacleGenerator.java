@@ -61,45 +61,39 @@ public class ObstacleGenerator {
 				{
 					if(player.getBody().getPosition().x + 50 > nextObstaclePosition && player.isAlive())
 					{
-						int random = generator.nextInt(9);
+						int random = generator.nextInt(8);
 						switch(random){
 						case 0:
-							if(!firstObstacleFlag)
-								generateBottomUpperSegment(); //z jakiegos powodu jezeli ten segment generuje sie jako pierwszy to nie ma odstepu miedzy nimi
-							firstObstacleFlag = false;
+							generateBottomObstacle(1, -1);
 							break;
 						case 1:
-							generateUpperWall(false);
+							generateBottomObstacle(2, -1);
 							break;
 						case 2:
-							generateBottomWall(false);
+							generateBottomObstacle(3, -1);
 							break;
 						case 3:
-							generateBigWall();
+							generateBottomObstacle(4, -1);
 							break;
 						case 4:
-							generatePyramid();
+							generateSmallPyramid();
 							break;
 						case 5:
-							generateSingleBottomObstacle();
+							generateBigPyramid();
 							break;
 						case 6:
-							generateSingleUpperObstacle(5.5f);
-							break;
-						case 7:
 							generateBallBottom();
 							break;
-						case 8:
-							generateBallTop();
+						case 7:
+							generateBallUpper();
 							break;
 						}
 					}
 					else if(!player.isAlive())
 						ignoreAllCollisions();
-					if(player.isAlive())
-						setProperSlidingCollisions();
 				}
-				//System.out.println("POOL : oooops the pool is empty - waiting for release any");
+				if(player.isAlive())
+					setProperSlidingCollisions();
 				releaseUselessObstacles();
 			}
 
@@ -113,132 +107,76 @@ public class ObstacleGenerator {
 	
 	
 	//Obstacle block methods (wysokosc skrzynki to 1.3f)
-	
-	private void generateSingleBottomObstacle()
+	//margin -1 means auto
+	private void generateBottomObstacle(int height, float customMargin)
 	{
 		Obstacle obstacle = null;
-		
-		if(!obstaclesPoolManager.bottom_1_Pool.isEmpty())
-		{
-			obstacle = obstaclesPoolManager.bottom_1_Pool.pop();
-			obstacle.getBody().setTransform(nextObstaclePosition, 6.8f, 0);
-			usedObstacles.add(obstacle);
-			nextObstaclePosition = calculateObstaclePosition(); 
-			ObstaclesPoolManager.getInstance().setCollisions(obstacle);
-		}
-	}
-	
-	private void generateSingleUpperObstacle(float yPos)
-	{
-		Obstacle obstacle = null;
-		
-		if(!obstaclesPoolManager.bottom_1_Pool.isEmpty()) //!
-		{
-			obstacle = obstaclesPoolManager.bottom_1_Pool.pop();
-			obstacle.getBody().setTransform(nextObstaclePosition, yPos, 0);
-			usedObstacles.add(obstacle);
-			nextObstaclePosition = calculateObstaclePosition();
-			ObstaclesPoolManager.getInstance().setCollisions(obstacle);
-		}
-	}
-	
-	private void generatePyramid(){
-		List<Obstacle> obstacles = new ArrayList<Obstacle>();
-		Obstacle obstacle;
-		
-		if(obstaclesPoolManager.bottom_1_Pool.size() >= 2 && obstaclesPoolManager.bottom_2_Pool.size() >= 1)
-		{
-
-			obstacle = obstaclesPoolManager.bottom_1_Pool.pop();
-			obstacles.add(obstacle);
-			usedObstacles.add(obstacle);
-			ObstaclesPoolManager.getInstance().setCollisions(obstacle);
-
-			obstacle = obstaclesPoolManager.bottom_2_Pool.pop();
-			obstacles.add(obstacle);
-			usedObstacles.add(obstacle);
-			ObstaclesPoolManager.getInstance().setCollisions(obstacle);
-			
-			obstacle = obstaclesPoolManager.bottom_1_Pool.pop();
-			obstacles.add(obstacle);
-			usedObstacles.add(obstacle);
-			ObstaclesPoolManager.getInstance().setCollisions(obstacle);
-
-			obstacles.get(0).getBody().setTransform(nextObstaclePosition, 6.8f, 0);
-			obstacles.get(1).getBody().setTransform(nextObstaclePosition+1.40f, 6.8f, 0);
-			obstacles.get(2).getBody().setTransform(nextObstaclePosition+2.8f, 6.8f, 0);
-			nextObstaclePosition = calculateObstaclePosition(); //to oznacza ze nastepna przeszkoda pojawi sie za 100 jednostek. Trzeba to wyliczac na podstawie predkosci playera (mozna tez dodawac zmienna losowa)
-		}
-	}
-	
-	private void generateBigWall(){
-		List<Obstacle> obstacles = new ArrayList<Obstacle>();
-		Obstacle obstacle;
-		
-		if(obstaclesPoolManager.bottom_2_Pool.size() >= 2)
-		{
-			for(int i=0; i<2; i++){
+		switch(height){
+		case 1:
+			if(!obstaclesPoolManager.bottom_1_Pool.isEmpty())
+			{
+				obstacle = obstaclesPoolManager.bottom_1_Pool.pop();
+				obstacle.getBody().setTransform(nextObstaclePosition, 6.9f, 0);
+				usedObstacles.add(obstacle);
+				if(customMargin<0) nextObstaclePosition = calculateObstaclePosition(); 
+				else nextObstaclePosition = customMargin;
+				ObstaclesPoolManager.getInstance().setCollisions(obstacle);
+			} else System.out.println("POOL zabrak這 bottom1");
+			break;
+		case 2:
+			if(!obstaclesPoolManager.bottom_2_Pool.isEmpty())
+			{
 				obstacle = obstaclesPoolManager.bottom_2_Pool.pop();
-				obstacles.add(obstacle);
+				obstacle.getBody().setTransform(nextObstaclePosition, 6.22f, 0);
 				usedObstacles.add(obstacle);
+				if(customMargin<0) nextObstaclePosition = calculateObstaclePosition(); 
+				else nextObstaclePosition = customMargin;
 				ObstaclesPoolManager.getInstance().setCollisions(obstacle);
-			}
-
-			obstacles.get(0).getBody().setTransform(nextObstaclePosition, 6.8f, 0);
-			obstacles.get(1).getBody().setTransform(nextObstaclePosition, -1.5f, 0);
-			nextObstaclePosition = calculateObstaclePosition(); //to oznacza ze nastepna przeszkoda pojawi sie za 100 jednostek. Trzeba to wyliczac na podstawie predkosci playera (mozna tez dodawac zmienna losowa)
-		}
-	}
-	
-	private void generateBottomWall(boolean customMargin){
-		List<Obstacle> obstacles = new ArrayList<Obstacle>();
-		Obstacle obstacle;
-		
-		if(obstaclesPoolManager.bottom_4_Pool.size() >= 1)
-		{
-			obstacle = obstaclesPoolManager.bottom_4_Pool.pop();
-			obstacles.add(obstacle);
-			usedObstacles.add(obstacle);
-			ObstaclesPoolManager.getInstance().setCollisions(obstacle);
-
-			obstacles.get(0).getBody().setTransform(nextObstaclePosition, 6.8f, 0);
-			
-			if(!customMargin)
-				nextObstaclePosition = calculateObstaclePosition(); //to oznacza ze nastepna przeszkoda pojawi sie za 100 jednostek. Trzeba to wyliczac na podstawie predkosci playera (mozna tez dodawac zmienna losowa)
-		}
-	}
-	
-	private void generateUpperWall(boolean customMargin){
-		List<Obstacle> obstacles = new ArrayList<Obstacle>();
-		Obstacle obstacle;
-		
-		if(obstaclesPoolManager.bottom_4_Pool.size() >= 2)
-		{
-			
-			for(int i=0; i<2; i++){
+			} else System.out.println("POOL zabrak這 bottom2");
+			break;
+		case 3:
+			if(!obstaclesPoolManager.bottom_3_Pool.isEmpty())
+			{
+				obstacle = obstaclesPoolManager.bottom_3_Pool.pop();
+				obstacle.getBody().setTransform(nextObstaclePosition, 5.54f, 0);
+				usedObstacles.add(obstacle);
+				if(customMargin<0) nextObstaclePosition = calculateObstaclePosition(); 
+				else nextObstaclePosition = customMargin;
+				ObstaclesPoolManager.getInstance().setCollisions(obstacle);
+			} else System.out.println("POOL zabrak這 bottom3");
+			break;
+		case 4:
+			if(!obstaclesPoolManager.bottom_4_Pool.isEmpty())
+			{
 				obstacle = obstaclesPoolManager.bottom_4_Pool.pop();
-				obstacles.add(obstacle);
+				obstacle.getBody().setTransform(nextObstaclePosition, 4.82f, 0);
 				usedObstacles.add(obstacle);
+				if(customMargin<0) nextObstaclePosition = calculateObstaclePosition(); 
+				else nextObstaclePosition = customMargin; 
 				ObstaclesPoolManager.getInstance().setCollisions(obstacle);
-			}
-			
-			obstacles.get(0).getBody().setTransform(nextObstaclePosition, 1.6f, 0);
-			obstacles.get(1).getBody().setTransform(nextObstaclePosition, -3.6f, 0);
-			
-			if(!customMargin)
-				nextObstaclePosition = calculateObstaclePosition(); //to oznacza ze nastepna przeszkoda pojawi sie za 100 jednostek. Trzeba to wyliczac na podstawie predkosci playera (mozna tez dodawac zmienna losowa)
+			} else System.out.println("POOL zabrak這 bottom4");
+			break;
+		default:
+			System.out.println("No such height available");
+			break;
 		}
 	}
 	
-	private void generateBottomUpperSegment(){
-		if(obstaclesPoolManager.bottom_4_Pool.size() >= 3 )
-		generateBottomWall(true);
-		nextObstaclePosition += 0.5f*player.getBody().getLinearVelocity().x; 
-		generateUpperWall(true);
-		nextObstaclePosition = calculateObstaclePosition();
+	private void generateSmallPyramid(){
+		generateBottomObstacle(1, nextObstaclePosition+1.40f);
+		generateBottomObstacle(2, nextObstaclePosition+1.40f);
+		generateBottomObstacle(1, -1);
 	}
 	
-	public void generateBallTop(){
+	private void generateBigPyramid(){
+		generateBottomObstacle(1, nextObstaclePosition+1.40f);
+		generateBottomObstacle(2, nextObstaclePosition+1.40f);
+		generateBottomObstacle(3, nextObstaclePosition+1.40f);
+		generateBottomObstacle(2, nextObstaclePosition+1.40f);
+		generateBottomObstacle(1, -1);
+	}
+
+	private void generateBallUpper(){
 		if(!obstaclesPoolManager.ballUpperPool.isEmpty()){
 			System.out.println("POOL, generuje upper na x: " + nextObstaclePosition+10);
 			BallUpper ball = obstaclesPoolManager.ballUpperPool.pop();
@@ -271,12 +209,15 @@ public class ObstacleGenerator {
 	}
 	
 	private void setProperSlidingCollisions(){
+		
 		for(Obstacle obstacle : usedObstacles){
-			if(!( "Bottom1".equals(obstacle.getBody().getUserData()) || "Bottom2".equals(obstacle.getBody().getUserData()) || "Bottom3".equals(obstacle.getBody().getUserData()) || "Bottom4".equals(obstacle.getBody().getUserData()) ) && !obstacle.getBody().getUserData().equals("ballBottom")){
+			if(obstacle.getBody().getUserData().equals("ballUpper")){
 				List<Fixture> fixtureList = obstacle.getBody().getFixtureList();
 				for(Fixture fixture : fixtureList){
-					if(player.isSliding())
+					if(player.isSliding()){
 						fixture.setSensor(true);
+						System.out.println("TEST przed");
+					}
 					else
 						fixture.setSensor(false);
 			    }
@@ -290,40 +231,37 @@ public class ObstacleGenerator {
 		{                                             //nawet nie probowac synchronizowac :P probowalem synchronizowac metody/bloki ponad godzine i lipa a tak dziala
 			Obstacle obstacle = usedObstacles.get(u);
 			
-			if( obstacle.getBody().getPosition().x < (player.getBody().getPosition().x -10)) //- 10 zeby znikaly juz poza ekranem
+			if(obstacle.getBody().getPosition().x < (player.getBody().getPosition().x -10)) //- 10 zeby znikaly juz poza ekranem
 			{
+				System.out.println("POOL UZYTYCH " + usedObstacles.size());
 				usedObstacles.remove(obstacle);
-				if( ( (String)(obstacle.getBody().getUserData()) ).equals("crateUpper") )
+				if(((String)(obstacle.getBody().getUserData())).equals("crateUpper"))
 				{
-					obstaclesPoolManager.crateUpperPool.push( (CrateUpper)obstacle );
+					obstaclesPoolManager.crateUpperPool.push((CrateUpper)obstacle);
 				}
-				if(  "Bottom1".equals(obstacle.getBody().getUserData()) )
+				if("bottom1".equals(obstacle.getBody().getUserData()))
 				{
-					obstaclesPoolManager.bottom_1_Pool.push( (Bottom_1)obstacle );
+					obstaclesPoolManager.bottom_1_Pool.push((Bottom_1)obstacle);
 				}
-				if(  "Bottom2".equals(obstacle.getBody().getUserData()) )
+				if("bottom2".equals(obstacle.getBody().getUserData()))
 				{
-					obstaclesPoolManager.bottom_2_Pool.push( (Bottom_2)obstacle );
+					obstaclesPoolManager.bottom_2_Pool.push((Bottom_2)obstacle);
 				}
-				if(  "Bottom3".equals(obstacle.getBody().getUserData()) )
+				if("bottom3".equals(obstacle.getBody().getUserData()))
 				{
-					obstaclesPoolManager.bottom_3_Pool.push( (Bottom_3)obstacle );
+					obstaclesPoolManager.bottom_3_Pool.push((Bottom_3)obstacle);
 				}
-				if(  "Bottom4".equals(obstacle.getBody().getUserData()) )
+				if("bottom4".equals(obstacle.getBody().getUserData()))
 				{
-					obstaclesPoolManager.bottom_4_Pool.push( (Bottom_4)obstacle );
+					obstaclesPoolManager.bottom_4_Pool.push((Bottom_4)obstacle);
 				}
-				if( ( (String)(obstacle.getBody().getUserData()) ).equals("ballUpperAnchor") )
+				if(((obstacle.getBody().getUserData())).equals("ballUpperAnchor"))
 				{
-					System.out.println("POOL up " + obstacle.getBody().getPosition().x + " a 10 jednostek za playerem " + (player.getBody().getPosition().x-10));
-					obstaclesPoolManager.ballUpperPool.push( (BallUpper)obstacle );
-					System.out.println("POOL po zwolnieniu na stosie jest up闚: " + obstaclesPoolManager.ballUpperPool.size());
+					obstaclesPoolManager.ballUpperPool.push((BallUpper)obstacle);
 				}
-				if( ( (String)(obstacle.getBody().getUserData()) ).equals("ballBottomAnchor") )
+				if((obstacle.getBody().getUserData()).equals("ballBottomAnchor"))
 				{
-					System.out.println("POOL bot" + obstacle.getBody().getPosition().x + " a 10 jednostek za playerem " + (player.getBody().getPosition().x-10));
-					obstaclesPoolManager.ballBottomPool.push( (BallBottom)obstacle );
-					System.out.println("POOL po zwolnieniu na stosie jest bot闚: " + obstaclesPoolManager.ballBottomPool.size());
+					obstaclesPoolManager.ballBottomPool.push((BallBottom)obstacle);
 				}
 				ObstaclesPoolManager.getInstance().ignoreCollisions(obstacle);
 			}

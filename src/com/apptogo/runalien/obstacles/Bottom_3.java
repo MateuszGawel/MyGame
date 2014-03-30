@@ -19,10 +19,10 @@ public class Bottom_3 extends Obstacle{
 	public Bottom_3(PhysicsWorld physicsWorld, Entity foregroundLayer){
 		sprite = new Sprite(-1000, 100, ResourcesManager.getInstance().bottom_3_region, ResourcesManager.getInstance().vbom);
 		//narazie pozycja x jest zero ale ostateznie musi byc minus wpizdu zeby na poczatku ich nie bylo widac
-		sprite.setUserData("Bottom3");
+		sprite.setUserData("bottom3");
 		sprite.setCullingEnabled(false);
 		body = PhysicsFactory.createBoxBody(physicsWorld, sprite, BodyType.StaticBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0));
-		body.setUserData("crateBottom");
+		body.setUserData("bottom3");
 		foregroundLayer.attachChild(sprite);
 		ObstaclesPoolManager.getInstance().ignoreCollisions(this);
 		physicsWorld.registerPhysicsConnector(new PhysicsConnector(sprite, body, true, false) {

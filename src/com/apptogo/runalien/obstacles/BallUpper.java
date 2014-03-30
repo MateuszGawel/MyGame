@@ -9,7 +9,11 @@ import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
 import org.andengine.util.color.Color;
 
+import com.apptogo.runalien.Player;
 import com.apptogo.runalien.ResourcesManager;
+import com.apptogo.runalien.SceneManager;
+import com.apptogo.runalien.SceneManager.SceneType;
+import com.apptogo.runalien.scenes.GameScene;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -22,6 +26,7 @@ public class BallUpper extends Obstacle{
 	private Sprite anchorSprite;
 	private Body anchorBody;
 	Line connectionLine;
+	public Obstacle obstacle;
 	
 	int ballY = 110;
 	int ballX = -500;
@@ -30,6 +35,7 @@ public class BallUpper extends Obstacle{
 
 	public BallUpper(PhysicsWorld physicsWorld, Entity foregroundLayer){
 		
+		obstacle = this;
 		anchorSprite = new Sprite(anchorX, anchorY, ResourcesManager.getInstance().crate_region, ResourcesManager.getInstance().vbom); 
 		anchorSprite.setCullingEnabled(false);
 		anchorSprite.setUserData("ballUpperAnchor");
@@ -71,7 +77,6 @@ public class BallUpper extends Obstacle{
 				connectionLine.setPosition(anchorBodyCenter.x * PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, anchorBodyCenter.y * PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, ballBodyCenter.x * PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, ballBodyCenter.y * PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
 			}
 		});
-		physicsWorld.registerPhysicsConnector(new PhysicsConnector(sprite, body, true, true));
 
 
 		final RevoluteJointDef revoluteJointDef = new RevoluteJointDef();
@@ -94,7 +99,7 @@ public class BallUpper extends Obstacle{
 	@Override
 	public Body getBody()
 	{
-		return anchorBody;
+		return body;
 	}
 
 }

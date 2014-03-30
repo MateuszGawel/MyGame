@@ -395,19 +395,21 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 						resourcesManager.fallDownSound.play();
 					}
 				}
-
-				if (player.isAlive() && (("player".equals(x1.getBody().getUserData()) && ( "Bottom1".equals(x1.getBody().getUserData()) || "Bottom2".equals(x1.getBody().getUserData()) || "Bottom3".equals(x1.getBody().getUserData()) || "Bottom4".equals(x1.getBody().getUserData()) )) || ("player".equals(x2.getBody().getUserData()) && ( "Bottom1".equals(x1.getBody().getUserData()) || "Bottom2".equals(x1.getBody().getUserData()) || "Bottom3".equals(x1.getBody().getUserData()) || "Bottom4".equals(x1.getBody().getUserData()) )))) {
+				
+				//Obstacle Collisions
+				
+				if(player.isAlive() && (("player".equals(x1.getBody().getUserData()) && ("bottom1".equals(x2.getBody().getUserData()))) || (("player".equals(x2.getBody().getUserData())) && ("bottom1".equals(x1.getBody().getUserData())))))
 					player.dieBottom();
-				}
-				if (player.isAlive() && !player.isSliding() && (("player".equals(x1.getBody().getUserData()) && "crateUpper".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "crateUpper".equals(x1.getBody().getUserData())))) {
+				if(player.isAlive() && (("player".equals(x1.getBody().getUserData()) && ("bottom2".equals(x2.getBody().getUserData()))) || (("player".equals(x2.getBody().getUserData())) && ("bottom2".equals(x1.getBody().getUserData())))))
+					player.dieBottom();
+				if(player.isAlive() && (("player".equals(x1.getBody().getUserData()) && ("bottom3".equals(x2.getBody().getUserData()))) || (("player".equals(x2.getBody().getUserData())) && ("bottom3".equals(x1.getBody().getUserData())))))
+					player.dieBottom();
+				if(player.isAlive() && (("player".equals(x1.getBody().getUserData()) && ("bottom4".equals(x2.getBody().getUserData()))) || (("player".equals(x2.getBody().getUserData())) && ("bottom4".equals(x1.getBody().getUserData())))))
+					player.dieBottom();
+				if(player.isAlive() && (("player".equals(x1.getBody().getUserData()) && "ballBottom".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "ballBottom".equals(x1.getBody().getUserData()))))
 					player.dieTop();
-				}
-				if (player.isAlive() && (("player".equals(x1.getBody().getUserData()) && "ballBottom".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "ballBottom".equals(x1.getBody().getUserData())))) {
+				if(player.isAlive() && !player.isSliding() && (("player".equals(x1.getBody().getUserData()) && "ballUpper".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "ballUpper".equals(x1.getBody().getUserData()))))
 					player.dieTop();
-				}
-				if (player.isAlive() && !player.isSliding() && (("player".equals(x1.getBody().getUserData()) && "ballUpper".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && ( "Bottom1".equals(x1.getBody().getUserData()) || "Bottom2".equals(x1.getBody().getUserData()) || "Bottom3".equals(x1.getBody().getUserData()) || "Bottom4".equals(x1.getBody().getUserData()) ) ))) {
-					player.dieTop();
-				}
 			}
 			
 			@Override
@@ -429,4 +431,14 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		};
 		return contactListener;
 	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
+	
+	
 }
