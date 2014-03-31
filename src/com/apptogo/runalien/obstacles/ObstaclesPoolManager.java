@@ -14,12 +14,12 @@ public class ObstaclesPoolManager
 	
 	//Obstacles ammount
 	private final int bottom_1_Ammount = 10;
-	private final int bottom_2_Ammount = 5;
+	private final int bottom_2_Ammount = 7;
 	private final int bottom_3_Ammount = 5;
 	private final int bottom_4_Ammount = 3;
 	private final int crateUpperAmmount = 0;
-	private final int ballUpperAmmount = 2;
-	private final int ballBottomAmmount = 2;
+	private final int ballUpperAmmount = 3;
+	private final int ballBottomAmmount = 3;
 	
 	//Pools
 	public Stack<Bottom_1> bottom_1_Pool;

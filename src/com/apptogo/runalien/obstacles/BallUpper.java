@@ -51,8 +51,7 @@ public class BallUpper extends Obstacle{
 		
 		
 		connectionLine = new Line(anchorX, anchorY, ballX, ballY, ResourcesManager.getInstance().vbom);
-		//connectionLine.setColor(new Color(70f/255f, 50f/255f, 10f/255f));
-		connectionLine.setColor(Color.BLUE);
+		connectionLine.setColor(new Color(70f/255f, 50f/255f, 10f/255f));
 		connectionLine.setLineWidth(4.0f);
 		connectionLine.setCullingEnabled(false);
 		connectionLine.setVisible(true);

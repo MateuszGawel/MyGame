@@ -105,7 +105,6 @@ public class ObstacleGenerator {
 		});
 	}
 	
-	
 	//Obstacle block methods (wysokosc skrzynki to 1.3f)
 	//margin -1 means auto
 	private void generateBottomObstacle(int height, float customMargin)
@@ -178,24 +177,24 @@ public class ObstacleGenerator {
 
 	private void generateBallUpper(){
 		if(!obstaclesPoolManager.ballUpperPool.isEmpty()){
-			System.out.println("POOL, generuje upper na x: " + nextObstaclePosition+10);
 			BallUpper ball = obstaclesPoolManager.ballUpperPool.pop();
 			ObstaclesPoolManager.getInstance().setCollisions(ball);
 			ball.setTransformX(nextObstaclePosition+10);
-			nextObstaclePosition = calculateObstaclePosition()+10;
+			nextObstaclePosition = calculateObstaclePosition()+20;
 			usedObstacles.add(ball);
 		}
+		else System.out.println("POOL zabrak³o ball upper");
 	}
 	
 	private void generateBallBottom(){
 		if(!obstaclesPoolManager.ballBottomPool.isEmpty()){
-			System.out.println("POOL, generuje bottom na x: " + nextObstaclePosition+10);
 			BallBottom ball = obstaclesPoolManager.ballBottomPool.pop();
 			ObstaclesPoolManager.getInstance().setCollisions(ball);
 			ball.setTransformX(nextObstaclePosition+10);
-			nextObstaclePosition = calculateObstaclePosition()+15;
+			nextObstaclePosition = calculateObstaclePosition()+20;
 			usedObstacles.add(ball);
 		}
+		else System.out.println("POOL zabrak³o ball bottom");
 	}
 	//Others
 	
@@ -216,7 +215,6 @@ public class ObstacleGenerator {
 				for(Fixture fixture : fixtureList){
 					if(player.isSliding()){
 						fixture.setSensor(true);
-						System.out.println("TEST przed");
 					}
 					else
 						fixture.setSensor(false);
@@ -233,7 +231,6 @@ public class ObstacleGenerator {
 			
 			if(obstacle.getBody().getPosition().x < (player.getBody().getPosition().x -10)) //- 10 zeby znikaly juz poza ekranem
 			{
-				System.out.println("POOL UZYTYCH " + usedObstacles.size());
 				usedObstacles.remove(obstacle);
 				if(((String)(obstacle.getBody().getUserData())).equals("crateUpper"))
 				{
@@ -255,17 +252,25 @@ public class ObstacleGenerator {
 				{
 					obstaclesPoolManager.bottom_4_Pool.push((Bottom_4)obstacle);
 				}
-				if(((obstacle.getBody().getUserData())).equals("ballUpperAnchor"))
+				if(((obstacle.getBody().getUserData())).equals("ballUper"))
 				{
 					obstaclesPoolManager.ballUpperPool.push((BallUpper)obstacle);
 				}
-				if((obstacle.getBody().getUserData()).equals("ballBottomAnchor"))
+				if((obstacle.getBody().getUserData()).equals("ballBottom"))
 				{
 					obstaclesPoolManager.ballBottomPool.push((BallBottom)obstacle);
 				}
 				ObstaclesPoolManager.getInstance().ignoreCollisions(obstacle);
 			}
 		}
+	}
+
+	public float getNextObstaclePosition() {
+		return nextObstaclePosition;
+	}
+
+	public void setNextObstaclePosition(float nextObstaclePosition) {
+		this.nextObstaclePosition = nextObstaclePosition;
 	}
 
 }

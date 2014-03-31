@@ -44,6 +44,7 @@ public abstract class Player extends AnimatedSprite {
 	private float cameraShiftY = -150;
 	private float cameraShiftX = 200;
 	private boolean boundsFlag = true;
+	private boolean canSpeedUp = true;
 
 	public Player(float pX, float pY, VertexBufferObjectManager vbo, BoundCamera camera, PhysicsWorld physicsWorld) {
 		super(pX, pY, ResourcesManager.getInstance().player_region, vbo);
@@ -76,7 +77,6 @@ public abstract class Player extends AnimatedSprite {
 		        camera.setBoundsEnabled(boundsFlag);
 				camera.onUpdate(0.1f); 
 				camera.setCenter(camera.getCenterX()+cameraShiftX, camera.getCenterY()-cameraShiftY);
-
 				if (canRun) {
 					body.setLinearVelocity(new Vector2(runningSpeed, body.getLinearVelocity().y));
 				}
@@ -84,8 +84,9 @@ public abstract class Player extends AnimatedSprite {
 					body.setLinearVelocity(new Vector2(runningSpeed, body.getLinearVelocity().y));
 					flag = false;
 				}
-				if(body.getPosition().x > nextSpeedUp){
-					nextSpeedUp+=300;
+				if(canSpeedUp && body.getPosition().x > nextSpeedUp){
+					System.out.println("PRZYSPIESZAM " + body.getLinearVelocity().x);
+					nextSpeedUp = body.getPosition().x + 300;
 					runningSpeed++;
 				}
 			}
@@ -388,6 +389,30 @@ public abstract class Player extends AnimatedSprite {
 
 	public void setBoundsFlag(boolean boundsFlag) {
 		this.boundsFlag = boundsFlag;
+	}
+
+	public boolean isChargingDown() {
+		return chargingDown;
+	}
+
+	public void setChargingDown(boolean chargingDown) {
+		this.chargingDown = chargingDown;
+	}
+
+	public boolean isDoubleJumped() {
+		return doubleJumped;
+	}
+
+	public void setDoubleJumped(boolean doubleJumped) {
+		this.doubleJumped = doubleJumped;
+	}
+
+	public boolean isCanSpeedUp() {
+		return canSpeedUp;
+	}
+
+	public void setCanSpeedUp(boolean canSpeedUp) {
+		this.canSpeedUp = canSpeedUp;
 	}
 
 	

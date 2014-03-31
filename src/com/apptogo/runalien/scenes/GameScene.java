@@ -72,6 +72,8 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	private boolean firstUpdate = true;
 	private boolean firstTouch = false;
 	private boolean firstGroundBlock = true;
+	private boolean gamePaused = false;
+	private boolean displayTutorial = false;
 
 	//gameover sprites
 	Sprite sGameOver;
@@ -79,12 +81,23 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	Sprite sMenu;
 	Sprite sSubmit;
 
+	//tutorial
+	private Text tapToJump;
+	private Text tapToDoubleJump;
+	private Text tapToSlide;
+	private Text tapToChargeDown;
+	private float nextTutorialPartDelay;
+	private boolean[] partOfTutorialDisplayed = {false, false, false, false};
+	private boolean[] partOfTutorialCompleted = {false, false, false, false};
+	private int tutorialScoreOffset = 0;
+	
 	//local highscore 
 	private static final String HIGHSCORE_DB_NAME = "MyGameHighscores";
 	private static final String HIGHSCORE_LABEL = "score";
+	private static final String TUTORIAL_DISPLAYED_LABEL = "firstGame";
 	private SharedPreferences mScoreDb = activity.getSharedPreferences(HIGHSCORE_DB_NAME, Context.MODE_PRIVATE);
 	private SharedPreferences.Editor mScoreDbEditor = this.mScoreDb.edit();
-	public int score = -2;
+	public int score = 0;
 	private Text bestScoreText;
 	private Text scoreText; //actual score top-left corner
 	
@@ -199,10 +212,19 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	//MAIN OBJECTS METHODS
 	private void createHUD() {
 		gameHUD = new HUD();
-		scoreText = new Text(0, 0, ResourcesManager.getInstance().mainFont, "score: 0123456789", new TextOptions(), vbom);
+		scoreText = new Text(5, 0, ResourcesManager.getInstance().mainFont, "score: 0123456789", new TextOptions(), vbom);
 		scoreText.setText("SCORE: 0");
 		gameHUD.attachChild(scoreText);
 		camera.setHUD(gameHUD);
+
+		tapToJump = new Text(0, 0, ResourcesManager.getInstance().mainFont, "Tap right site of the screen to jump", new TextOptions(), vbom);
+		tapToJump.setPosition(2000, 400);
+		tapToDoubleJump = new Text(0, 0, ResourcesManager.getInstance().mainFont, "Tap right side of the screen TWO TIMES to double jump", new TextOptions(), vbom);
+		tapToDoubleJump.setPosition(2000, 400);
+		tapToSlide = new Text(0, 0, ResourcesManager.getInstance().mainFont, "Tap left side of the screen to jump", new TextOptions(), vbom);
+		tapToSlide.setPosition(-2000, 400);
+		tapToChargeDown = new Text(0, 0, ResourcesManager.getInstance().mainFont, "Tap left site of the screen in air to charge down", new TextOptions(), vbom);
+		tapToChargeDown.setPosition(-2000, 400);
 	}
 
 	private void createPhysics() {
@@ -219,7 +241,12 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 			public void onUpdate(float pSecondsElapsed) {
 				camera.setChaseEntity(player);
 				if(player.isAlive()){
-					score = (int) Math.round(player.getBody().getPosition().x/10);
+					if(partOfTutorialCompleted[3]){
+						if(tutorialScoreOffset == 0)
+							tutorialScoreOffset = Math.round(player.getBody().getPosition().x/10);
+						score = (int) Math.round(player.getBody().getPosition().x/10) - tutorialScoreOffset;
+					}
+					displayTutorial();
 					setScore(score);
 				}
 
@@ -230,6 +257,8 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 					}
 
 				}
+				if(displayTutorial)
+					generateTutorial();
 
 			}
 		});
@@ -242,6 +271,8 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				saveHighScore();
 				autoParallaxBackground.stop();
 				showGameOver();
+				mScoreDbEditor.putBoolean(TUTORIAL_DISPLAYED_LABEL, true);
+				mScoreDbEditor.commit();
 			}
 		};
 		player.setUserData("player");
@@ -327,7 +358,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		Sprite sSign = new Sprite(600, 50, resourcesManager.sign_region, resourcesManager.vbom);
 		foregroundLayer.attachChild(sSign);
 		bestScoreText = new Text(0, 0, ResourcesManager.getInstance().bestScoreFont, "012345679", ResourcesManager.getInstance().vbom);
-		bestScoreText.setPosition(660, 110);
+		bestScoreText.setPosition(670, 110);
 		foregroundLayer.attachChild(bestScoreText);
 	}
 	
@@ -352,6 +383,72 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 			return this.mScoreDb.getInt(HIGHSCORE_LABEL, 0);
 	}
 
+	private void displayTutorial(){
+		if (firstUpdate) {
+			
+			if (mScoreDb != null){
+				if(!this.mScoreDb.getBoolean(TUTORIAL_DISPLAYED_LABEL, false)){ //dodac wykrzyknik
+					System.out.println("tutorial ma dzialac");
+					displayTutorial = true;
+				}
+				else{
+					System.out.println("TUTORIAL JUZ BYL POKAZANY");
+					displayTutorial = false;
+				}
+			}
+		}
+	}
+	
+	private void pauseGame(){
+		gamePaused = true;
+		camera.setChaseEntity(null);
+		this.setIgnoreUpdate(true);
+	}
+	
+	private void resumeGame(){
+		gamePaused = false;
+		camera.setChaseEntity(player);
+		this.setIgnoreUpdate(false);
+	}
+	
+	private void generateTutorial(){
+		player.setCanSpeedUp(false);
+		if(player.getBody().getPosition().x > 5 && !partOfTutorialDisplayed[0]){
+			tapToJump.setText("Tap right side of the screen to jump");
+			gameHUD.attachChild(tapToJump);
+			tapToJump.registerEntityModifier(new MoveXModifier(12.5f, tapToJump.getX(), 320, EaseElasticInOut.getInstance()));
+			partOfTutorialDisplayed[0] = true;
+		}
+		else if(player.getBody().getPosition().x > nextTutorialPartDelay && !partOfTutorialDisplayed[1] && partOfTutorialCompleted[0]){
+			tapToJump.registerEntityModifier(new MoveXModifier(12.5f, tapToJump.getX(), -1000, EaseElasticInOut.getInstance()));
+			tapToDoubleJump.setText("Tap right side of the screen TWO TIMES to double jump");
+			gameHUD.attachChild(tapToDoubleJump);
+			tapToDoubleJump.registerEntityModifier(new MoveXModifier(12.5f, tapToDoubleJump.getX(), 50, EaseElasticInOut.getInstance()));
+			partOfTutorialDisplayed[1] = true;
+		}
+		else if(player.getBody().getPosition().x > nextTutorialPartDelay && !partOfTutorialDisplayed[2] && partOfTutorialCompleted[1]){
+			tapToDoubleJump.registerEntityModifier(new MoveXModifier(12.5f, tapToDoubleJump.getX(), -1000, EaseElasticInOut.getInstance()));
+			tapToSlide.setText("Tap left side of the screen to slide");
+			gameHUD.attachChild(tapToSlide);
+			tapToSlide.registerEntityModifier(new MoveXModifier(12.5f, tapToSlide.getX(), 10, EaseElasticInOut.getInstance()));
+			partOfTutorialDisplayed[2] = true;
+		}
+		else if(player.getBody().getPosition().x > nextTutorialPartDelay && !partOfTutorialDisplayed[3] && partOfTutorialCompleted[2]){
+			tapToSlide.registerEntityModifier(new MoveXModifier(12.5f, tapToSlide.getX(), 1000, EaseElasticInOut.getInstance()));
+			tapToChargeDown.setText("Tap left side of the screen in air to charge down");
+			gameHUD.attachChild(tapToChargeDown);
+			tapToChargeDown.registerEntityModifier(new MoveXModifier(12.5f, tapToChargeDown.getX(), 10, EaseElasticInOut.getInstance()));
+			partOfTutorialDisplayed[3] = true;
+		}
+		else if(player.getBody().getPosition().x > nextTutorialPartDelay && partOfTutorialCompleted[3]){
+			tapToChargeDown.registerEntityModifier(new MoveXModifier(12.5f, tapToChargeDown.getX(), 1000, EaseElasticInOut.getInstance()));
+			nextTutorialPartDelay = player.getBody().getPosition().x + 10;
+			displayTutorial = false;
+			obstacleGenerator.setNextObstaclePosition(player.getBody().getPosition().x + 50);
+			obstacleGenerator.startObstacleGenerationAlgorithm();
+			player.setCanSpeedUp(true);
+		}
+	}
 	
 	// LISTENERS
 	@Override
@@ -361,14 +458,43 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				player.setRunning();
 				firstTouch = true;
 				autoParallaxBackground.start();
-				obstacleGenerator.startObstacleGenerationAlgorithm();
+				if(!displayTutorial){
+					obstacleGenerator.startObstacleGenerationAlgorithm();
+					for(int i=0; i<partOfTutorialCompleted.length; i++)
+						partOfTutorialCompleted[i] = true;
+					for(int i=0; i<partOfTutorialDisplayed.length; i++)
+						partOfTutorialDisplayed[i] = true;
+				}
 			} else if (pSceneTouchEvent.getX() > player.getX() + 200) {
-				player.doubleJump();
+				if(partOfTutorialCompleted[0] && partOfTutorialDisplayed[1]){
+					player.doubleJump();
+					if(player.isDoubleJumped()){
+						partOfTutorialCompleted[1] = true;
+					}
+				}
 				player.jump();
+				if(player.isJumping())
+					partOfTutorialCompleted[0] = true;
 			} else if (pSceneTouchEvent.getX() <= player.getX() + 200) {
-				player.slide();
-				player.chargeDown();
+				if(partOfTutorialCompleted[2] && partOfTutorialDisplayed[3]){
+					player.chargeDown();
+					if(player.isChargingDown())
+						partOfTutorialCompleted[3] = true;
+				}
+				if(partOfTutorialCompleted[1]){
+					player.slide();
+					if(player.isSliding())
+						partOfTutorialCompleted[2] = true;
+				}
 			}
+			if(!partOfTutorialCompleted[0])
+				nextTutorialPartDelay = player.getBody().getPosition().x + 10;
+			else if(!partOfTutorialCompleted[1])
+				nextTutorialPartDelay = player.getBody().getPosition().x + 10;
+			else if(!partOfTutorialCompleted[2])
+				nextTutorialPartDelay = player.getBody().getPosition().x + 10;
+			else if(!partOfTutorialCompleted[3])
+				nextTutorialPartDelay = player.getBody().getPosition().x + 10;
 		}
 		return false;
 	}
