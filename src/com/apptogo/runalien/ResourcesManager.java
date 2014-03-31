@@ -58,6 +58,10 @@ public class ResourcesManager {
 	public ITextureRegion bottom_2_region;
 	public ITextureRegion bottom_3_region;
 	public ITextureRegion bottom_4_region;
+	public ITextureRegion upper_1_region;
+	public ITextureRegion upper_2_region;
+	public ITextureRegion upper_3_region;
+	public ITextureRegion upper_4_region;
 	public ITextureRegion crate_region;
 	public ITextureRegion ball_region;
 	public ITextureRegion sign_region;
@@ -185,6 +189,10 @@ public class ResourcesManager {
 	    bottom_2_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "bottom2.png");
 	    bottom_3_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "bottom3.png");
 	    bottom_4_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "bottom4.png");
+	    upper_1_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "upper1.png");
+	    upper_2_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "upper2.png");
+	    upper_3_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "upper3.png");
+	    upper_4_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "upper4.png");
 	    crate_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "crate.png");
 	    sign_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "sign.png");	 
 	    ball_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "ball.png");

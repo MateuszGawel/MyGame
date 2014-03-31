@@ -61,7 +61,7 @@ public class ObstacleGenerator {
 				{
 					if(player.getBody().getPosition().x + 50 > nextObstaclePosition && player.isAlive())
 					{
-						int random = generator.nextInt(8);
+						int random = generator.nextInt(12);
 						switch(random){
 						case 0:
 							generateBottomObstacle(1, -1);
@@ -86,6 +86,18 @@ public class ObstacleGenerator {
 							break;
 						case 7:
 							generateBallUpper();
+							break;
+						case 8:
+							generateUpperObstacle(1, -1);
+							break;
+						case 9:
+							generateUpperBottomWall();
+							break;
+						case 10:
+							generateUpDownSequence();
+							break;
+						case 11:
+							generateUpperObstacle(4, -1);
 							break;
 						}
 					}
@@ -161,10 +173,74 @@ public class ObstacleGenerator {
 		}
 	}
 	
+	private void generateUpperObstacle(int height, float customMargin)
+	{
+		Obstacle obstacle = null;
+		switch(height){
+		case 1:
+			if(!obstaclesPoolManager.upper_1_Pool.isEmpty())
+			{
+				obstacle = obstaclesPoolManager.upper_1_Pool.pop();
+				obstacle.getBody().setTransform(nextObstaclePosition, 4.3f, 0);
+				usedObstacles.add(obstacle);
+				if(customMargin<0) nextObstaclePosition = calculateObstaclePosition(); 
+				else nextObstaclePosition = customMargin;
+				ObstaclesPoolManager.getInstance().setCollisions(obstacle);
+			} else System.out.println("POOL zabrak這 upper1");
+			break;
+		case 2:
+			if(!obstaclesPoolManager.upper_2_Pool.isEmpty())
+			{
+				obstacle = obstaclesPoolManager.upper_2_Pool.pop();
+				obstacle.getBody().setTransform(nextObstaclePosition, -1.5f, 0);
+				usedObstacles.add(obstacle);
+				if(customMargin<0) nextObstaclePosition = calculateObstaclePosition(); 
+				else nextObstaclePosition = customMargin;
+				ObstaclesPoolManager.getInstance().setCollisions(obstacle);
+			} else System.out.println("POOL zabrak這 upper2");
+			break;
+		case 3: // w sumie do niczego nie przydatne chyba
+			if(!obstaclesPoolManager.upper_3_Pool.isEmpty())
+			{
+				obstacle = obstaclesPoolManager.upper_3_Pool.pop();
+				obstacle.getBody().setTransform(nextObstaclePosition, -1f, 0);
+				usedObstacles.add(obstacle);
+				if(customMargin<0) nextObstaclePosition = calculateObstaclePosition(); 
+				else nextObstaclePosition = customMargin;
+				ObstaclesPoolManager.getInstance().setCollisions(obstacle);
+			} else System.out.println("POOL zabrak這 upper3");
+			break;
+		case 4:
+			if(!obstaclesPoolManager.upper_4_Pool.isEmpty())
+			{
+				obstacle = obstaclesPoolManager.upper_4_Pool.pop();
+				obstacle.getBody().setTransform(nextObstaclePosition, 1.1f, 0);
+				usedObstacles.add(obstacle);
+				if(customMargin<0) nextObstaclePosition = calculateObstaclePosition(); 
+				else nextObstaclePosition = customMargin; 
+				ObstaclesPoolManager.getInstance().setCollisions(obstacle);
+			} else System.out.println("POOL zabrak這 upper4");
+			break;
+		default:
+			System.out.println("No such height available");
+			break;
+		}
+	}
+	
 	private void generateSmallPyramid(){
 		generateBottomObstacle(1, nextObstaclePosition+1.40f);
 		generateBottomObstacle(2, nextObstaclePosition+1.40f);
 		generateBottomObstacle(1, -1);
+	}
+	
+	private void generateUpperBottomWall(){
+		generateUpperObstacle(2, nextObstaclePosition);
+		generateBottomObstacle(2, -1);
+	}
+	
+	private void generateUpDownSequence(){
+		generateBottomObstacle(4, nextObstaclePosition + 7f);
+		generateUpperObstacle(4, -1);
 	}
 	
 	private void generateBigPyramid(){
@@ -210,7 +286,7 @@ public class ObstacleGenerator {
 	private void setProperSlidingCollisions(){
 		
 		for(Obstacle obstacle : usedObstacles){
-			if(obstacle.getBody().getUserData().equals("ballUpper")){
+			if(obstacle.getBody().getUserData().toString().toLowerCase().contains("upper")){
 				List<Fixture> fixtureList = obstacle.getBody().getFixtureList();
 				for(Fixture fixture : fixtureList){
 					if(player.isSliding()){
@@ -251,6 +327,22 @@ public class ObstacleGenerator {
 				if("bottom4".equals(obstacle.getBody().getUserData()))
 				{
 					obstaclesPoolManager.bottom_4_Pool.push((Bottom_4)obstacle);
+				}
+				if("upper1".equals(obstacle.getBody().getUserData()))
+				{
+					obstaclesPoolManager.upper_1_Pool.push((Upper_1)obstacle);
+				}
+				if("upper2".equals(obstacle.getBody().getUserData()))
+				{
+					obstaclesPoolManager.upper_2_Pool.push((Upper_2)obstacle);
+				}
+				if("upper3".equals(obstacle.getBody().getUserData()))
+				{
+					obstaclesPoolManager.upper_3_Pool.push((Upper_3)obstacle);
+				}
+				if("upper4".equals(obstacle.getBody().getUserData()))
+				{
+					obstaclesPoolManager.upper_4_Pool.push((Upper_4)obstacle);
 				}
 				if(((obstacle.getBody().getUserData())).equals("ballUper"))
 				{
