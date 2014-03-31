@@ -533,17 +533,17 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				if(player.isAlive() && (("player".equals(x1.getBody().getUserData()) && ("bottom4".equals(x2.getBody().getUserData()))) || (("player".equals(x2.getBody().getUserData())) && ("bottom4".equals(x1.getBody().getUserData())))))
 					player.dieBottom();
 				if(player.isAlive() && (("player".equals(x1.getBody().getUserData()) && "ballBottom".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "ballBottom".equals(x1.getBody().getUserData()))))
-					player.dieTop();
+					player.dieTop(false);
 				if(player.isAlive() && !player.isSliding() && (("player".equals(x1.getBody().getUserData()) && "ballUpper".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "ballUpper".equals(x1.getBody().getUserData()))))
-					player.dieTop();
+					player.dieTop(false);
 				if(player.isAlive() && !player.isSliding() && (("player".equals(x1.getBody().getUserData()) && ("upper1".equals(x2.getBody().getUserData()))) || (("player".equals(x2.getBody().getUserData())) && ("upper1".equals(x1.getBody().getUserData())))) )
-					player.dieTop();
+					player.dieTop(true);
 				if(player.isAlive() && !player.isSliding() && (("player".equals(x1.getBody().getUserData()) && ("upper2".equals(x2.getBody().getUserData()))) || (("player".equals(x2.getBody().getUserData())) && ("upper2".equals(x1.getBody().getUserData())))) )
-					player.dieTop();
+					player.dieTop(true);
 				if(player.isAlive() && !player.isSliding() && (("player".equals(x1.getBody().getUserData()) && ("upper3".equals(x2.getBody().getUserData()))) || (("player".equals(x2.getBody().getUserData())) && ("upper3".equals(x1.getBody().getUserData())))) )
-					player.dieTop();
+					player.dieTop(true);
 				if(player.isAlive() && !player.isSliding() && (("player".equals(x1.getBody().getUserData()) && ("upper4".equals(x2.getBody().getUserData()))) || (("player".equals(x2.getBody().getUserData())) && ("upper4".equals(x1.getBody().getUserData())))) )
-					player.dieTop();
+					player.dieTop(true);
 			}
 			
 			@Override

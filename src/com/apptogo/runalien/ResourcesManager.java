@@ -98,6 +98,7 @@ public class ResourcesManager {
 	public Sound doubleJumpSound;
 	public Sound chargeDownSound;
 	public Sound bigLandSound;
+	public Sound bellHit;
 	
 
 	
@@ -253,6 +254,7 @@ public class ResourcesManager {
 		    doubleJumpSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/doubleJumpSound.ogg");
 		    chargeDownSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/chargeDownSound.ogg");
 		    bigLandSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/bigLandSound.ogg");
+		    bellHit = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/bell.ogg");
 		}
 		catch (IOException e)
 		{
@@ -273,6 +275,7 @@ public class ResourcesManager {
 		doubleJumpSound.stop();
 		bigLandSound.stop();
 		chargeDownSound.stop();
+		bellHit.stop();
 
 		
 		runSound.release();
@@ -286,6 +289,7 @@ public class ResourcesManager {
 		doubleJumpSound.release();
 		bigLandSound.release();
 		chargeDownSound.release();
+		bellHit.release();
 	}
 	
 	//OTHERS

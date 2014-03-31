@@ -37,6 +37,7 @@ public abstract class Player extends AnimatedSprite {
 	public Sound doubleJumpSound;
 	public Sound bigLandSound;
 	public Sound chargeDownSound;
+	public Sound bellHit;
 	private boolean flag = true;
 	private boolean flag2 = true;
 	private float runningSpeed = 13;
@@ -50,6 +51,7 @@ public abstract class Player extends AnimatedSprite {
 		super(pX, pY, ResourcesManager.getInstance().player_region, vbo);
 		createPhysics(camera, physicsWorld);
 		camera.setChaseEntity(this);
+		bellHit = ResourcesManager.getInstance().bellHit;
 		runSound = ResourcesManager.getInstance().runSound;
 		screamSound = ResourcesManager.getInstance().screamSound;
 		jumpSound = ResourcesManager.getInstance().jumpSound;
@@ -312,13 +314,14 @@ public abstract class Player extends AnimatedSprite {
 		}
 	}
 	
-	public void dieTop(){
+	public void dieTop(boolean itIsBell){
 		if(alive){
 			alive = false;
 			canRun = false;
 			screamSound.pause();
 			runSound.pause();
 			dieSound.play();
+			if(itIsBell) bellHit.play();
 			long[] PLAYER_ANIMATE = new long[13];
 			for(int i=0; i<13; i++)
 				PLAYER_ANIMATE[i]=20;
