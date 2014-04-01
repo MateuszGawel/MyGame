@@ -61,43 +61,52 @@ public class ObstacleGenerator {
 				{
 					if(player.getBody().getPosition().x + 50 > nextObstaclePosition && player.isAlive())
 					{
-						int random = generator.nextInt(12);
+						int random = generator.nextInt(15);
 						switch(random){
 						case 0:
 							generateBottomObstacle(1, -1);
 							break;
 						case 1:
-							generateBottomObstacle(2, -1);
-							break;
-						case 2:
-							generateBottomObstacle(3, -1);
-							break;
-						case 3:
-							generateBottomObstacle(4, -1);
-							break;
-						case 4:
-							generateSmallPyramid();
-							break;
-						case 5:
-							generateBigPyramid();
-							break;
-						case 6:
-							generateBallBottom();
-							break;
-						case 7:
-							generateBallUpper();
-							break;
-						case 8:
 							generateUpperObstacle(1, -1);
 							break;
-						case 9:
-							generateUpperBottomWall();
+						case 2:
+							generateUpperObstacle(4, -1);
 							break;
-						case 10:
+						case 3:
+							generateSmallPyramid(-1);
+							break;
+						case 4:
+							generateRightBigPyramid();
+							break;
+						case 5:
+							generateLeftBigPyramid();
+							break;
+						case 6:
+							generateRightVeryBigPyramid();
+							break;
+						case 7:
 							generateUpDownSequence();
 							break;
+						case 8:
+							generateMuchJumpingSequence(8);
+							break;
+						case 9:
+							generateUpperBottomWall(-1);
+							break;
+						case 10:
+							generateMadWallOpenedSequence(7);
+							break;
 						case 11:
-							generateUpperObstacle(4, -1);
+							generateJumpThenSlideSequence(7);
+							break;
+						case 12:
+							generateWhatTheSmackSequence(7);
+							break;
+						case 13:
+							generateBallBottom();
+							break;
+						case 14:
+							generateBallUpper();
 							break;
 						}
 					}
@@ -227,15 +236,17 @@ public class ObstacleGenerator {
 		}
 	}
 	
-	private void generateSmallPyramid(){
+	private void generateSmallPyramid(float distance){
 		generateBottomObstacle(1, nextObstaclePosition+1.40f);
 		generateBottomObstacle(2, nextObstaclePosition+1.40f);
-		generateBottomObstacle(1, -1);
+		if(distance > 0) generateBottomObstacle(1, nextObstaclePosition + distance);
+		else             generateBottomObstacle(1, -1);  
 	}
 	
-	private void generateUpperBottomWall(){
+	private void generateUpperBottomWall(float distance){
 		generateUpperObstacle(2, nextObstaclePosition);
-		generateBottomObstacle(2, -1);
+		if(distance > 0) generateBottomObstacle(2, nextObstaclePosition + distance);
+		else             generateBottomObstacle(2, -1);
 	}
 	
 	private void generateUpDownSequence(){
@@ -243,14 +254,70 @@ public class ObstacleGenerator {
 		generateUpperObstacle(4, -1);
 	}
 	
-	private void generateBigPyramid(){
+	private void generateRightBigPyramid(){
 		generateBottomObstacle(1, nextObstaclePosition+1.40f);
 		generateBottomObstacle(2, nextObstaclePosition+1.40f);
+		generateBottomObstacle(3, -1);
+	}
+	
+	private void generateRightVeryBigPyramid(){
+		generateBottomObstacle(1, nextObstaclePosition+1.40f);
+		generateBottomObstacle(2, nextObstaclePosition+1.40f);
+		generateBottomObstacle(3, nextObstaclePosition+1.40f);
+		generateBottomObstacle(4, -1);
+	}
+	
+	private void generateLeftBigPyramid(){
 		generateBottomObstacle(3, nextObstaclePosition+1.40f);
 		generateBottomObstacle(2, nextObstaclePosition+1.40f);
 		generateBottomObstacle(1, -1);
 	}
+	
+	private void generateMuchJumpingSequence(float distance){
+		generateBottomObstacle(1, nextObstaclePosition + distance - 1f);
+		
+		generateBottomObstacle(1, nextObstaclePosition+1.40f);
+		generateBottomObstacle(2, nextObstaclePosition+distance);
+		
+		generateUpperObstacle(1, nextObstaclePosition+distance);
+		
+		generateRightBigPyramid();
+	}
+	
+	private void generateMadWallOpenedSequence(float distance){
+		generateUpperBottomWall(distance);
+		
+		generateUpperObstacle(4, nextObstaclePosition + distance + 3);
+		
+		generateSmallPyramid(distance);
+		
+		generateUpperObstacle(4, nextObstaclePosition + distance + 3);
+		
+		generateRightVeryBigPyramid();
+		
+		generateLeftBigPyramid();
+	}
 
+	private void generateJumpThenSlideSequence(float distance){
+		generateBottomObstacle(1, nextObstaclePosition + distance);
+		generateUpperObstacle(1, nextObstaclePosition + distance + 2);
+		generateBottomObstacle(1, nextObstaclePosition + distance);
+		generateUpperObstacle(1, nextObstaclePosition + distance + 2);
+		generateBottomObstacle(1, nextObstaclePosition + distance);
+		generateUpperObstacle(1, nextObstaclePosition + distance + 2);
+		generateBottomObstacle(1, -1);
+	}
+	
+	private void generateWhatTheSmackSequence(float distance){
+		generateBottomObstacle(3, nextObstaclePosition + distance + 1);
+		generateUpperBottomWall(distance);
+		generateUpperObstacle(1, nextObstaclePosition + distance + 3);
+		generateSmallPyramid(distance);
+		generateUpperObstacle(1, nextObstaclePosition + distance + 3);
+		generateRightBigPyramid();
+		generateUpperObstacle(4, -1);
+	}
+	
 	private void generateBallUpper(){
 		if(!obstaclesPoolManager.ballUpperPool.isEmpty()){
 			BallUpper ball = obstaclesPoolManager.ballUpperPool.pop();
