@@ -12,7 +12,7 @@ import android.app.Activity;
 public abstract class BaseScene extends Scene{
 	
 	protected Engine engine;
-	protected Activity activity;
+	protected GameActivity activity;
 	protected ResourcesManager resourcesManager;
 	protected SceneManager sceneManager;
 	protected VertexBufferObjectManager vbom;

@@ -178,9 +178,12 @@ public abstract class Player extends AnimatedSprite {
 	}
 
 	public void jump() {
-	    if (jumping || sliding || !alive) 
+	    if (jumping || !alive) 
 	    {
 	        return; 
+	    }
+	    else if(sliding){
+	    	standUp();
 	    }
     	runSound.pause();
     	screamSound.pause();

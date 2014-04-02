@@ -76,6 +76,7 @@ public class SceneManager {
 		{
 			public void onTimePassed(final TimerHandler pTimerHandler)
 			{
+				//ResourcesManager.getInstance().activity.displayInterstitial();
 				resourcesManager.engine.unregisterUpdateHandler(pTimerHandler);
 				resourcesManager.loadGameResources();
 				gameScene = new GameScene();

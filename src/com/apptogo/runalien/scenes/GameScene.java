@@ -23,9 +23,16 @@ import org.andengine.input.touch.TouchEvent;
 import org.andengine.util.modifier.ease.EaseBounceInOut;
 import org.andengine.util.modifier.ease.EaseElasticInOut;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Vibrator;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.apptogo.runalien.BaseScene;
 import com.apptogo.runalien.Player;
@@ -47,6 +54,9 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.games.Games;
 
 public class GameScene extends BaseScene implements IOnSceneTouchListener {
@@ -56,6 +66,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	private PhysicsWorld physicsWorld;
 	private Player player;
 	ObstacleGenerator obstacleGenerator;
+	Vibrator vibrator;
 	
 	//ground
 	private int center = 0, center2;
@@ -91,6 +102,9 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	private boolean[] partOfTutorialCompleted = {false, false, false, false};
 	private int tutorialScoreOffset = 0;
 	
+	//ads
+	private AdView adView;
+	
 	//local highscore 
 	private static final String HIGHSCORE_DB_NAME = "MyGameHighscores";
 	private static final String HIGHSCORE_LABEL = "score";
@@ -121,11 +135,12 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		attachChild(foregroundLayer);
 		ObstaclesPoolManager.getInstance().initializePoolManager(physicsWorld, foregroundLayer);
 		obstacleGenerator = new ObstacleGenerator(this, player);
+		vibrator = (Vibrator)activity.getSystemService(Context.VIBRATOR_SERVICE);
 	}
 
 	@Override
 	public void onBackKeyPressed() {
-		sceneManager.loadMenuScene();
+		ResourcesManager.getInstance().activity.displayInterstitialAndLoadMenuScene();
 	}
 
 	@Override
@@ -142,6 +157,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		camera.setChaseEntity(null);
 		camera.setBoundsEnabled(false);
 		camera.setCenter(400, 240);
+		activity.setgameBannerAdViewInvisibile();
 		//powywalac reszte 
 	}
 
@@ -273,6 +289,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				showGameOver();
 				mScoreDbEditor.putBoolean(TUTORIAL_DISPLAYED_LABEL, true);
 				mScoreDbEditor.commit();
+				vibrator.vibrate(500);
 			}
 		};
 		player.setUserData("player");
@@ -285,7 +302,9 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 			@Override
 			public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
 				ResourcesManager.getInstance().clickSound.play();
-				sceneManager.replayGameScene();
+				//sceneManager.replayGameScene();
+				activity.setgameBannerAdViewInvisibile();
+				activity.displayInterstitialIfReadyAndReplay();
 				return true;
 			}
 		};
@@ -293,8 +312,8 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 			@Override
 			public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
 				ResourcesManager.getInstance().clickSound.play();
-				sceneManager.loadMenuScene();
-				
+				//sceneManager.loadMenuScene();
+				ResourcesManager.getInstance().activity.displayInterstitialAndLoadMenuScene();
 				return true;
 			}
 		};
@@ -311,7 +330,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 					resourcesManager.gameHelper.manualConnect();
 					//Games.Leaderboards.submitScore(ResourcesManager.getInstance().activity.getGoogleApiClient(), activity.getResources().getString(R.string.leaderboard_highscores), score);
 				}
-
 				return true;
 			}
 		};
@@ -349,8 +367,10 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				resourcesManager.engine.unregisterUpdateHandler(pTimerHandler);
 				SceneManager.getInstance().getCurrentScene().unregisterUpdateHandler(pTimerHandler);
 				ResourcesManager.getInstance().whooshSound.play();
+				activity.setgameBannerAdViewVisibile();
 			}
 		}));
+		
 	}
 
 	//SCORE METHODS
@@ -382,7 +402,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		else
 			return this.mScoreDb.getInt(HIGHSCORE_LABEL, 0);
 	}
-
+	//TUTORIAL METHODS
 	private void displayTutorial(){
 		if (firstUpdate) {
 			
