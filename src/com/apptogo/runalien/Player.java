@@ -45,7 +45,8 @@ public abstract class Player extends AnimatedSprite {
 	private float cameraShiftX = 200;
 	private boolean boundsFlag = true;
 	private boolean canSpeedUp = true;
-
+	private boolean slideAfterLanding = false;
+	
 	public Player(float pX, float pY, VertexBufferObjectManager vbo, BoundCamera camera, PhysicsWorld physicsWorld) {
 		super(pX, pY, ResourcesManager.getInstance().player_region, vbo);
 		createPhysics(camera, physicsWorld);
@@ -76,6 +77,7 @@ public abstract class Player extends AnimatedSprite {
 			@Override
 			public void onUpdate(float pSecondsElapsed) {
 				super.onUpdate(pSecondsElapsed);
+
 				camera.setBounds(-850, 500, 100000000, -250);
 		        camera.setBoundsEnabled(boundsFlag);
 				camera.onUpdate(0.1f); 
@@ -130,6 +132,7 @@ public abstract class Player extends AnimatedSprite {
 	
 	public void run(){
 		if(alive){
+			System.out.println("PLAYER biegne");
 			runSound.resume();
 			//screamSound.resume();
 			long[] PLAYER_ANIMATE = new long[31];
@@ -209,14 +212,20 @@ public abstract class Player extends AnimatedSprite {
 	}
 	
 	public void chargeDown(){
+		System.out.println("PLAYER wysokosc: " + this.getY() + " sila " + this.getBody().getLinearVelocity().y);
 		if(!alive || sliding || !jumping)
 			return;
-    	runSound.pause();
-    	screamSound.pause();
-	    chargeDownSound.setVolume(0.2f);
-	    //chargeDownSound.play();
-		body.setLinearVelocity(new Vector2(body.getLinearVelocity().x-15, 35));
-		chargingDown = true;
+	    else if(jumping && this.getY() > 100 && this.getBody().getLinearVelocity().y > 0){
+	    		slideAfterLanding = true;
+	    		System.out.println("PLAYER ustawiam flage");
+	    }
+	    else{
+	    	runSound.pause();
+	    	screamSound.pause();
+		    //chargeDownSound.play();
+			body.setLinearVelocity(new Vector2(body.getLinearVelocity().x-15, 35));
+			chargingDown = true;
+	    }
 	}
 	
 	public void land(){
@@ -242,7 +251,7 @@ public abstract class Player extends AnimatedSprite {
 	            	
 	            }
 	            public void onAnimationFinished(AnimatedSprite pAnimatedSprite) {
-	                run();
+	        	    run();
 		        }
 		    });
 			jumping = false;
@@ -252,10 +261,11 @@ public abstract class Player extends AnimatedSprite {
 	}
 	
 	public void slide() {
-	    if (sliding || jumping || !alive) 
+	    if (jumping || sliding || !alive) 
 	    {
 	        return; 
 	    }
+	    System.out.println("PLAYER wlasnie slizgam");
     	runSound.pause();
     	screamSound.pause();
     	slideSound.play();
@@ -284,6 +294,7 @@ public abstract class Player extends AnimatedSprite {
 	public void standUp() {
 	    sliding = false;
 	    screamSound.resume();
+	    System.out.println("PLAYER wstaje");
 	    long[] PLAYER_ANIMATE = new long[6];
 		for(int i=0; i<6; i++)
 			PLAYER_ANIMATE[i]=20;
@@ -299,7 +310,7 @@ public abstract class Player extends AnimatedSprite {
             	
             }
             public void onAnimationFinished(AnimatedSprite pAnimatedSprite) {
-                run();
+            	run();
 	        }
 	    });
 	}
@@ -421,6 +432,14 @@ public abstract class Player extends AnimatedSprite {
 
 	public void setCanSpeedUp(boolean canSpeedUp) {
 		this.canSpeedUp = canSpeedUp;
+	}
+
+	public boolean isSlideAfterLanding() {
+		return slideAfterLanding;
+	}
+
+	public void setSlideAfterLanding(boolean slideAfterLanding) {
+		this.slideAfterLanding = slideAfterLanding;
 	}
 
 	

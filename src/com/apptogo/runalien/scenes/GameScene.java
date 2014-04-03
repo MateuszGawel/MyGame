@@ -528,14 +528,30 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 
 				if ("player".equals(x1.getBody().getUserData()) && "ground".equals(x2.getBody().getUserData())) {
 					if (player.isJumping()) {
-						player.land();
+						if(player.isSlideAfterLanding()){
+							player.setSlideAfterLanding(false);
+							player.setJumping(false);
+							player.setDoubleJumped(false);
+							player.setChargingDown(false);
+							player.slide();
+						}
+						else
+							player.land();
 					}
 					if(!player.isAlive()){
 						resourcesManager.fallDownSound.play();
 					}
 				} else if ("player".equals(x2.getBody().getUserData()) && "ground".equals(x1.getBody().getUserData())) {
 					if (player.isJumping()) {
-						player.land();
+						if(player.isSlideAfterLanding()){
+							player.setSlideAfterLanding(false);
+							player.setJumping(false);
+							player.setDoubleJumped(false);
+							player.setChargingDown(false);
+							player.slide();
+						}
+						else
+							player.land();
 					}
 					if(!player.isAlive()){
 						resourcesManager.fallDownSound.play();
