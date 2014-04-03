@@ -35,7 +35,6 @@ public abstract class Player extends AnimatedSprite {
 	public Sound slideSound;
 	public Sound dieSound;
 	public Sound doubleJumpSound;
-	public Sound bigLandSound;
 	public Sound chargeDownSound;
 	public Sound bellHit;
 	private boolean flag = true;
@@ -56,10 +55,12 @@ public abstract class Player extends AnimatedSprite {
 		screamSound = ResourcesManager.getInstance().screamSound;
 		jumpSound = ResourcesManager.getInstance().jumpSound;
 		landingSound = ResourcesManager.getInstance().landingSound;
+		landingSound.setVolume(0.5f);
 		slideSound = ResourcesManager.getInstance().slideSound;
 		dieSound = ResourcesManager.getInstance().dieSound;
+		dieSound.setVolume(0.6f);
 		doubleJumpSound = ResourcesManager.getInstance().doubleJumpSound;
-		bigLandSound = ResourcesManager.getInstance().bigLandSound;
+		doubleJumpSound.setVolume(0.5f);
 		chargeDownSound = ResourcesManager.getInstance().chargeDownSound;
 		breathe();
 	}
@@ -130,7 +131,7 @@ public abstract class Player extends AnimatedSprite {
 	public void run(){
 		if(alive){
 			runSound.resume();
-			screamSound.resume();
+			//screamSound.resume();
 			long[] PLAYER_ANIMATE = new long[31];
 			for(int i=0; i<31; i++)
 				PLAYER_ANIMATE[i]=14;
@@ -187,7 +188,6 @@ public abstract class Player extends AnimatedSprite {
 	    }
     	runSound.pause();
     	screamSound.pause();
-    	jumpSound.setVolume(0.3f);
     	jumpSound.play();
 	    jumping = true;
 	    long[] PLAYER_ANIMATE = new long[13];
@@ -222,10 +222,11 @@ public abstract class Player extends AnimatedSprite {
 	public void land(){
 		if(alive){
 			if(chargingDown){
-				bigLandSound.setVolume(0.5f);
-				bigLandSound.play();
+				chargeDownSound.setVolume(0.5f);
+				chargeDownSound.play();
 			}
 			landingSound.play();
+			screamSound.resume();
 			long[] PLAYER_ANIMATE = new long[13];
 			for(int i=0; i<13; i++)
 				PLAYER_ANIMATE[i]=20;
@@ -282,6 +283,7 @@ public abstract class Player extends AnimatedSprite {
 	
 	public void standUp() {
 	    sliding = false;
+	    screamSound.resume();
 	    long[] PLAYER_ANIMATE = new long[6];
 		for(int i=0; i<6; i++)
 			PLAYER_ANIMATE[i]=20;
