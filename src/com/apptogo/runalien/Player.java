@@ -215,7 +215,7 @@ public abstract class Player extends AnimatedSprite {
 		System.out.println("PLAYER wysokosc: " + this.getY() + " sila " + this.getBody().getLinearVelocity().y);
 		if(!alive || sliding || !jumping)
 			return;
-	    else if(jumping && this.getY() > 100 && this.getBody().getLinearVelocity().y > 0){
+	    else if(jumping && this.getY() > 90 && this.getBody().getLinearVelocity().y > 0){
 	    		slideAfterLanding = true;
 	    		System.out.println("PLAYER ustawiam flage");
 	    }
