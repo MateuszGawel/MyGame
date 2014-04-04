@@ -22,6 +22,7 @@ public class ObstacleGenerator {
 	private float nextObstaclePosition = 30;
 	public Random generator = new Random();
 	private boolean firstObstacleFlag = true;
+	private int lastRandom = 0;
 	
 	public ObstacleGenerator(Scene scene, Player player)
 	{
@@ -53,7 +54,7 @@ public class ObstacleGenerator {
 		return (int)( (nextObstaclePosition + difficulty ));
 	}
 	
-	public void startObstacleGenerationAlgorithm(){	
+	public void startObstacleGenerationAlgorithm(final int tutorialScoreOffset){	
 		scene.registerUpdateHandler(new IUpdateHandler() {
 			@Override
 			public void onUpdate(float pSecondsElapsed) {
@@ -61,7 +62,18 @@ public class ObstacleGenerator {
 				{
 					if(player.getBody().getPosition().x + 50 > nextObstaclePosition && player.isAlive())
 					{
-						int random = generator.nextInt(15);
+						int score = (int) Math.round(player.getBody().getPosition().x/10) - tutorialScoreOffset;
+						int minSpace = 4 + (int)(player.getBody().getLinearVelocity().x / 2 );
+						
+						int maxRand = 1 + (((int)((score+10)/5))%15 );
+						
+						int random = generator.nextInt( maxRand );
+						
+						if( random == lastRandom ) { random++; lastRandom = -1;}
+						else lastRandom = random;
+						
+						lastRandom = random;
+						
 						switch(random){
 						case 0:
 							generateBottomObstacle(1, -1);
@@ -88,19 +100,19 @@ public class ObstacleGenerator {
 							generateUpDownSequence();
 							break;
 						case 8:
-							generateMuchJumpingSequence(8);
+							generateMuchJumpingSequence(minSpace);
 							break;
 						case 9:
 							generateUpperBottomWall(-1);
 							break;
 						case 10:
-							generateMadWallOpenedSequence(7);
+							generateMadWallOpenedSequence(minSpace);
 							break;
 						case 11:
-							generateJumpThenSlideSequence(7);
+							generateJumpThenSlideSequence(minSpace);
 							break;
 						case 12:
-							generateWhatTheSmackSequence(7);
+							generateWhatTheSmackSequence(minSpace);
 							break;
 						case 13:
 							generateBallBottom();
@@ -238,6 +250,7 @@ public class ObstacleGenerator {
 	
 	private void generateSmallPyramid(float distance){
 		generateBottomObstacle(1, nextObstaclePosition+1.40f);
+		generateUpperObstacle(2, nextObstaclePosition);
 		generateBottomObstacle(2, nextObstaclePosition+1.40f);
 		if(distance > 0) generateBottomObstacle(1, nextObstaclePosition + distance);
 		else             generateBottomObstacle(1, -1);  

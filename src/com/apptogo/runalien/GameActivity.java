@@ -146,10 +146,12 @@ public class GameActivity extends GoogleBaseGameActivity implements ConnectionCa
         gameBannerAdView.setVisibility(AdView.INVISIBLE);
         gameBannerAdView.refreshDrawableState();
         
-        //rz¹danie o reklamê
+        //zadanie o reklamê
 	    AdRequest gameBannerAdRequest = new AdRequest.Builder()
-        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+	    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
         .addTestDevice("4C8EA9CBB8BB046BCA4404AEAC8B25CA")
+        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+        .addTestDevice("B4CDA4E066371C22AA6C995811986124")
         .build();
 	    
 	    //wczytanie reklamy do widoku
@@ -186,6 +188,8 @@ public class GameActivity extends GoogleBaseGameActivity implements ConnectionCa
 	    AdRequest interestitialAdRequest = new AdRequest.Builder()
         .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
         .addTestDevice("4C8EA9CBB8BB046BCA4404AEAC8B25CA")
+        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+        .addTestDevice("B4CDA4E066371C22AA6C995811986124")
         .build();
 
         // Begin loading your interstitial.

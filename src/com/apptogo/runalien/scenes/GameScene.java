@@ -465,7 +465,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 			nextTutorialPartDelay = player.getBody().getPosition().x + 10;
 			displayTutorial = false;
 			obstacleGenerator.setNextObstaclePosition(player.getBody().getPosition().x + 50);
-			obstacleGenerator.startObstacleGenerationAlgorithm();
+			obstacleGenerator.startObstacleGenerationAlgorithm( tutorialScoreOffset );
 			player.setCanSpeedUp(true);
 		}
 	}
@@ -479,7 +479,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				firstTouch = true;
 				autoParallaxBackground.start();
 				if(!displayTutorial){
-					obstacleGenerator.startObstacleGenerationAlgorithm();
+					obstacleGenerator.startObstacleGenerationAlgorithm(tutorialScoreOffset);
 					for(int i=0; i<partOfTutorialCompleted.length; i++)
 						partOfTutorialCompleted[i] = true;
 					for(int i=0; i<partOfTutorialDisplayed.length; i++)
