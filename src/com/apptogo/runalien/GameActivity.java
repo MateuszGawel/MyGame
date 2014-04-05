@@ -150,7 +150,7 @@ public class GameActivity extends GoogleBaseGameActivity implements ConnectionCa
 	    AdRequest gameBannerAdRequest = new AdRequest.Builder()
 	    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
         .addTestDevice("4C8EA9CBB8BB046BCA4404AEAC8B25CA")
-        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+        .addTestDevice("5F32613150315ED40B2E9FDCC884795A")
         .addTestDevice("B4CDA4E066371C22AA6C995811986124")
         .build();
 	    
@@ -188,7 +188,7 @@ public class GameActivity extends GoogleBaseGameActivity implements ConnectionCa
 	    AdRequest interestitialAdRequest = new AdRequest.Builder()
         .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
         .addTestDevice("4C8EA9CBB8BB046BCA4404AEAC8B25CA")
-        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+        .addTestDevice("5F32613150315ED40B2E9FDCC884795A")
         .addTestDevice("B4CDA4E066371C22AA6C995811986124")
         .build();
 

@@ -17,20 +17,20 @@ public class Bottom_2 extends Obstacle{
 	private Body body;
 	
 	public Bottom_2(PhysicsWorld physicsWorld, Entity foregroundLayer){
-		sprite = new Sprite(-1000, 100, ResourcesManager.getInstance().bottom_2_region, ResourcesManager.getInstance().vbom);
+		sprite = new Sprite(-1000, 155, ResourcesManager.getInstance().bottom_2_region, ResourcesManager.getInstance().vbom);
 		//narazie pozycja x jest zero ale ostateznie musi byc minus wpizdu zeby na poczatku ich nie bylo widac
 		sprite.setUserData("bottom2");
 		sprite.setCullingEnabled(false);
-		body = PhysicsFactory.createBoxBody(physicsWorld, sprite, BodyType.StaticBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0));
-		body.setUserData("bottom2");
+		//body = PhysicsFactory.createBoxBody(physicsWorld, sprite, BodyType.StaticBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0));
+		//body.setUserData("bottom2");
 		foregroundLayer.attachChild(sprite);
-		ObstaclesPoolManager.getInstance().ignoreCollisions(this);
-		physicsWorld.registerPhysicsConnector(new PhysicsConnector(sprite, body, true, false) {
+		//ObstaclesPoolManager.getInstance().ignoreCollisions(this);
+		/*physicsWorld.registerPhysicsConnector(new PhysicsConnector(sprite, body, true, false) {
 			@Override
 			public void onUpdate(float pSecondsElapsed) {
 				super.onUpdate(pSecondsElapsed);
 			}
-		});
+		});*/
 	}
 	
 	@Override
@@ -42,7 +42,7 @@ public class Bottom_2 extends Obstacle{
 	@Override
 	public Body getBody()
 	{
-		return body;
+		return null;
 	}
 
 }
