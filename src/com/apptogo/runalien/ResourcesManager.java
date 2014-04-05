@@ -67,6 +67,7 @@ public class ResourcesManager {
 	public ITextureRegion ball_region;
 	public ITextureRegion sign_region;
 	public ITextureRegion grass_region;
+	public ITextureRegion playerCover_region;
 	public ITiledTextureRegion player_region;
 	public ITiledTextureRegion player_slide_region;
 	public BuildableBitmapTextureAtlas gameTextureAtlas;
@@ -203,6 +204,7 @@ public class ResourcesManager {
 	    submit_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "submit.png");
 	    grass_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "grass.png");
 	    
+	    playerCover_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "playerCover.png");
 	    player_region = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(playerTextureAtlas, activity, "player.png", 12, 11);
 	    
         dirtRepeatingAtlas = new BitmapTextureAtlas(activity.getTextureManager(), 311, 122, TextureOptions.REPEATING_BILINEAR_PREMULTIPLYALPHA);
