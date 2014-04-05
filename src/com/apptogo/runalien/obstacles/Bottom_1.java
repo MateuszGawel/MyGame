@@ -17,7 +17,7 @@ public class Bottom_1 extends Obstacle{
 	private Body body;
 	
 	public Bottom_1(PhysicsWorld physicsWorld, Entity foregroundLayer){
-		sprite = new Sprite(200, 200, ResourcesManager.getInstance().bottom_1_region, ResourcesManager.getInstance().vbom);
+		sprite = new Sprite(-1000, 200, ResourcesManager.getInstance().bottom_1_region, ResourcesManager.getInstance().vbom);
 		//narazie pozycja x jest zero ale ostateznie musi byc minus wpizdu zeby na poczatku ich nie bylo widac
 		sprite.setUserData("bottom1");
 		sprite.setCullingEnabled(false);

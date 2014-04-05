@@ -19,7 +19,7 @@ public class ObstacleGenerator {
 	private Player player;
 	private Scene scene;
 	private List<Obstacle> usedObstacles;
-	private float nextObstaclePosition = 600;
+	private float nextObstaclePosition = 400;
 	public Random generator = new Random();
 	private boolean firstObstacleFlag = true;
 	private ArrayList<Integer> lastRandoms;
@@ -52,22 +52,22 @@ public class ObstacleGenerator {
 
 		int randomFactor = (int)( Math.random() * (difficulty + 1) ); //im wyzsze difficulty tym latwiej grac - wieksze odstepy
 		
-		return (int)( (nextObstaclePosition + 300 ));
+		return (int)( (nextObstaclePosition + 400 ));
 	}
 	
 	public void startObstacleGenerationAlgorithm(final int tutorialScoreOffset){	
 		scene.registerUpdateHandler(new IUpdateHandler() {
 			@Override
 			public void onUpdate(float pSecondsElapsed) {
+				checkCollisions();
 				if(obstaclesPoolManager.isNotEmpty())
 				{
-					System.out.println("LOG pozycja playera: " + player.getX() + " nextobstr: " + nextObstaclePosition);
-					if(player.getX() + 500 > nextObstaclePosition && player.isAlive())
+					if(player.getX() + 800 > nextObstaclePosition && player.isAlive())
 					{
 						int score = (int) Math.round(player.getBody().getPosition().x/10) - tutorialScoreOffset;
 						int minSpace = 4 + (int)(player.getBody().getLinearVelocity().x / 2 );
 						
-						int maxRand = 8;// + (((int)((score+10)/3))%15 );
+						int maxRand = 10;// + (((int)((score+10)/3))%15 );
 						
 						int random = generator.nextInt( maxRand );
 						
@@ -116,9 +116,11 @@ public class ObstacleGenerator {
 							generateUpperObstacle(4, -1);
 							break;
 						case 8:
-							generateRightVeryBigPyramid();
+							System.out.println("KULA BOTTOM");
+							generateBallBottom();
 							break;
 						case 9:
+							System.out.println("KULA UP");
 							generateBallUpper();
 							break;
 						case 10:
@@ -154,6 +156,21 @@ public class ObstacleGenerator {
 		});
 	}
 	
+	private void checkCollisions(){
+		for(Obstacle obstacle : usedObstacles){
+			if(obstacle.getSprite().collidesWith(player.playerCover)){
+				if(obstacle.getBody() != null && obstacle.getBody().getUserData().toString().equals("ballBottom")){
+					player.dieTop(false);
+				}
+				else if(obstacle.getSprite().getUserData().toString().contains("bottom")){
+					player.dieBottom();
+				}
+				else if(obstacle.getSprite().getUserData().toString().contains("upper")){
+					player.dieTop(true);
+				}
+			}
+		}
+	}
 	//Obstacle block methods (wysokosc skrzynki to 1.3f)
 	//margin -1 means auto
 	private void generateBottomObstacle(int height, float customMargin)
@@ -352,8 +369,8 @@ public class ObstacleGenerator {
 		if(!obstaclesPoolManager.ballUpperPool.isEmpty()){
 			BallUpper ball = obstaclesPoolManager.ballUpperPool.pop();
 			ObstaclesPoolManager.getInstance().setCollisions(ball);
-			ball.setTransformX(nextObstaclePosition+10);
-			nextObstaclePosition = calculateObstaclePosition()+20;
+			ball.setTransformX(nextObstaclePosition/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT+10);
+			nextObstaclePosition = calculateObstaclePosition()+200;
 			usedObstacles.add(ball);
 		}
 		else System.out.println("POOL zabrak³o ball upper");
@@ -363,8 +380,8 @@ public class ObstacleGenerator {
 		if(!obstaclesPoolManager.ballBottomPool.isEmpty()){
 			BallBottom ball = obstaclesPoolManager.ballBottomPool.pop();
 			ObstaclesPoolManager.getInstance().setCollisions(ball);
-			ball.setTransformX(nextObstaclePosition+10);
-			nextObstaclePosition = calculateObstaclePosition()+20;
+			ball.setTransformX(nextObstaclePosition/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT+10);
+			nextObstaclePosition = calculateObstaclePosition()+200;
 			usedObstacles.add(ball);
 		}
 		else System.out.println("POOL zabrak³o ball bottom");
@@ -372,12 +389,12 @@ public class ObstacleGenerator {
 	//Others
 	
 	private void ignoreAllCollisions(){
-		for(Obstacle obstacle : usedObstacles){
-			List<Fixture> fixtureList = obstacle.getBody().getFixtureList();
-			for(Fixture fixture : fixtureList){
-				fixture.setSensor(true);
-		    }
-		}
+		//for(Obstacle obstacle : usedObstacles){
+		//	List<Fixture> fixtureList = obstacle.getBody().getFixtureList();
+		//	for(Fixture fixture : fixtureList){
+		//		fixture.setSensor(true);
+		//    }
+		//}
 	}
 	
 	private void setProperSlidingCollisions(){
@@ -398,12 +415,11 @@ public class ObstacleGenerator {
 	
 	private void releaseUselessObstacles()
 	{
-		System.out.println("POOL w pooli: " + usedObstacles.size());
 		for(int u = 0; u < usedObstacles.size(); u++) //tu byl problem z concurrency - uzywalismy foreach z iteratorem i on robil problemy UWAGA NA TO MOZE BYC DZIURAWE
 		{                                             //nawet nie probowac synchronizowac :P probowalem synchronizowac metody/bloki ponad godzine i lipa a tak dziala
 			Obstacle obstacle = usedObstacles.get(u);
 			
-			if(obstacle.getSprite().getX() < (player.getX() -10)) //- 10 zeby znikaly juz poza ekranem
+			if(obstacle.getSprite().getX() < (player.getX() -50)) //- 10 zeby znikaly juz poza ekranem
 			{
 				usedObstacles.remove(obstacle);
 				if(((String)(obstacle.getSprite().getUserData())).equals("crateUpper"))

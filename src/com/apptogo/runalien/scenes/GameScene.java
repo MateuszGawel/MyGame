@@ -535,22 +535,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				final Fixture x1 = contact.getFixtureA();
 				final Fixture x2 = contact.getFixtureB();
 
-				if ("player".equals(x1.getBody().getUserData()) && "ground".equals(x2.getBody().getUserData())) {
-					if (player.isJumping()) {
-						if(player.isSlideAfterLanding()){
-							player.setSlideAfterLanding(false);
-							player.setJumping(false);
-							player.setDoubleJumped(false);
-							player.setChargingDown(false);
-							player.slide();
-						}
-						else
-							player.land();
-					}
-					if(!player.isAlive()){
-						resourcesManager.fallDownSound.play();
-					}
-				} else if ("player".equals(x2.getBody().getUserData()) && "ground".equals(x1.getBody().getUserData())) {
+				if ("player".equals(x1.getBody().getUserData()) && "ground".equals(x2.getBody().getUserData()) || "player".equals(x2.getBody().getUserData()) && "ground".equals(x1.getBody().getUserData())) {
 					if (player.isJumping()) {
 						if(player.isSlideAfterLanding()){
 							player.setSlideAfterLanding(false);
@@ -568,27 +553,10 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				}
 				
 				//Obstacle Collisions
-				
-				if(player.isAlive() && (("player".equals(x1.getBody().getUserData()) && ("bottom1".equals(x2.getBody().getUserData()))) || (("player".equals(x2.getBody().getUserData())) && ("bottom1".equals(x1.getBody().getUserData())))))
-					player.dieBottom();
-				if(player.isAlive() && (("player".equals(x1.getBody().getUserData()) && ("bottom2".equals(x2.getBody().getUserData()))) || (("player".equals(x2.getBody().getUserData())) && ("bottom2".equals(x1.getBody().getUserData())))))
-					player.dieBottom();
-				if(player.isAlive() && (("player".equals(x1.getBody().getUserData()) && ("bottom3".equals(x2.getBody().getUserData()))) || (("player".equals(x2.getBody().getUserData())) && ("bottom3".equals(x1.getBody().getUserData())))))
-					player.dieBottom();
-				if(player.isAlive() && (("player".equals(x1.getBody().getUserData()) && ("bottom4".equals(x2.getBody().getUserData()))) || (("player".equals(x2.getBody().getUserData())) && ("bottom4".equals(x1.getBody().getUserData())))))
-					player.dieBottom();
 				if(player.isAlive() && (("player".equals(x1.getBody().getUserData()) && "ballBottom".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "ballBottom".equals(x1.getBody().getUserData()))))
 					player.dieTop(false);
 				if(player.isAlive() && !player.isSliding() && (("player".equals(x1.getBody().getUserData()) && "ballUpper".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "ballUpper".equals(x1.getBody().getUserData()))))
 					player.dieTop(false);
-				if(player.isAlive() && !player.isSliding() && (("player".equals(x1.getBody().getUserData()) && ("upper1".equals(x2.getBody().getUserData()))) || (("player".equals(x2.getBody().getUserData())) && ("upper1".equals(x1.getBody().getUserData())))) )
-					player.dieTop(true);
-				if(player.isAlive() && !player.isSliding() && (("player".equals(x1.getBody().getUserData()) && ("upper2".equals(x2.getBody().getUserData()))) || (("player".equals(x2.getBody().getUserData())) && ("upper2".equals(x1.getBody().getUserData())))) )
-					player.dieTop(true);
-				if(player.isAlive() && !player.isSliding() && (("player".equals(x1.getBody().getUserData()) && ("upper3".equals(x2.getBody().getUserData()))) || (("player".equals(x2.getBody().getUserData())) && ("upper3".equals(x1.getBody().getUserData())))) )
-					player.dieTop(true);
-				if(player.isAlive() && !player.isSliding() && (("player".equals(x1.getBody().getUserData()) && ("upper4".equals(x2.getBody().getUserData()))) || (("player".equals(x2.getBody().getUserData())) && ("upper4".equals(x1.getBody().getUserData())))) )
-					player.dieTop(true);
 			}
 			
 			@Override

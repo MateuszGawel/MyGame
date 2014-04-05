@@ -17,7 +17,7 @@ public class Upper_4 extends Obstacle{
 	private Body body;
 	
 	public Upper_4(PhysicsWorld physicsWorld, Entity foregroundLayer){
-		sprite = new Sprite(200, 200, ResourcesManager.getInstance().upper_4_region, ResourcesManager.getInstance().vbom);
+		sprite = new Sprite(-1000, -120, ResourcesManager.getInstance().upper_4_region, ResourcesManager.getInstance().vbom);
 		//narazie pozycja x jest zero ale ostateznie musi byc minus wpizdu zeby na poczatku ich nie bylo widac
 		sprite.setUserData("upper4");
 		sprite.setCullingEnabled(false);
