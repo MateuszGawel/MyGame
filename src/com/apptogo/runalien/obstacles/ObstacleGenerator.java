@@ -22,7 +22,7 @@ public class ObstacleGenerator {
 	private float nextObstaclePosition = 30;
 	public Random generator = new Random();
 	private boolean firstObstacleFlag = true;
-	private int lastRandom = 0;
+	private ArrayList<Integer> lastRandoms;
 	
 	public ObstacleGenerator(Scene scene, Player player)
 	{
@@ -30,6 +30,7 @@ public class ObstacleGenerator {
 		this.scene = scene;
 		this.player = player;
 		usedObstacles = new ArrayList();
+		lastRandoms = new ArrayList<Integer>();
 	}
 	
 	private float getPlayerPositionX()
@@ -69,17 +70,31 @@ public class ObstacleGenerator {
 						
 						int random = generator.nextInt( maxRand );
 						
-						if( random == lastRandom ) { random++; lastRandom = -1;}
-						else lastRandom = random;
+						for(int i=0;i<lastRandoms.size(); i++) System.out.println("RAND : "+lastRandoms.get(i).intValue() );
+						System.out.println("RAND ------------------");
+						if( lastRandoms.size() >= 2 ) 
+						{ 
+							//moznaby to przerobic na jakiegos for-a zeby mozna bylo definiowac ilosc mozliwych powtorzen przeszkod ale mysle ze 2 pod rzad to rozsadna ilosc
+							int t_last = lastRandoms.get( lastRandoms.size() - 1).intValue();
+							int t_plast = lastRandoms.get( lastRandoms.size() - 2).intValue();
+							
+							if( (t_last == random && t_plast == random) || (t_last%2 == 0 && random%2 == 0 ) || (t_last%2 == 1 && random%2 == 1) )
+							{
+								if(random == 0) random++;
+								else            random--;
+								
+								lastRandoms.clear();
+							}
+						}
 						
-						lastRandom = random;
-						
+						lastRandoms.add(random);
+												
 						switch(random){
 						case 0:
-							generateBottomObstacle(1, -1);
+							generateUpperObstacle(1, -1);
 							break;
 						case 1:
-							generateUpperObstacle(1, -1);
+							generateBottomObstacle(1, -1);
 							break;
 						case 2:
 							generateUpperObstacle(4, -1);
@@ -91,34 +106,34 @@ public class ObstacleGenerator {
 							generateRightBigPyramid();
 							break;
 						case 5:
-							generateLeftBigPyramid();
+							generateMuchJumpingSequence(minSpace);
 							break;
 						case 6:
-							generateRightVeryBigPyramid();
+							generateUpperBottomWall(-1);
 							break;
 						case 7:
 							generateUpDownSequence();
 							break;
 						case 8:
-							generateMuchJumpingSequence(minSpace);
+							generateRightVeryBigPyramid();
 							break;
 						case 9:
-							generateUpperBottomWall(-1);
+							generateBallUpper();
 							break;
 						case 10:
-							generateMadWallOpenedSequence(minSpace);
+							generateLeftBigPyramid();
 							break;
 						case 11:
-							generateJumpThenSlideSequence(minSpace);
-							break;
-						case 12:
-							generateWhatTheSmackSequence(minSpace);
-							break;
-						case 13:
 							generateBallBottom();
 							break;
+						case 12:
+							generateMadWallOpenedSequence(minSpace);
+							break;
+						case 13:
+							generateJumpThenSlideSequence(minSpace);
+							break;
 						case 14:
-							generateBallUpper();
+							generateWhatTheSmackSequence(minSpace);
 							break;
 						}
 					}
