@@ -1,6 +1,8 @@
 package com.apptogo.runalien.scenes;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import org.andengine.engine.camera.hud.HUD;
 import org.andengine.engine.handler.IUpdateHandler;
@@ -19,6 +21,8 @@ import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
 import org.andengine.extension.debugdraw.DebugRenderer;
 import org.andengine.extension.physics.box2d.FixedStepPhysicsWorld;
+import org.andengine.extension.physics.box2d.PhysicsConnector;
+import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
 import org.andengine.input.touch.TouchEvent;
@@ -71,11 +75,10 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	ObstacleGenerator obstacleGenerator;
 	Vibrator vibrator;
 	
-	//ground
-	private int center = 0, center2;
-	final int LEVEL_BLOCK_LENGTH = 5;
-	private TexturedPolygon ground;
-	private Vector2[] levelCoordinates;
+	
+	private LinkedList<Body> groundPool;
+	private final int groundPoolAmount = 3; //min 3!!!
+	
 	
 	//background
 	private AutoParallaxBackground autoParallaxBackground;
@@ -125,6 +128,8 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	//OVERRIDEN METHODS
 	@Override
 	public void createScene() {
+		groundPool = new LinkedList<Body>();
+		
 		backgroundLayer = new Entity();
 		foregroundLayer = new Entity();
 		createHUD();
@@ -185,52 +190,26 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		setBackground(autoParallaxBackground);
 	}
 
-	private void generateLevelCoordinates() {
-		levelCoordinates = null;
-		levelCoordinates = new Vector2[4];
-		levelCoordinates[0] = new Vector2(center - 200, 360);
-		levelCoordinates[1] = new Vector2(center - 200, 240);
-		levelCoordinates[2] = new Vector2(center + 600, 240);
-		levelCoordinates[3] = new Vector2(center + 600 , 360);
-	}
-
 	private void createGround() {
-		generateLevelCoordinates();
-		ChainShape myChain = new ChainShape();
-		Vector2[] myV2 = new Vector2[levelCoordinates.length];
-		for (int i = 0; i < levelCoordinates.length; i++) {
-			myV2[i] = new Vector2(levelCoordinates[i].x / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, levelCoordinates[i].y / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
+		
+		for(int i = 0; i < groundPoolAmount; i++)
+		{
+			Sprite groundSprite = new Sprite( ( (-200) + (i * 800) ), 240, ResourcesManager.getInstance().ground_region, ResourcesManager.getInstance().vbom);
+			groundSprite.setCullingEnabled(false);
+			Body ground = PhysicsFactory.createBoxBody(physicsWorld, groundSprite, BodyType.StaticBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0.2f));
+			ground.setUserData("ground");
+			
+			groundPool.add(ground);
+			foregroundLayer.attachChild(groundSprite);
+			
+			physicsWorld.registerPhysicsConnector(new PhysicsConnector(groundSprite, ground, true, false) {
+				@Override
+				public void onUpdate(float pSecondsElapsed) {
+					super.onUpdate(pSecondsElapsed);
+				}
+			});
 		}
-		myChain.createChain(myV2);
-		center2 = (int) (myV2[0].x);
-
-		FixtureDef mFixtureDef = new FixtureDef();
-		mFixtureDef.shape = myChain;
-
-		BodyDef mBodyDef = new BodyDef();
-		mBodyDef.type = BodyType.StaticBody;
 		
-		Body mChainBody;
-		mChainBody = physicsWorld.createBody(mBodyDef);
-		mChainBody.createFixture(mFixtureDef);
-		myChain.dispose();
-		mChainBody.setUserData("ground");
-		
-		// TEXTURED POLYGON 2 - DIRT - TEXTURE REGION MUST BE FROM A REPEATING ATLAS
-		float[] vertexX2 = new float[myV2.length];
-		float[] vertexY2 = new float[myV2.length];
-
-		for (int i = 0; i < myV2.length; i++) {
-			vertexX2[i] = myV2[i].x * PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT;
-			vertexY2[i] = myV2[i].y * PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT;
-		}
-		ground = new TexturedPolygon(0, 0, vertexX2, vertexY2, resourcesManager.dirt_texture_region, vbom);
-		backgroundLayer.attachChild(ground);
-		ground.setUserData("ground");
-		
-		Sprite grass = new Sprite(center - 200, 232, ResourcesManager.getInstance().grass_region, vbom);
-		ground.attachChild(grass);
-		center += 800;
 		//backgroundLayer.attachChild(new DebugRenderer(physicsWorld, vbom));
 	}
 
@@ -274,13 +253,14 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 					displayTutorial();
 					setScore(score);
 				}
-
-				if (player.getBody().getPosition().x > center2) {
-					createGround();
-					if (backgroundLayer.getChildCount() == 4) {
-						backgroundLayer.detachChild(backgroundLayer.getFirstChild());
-					}
-
+				
+				Body t_firstGround = groundPool.getFirst();
+				
+				if (player.getBody().getPosition().x > (t_firstGround.getPosition().x + (800.0f / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT)) ) {
+					Body temp = groundPool.removeFirst();
+					temp.setTransform( temp.getPosition().x + ((800.0f / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT) * (groundPoolAmount)), (temp.getPosition().y), 0);
+					temp.setUserData("ground");
+					groundPool.add(temp);
 				}
 				if(displayTutorial)
 					generateTutorial();

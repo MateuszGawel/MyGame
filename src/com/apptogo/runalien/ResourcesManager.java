@@ -80,6 +80,7 @@ public class ResourcesManager {
 	
 	BitmapTextureAtlas dirtRepeatingAtlas;
 	public ITextureRegion dirt_texture_region;
+	public ITextureRegion ground_region;
 	
 	private BitmapTextureAtlas mAutoParallaxBackgroundTexture;
 	public ITextureRegion mParallaxLayerBack;
@@ -203,12 +204,14 @@ public class ResourcesManager {
 	    menu_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "menu.png");
 	    submit_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "submit.png");
 	    grass_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "grass.png");
+	    ground_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "ground.png");
 	    
 	    playerCover_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "playerCover.png");
 	    player_region = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(playerTextureAtlas, activity, "player.png", 12, 11);
 	    
         dirtRepeatingAtlas = new BitmapTextureAtlas(activity.getTextureManager(), 311, 122, TextureOptions.REPEATING_BILINEAR_PREMULTIPLYALPHA);
         dirt_texture_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(dirtRepeatingAtlas, activity, "dirt.png", 0, 0);
+        
         
 		mAutoParallaxBackgroundTexture = new BitmapTextureAtlas(activity.getTextureManager(), 1024, 1024, TextureOptions.DEFAULT);
 		//mParallaxLayerGrass = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mAutoParallaxBackgroundTexture, activity, "grass.png", 0, 0);
