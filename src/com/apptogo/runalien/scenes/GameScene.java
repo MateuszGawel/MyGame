@@ -141,10 +141,10 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		vibrator = (Vibrator)activity.getSystemService(Context.VIBRATOR_SERVICE);
 		
 		//strasznie na pale :<
-		Coin c = null;
-		for(int i=0;i<10000; i+=100) c = new Coin(i, 280, foregroundLayer);
+		//Coin c = null;
+		//for(int i=0;i<10000; i+=100) c = new Coin(i, 280, foregroundLayer);
 		
-		c.setPlayer(player);
+		//c.setPlayer(player);
 	}
 
 	@Override

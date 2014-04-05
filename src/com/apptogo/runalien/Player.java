@@ -11,6 +11,7 @@ import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.entity.modifier.RotationModifier;
 import org.andengine.entity.sprite.AnimatedSprite;
+import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.extension.physics.box2d.PhysicsConnector;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
@@ -49,6 +50,7 @@ public abstract class Player extends AnimatedSprite {
 	private boolean canSpeedUp = true;
 	private boolean slideAfterLanding = false;
 	public Random generator = new Random();
+	public Sprite playerCover;
 	
 	public Player(float pX, float pY, VertexBufferObjectManager vbo, BoundCamera camera, PhysicsWorld physicsWorld) {
 		super(pX, pY, ResourcesManager.getInstance().player_region, vbo);
@@ -67,6 +69,9 @@ public abstract class Player extends AnimatedSprite {
 		doubleJumpSound.setVolume(0.5f);
 		chargeDownSound = ResourcesManager.getInstance().chargeDownSound;
 		breathe();
+		
+		playerCover = new Sprite(getX() - (getWidth() - 50), getY() - (getHeight() + 50), ResourcesManager.getInstance().playerCover_region, ResourcesManager.getInstance().vbom);
+		this.attachChild(playerCover);
 	}
 
 	public abstract void onDie();
@@ -273,6 +278,10 @@ public abstract class Player extends AnimatedSprite {
 	    {
 	        return; 
 	    }
+	    
+	    playerCover.setRotationCenterY(playerCover.getY() + 65);
+	    playerCover.registerEntityModifier(new RotationModifier(0.2f, 0, -90));
+	    
 	    System.out.println("PLAYER wlasnie slizgam");
     	runSound.pause();
     	screamSound.pause();
@@ -285,7 +294,7 @@ public abstract class Player extends AnimatedSprite {
 		animate(PLAYER_ANIMATE, 106, 112, false, new IAnimationListener() {
 			
             public void onAnimationStarted(AnimatedSprite pAnimatedSprite, int pInitialLoopCount) {
-
+            		
             }
             public void onAnimationLoopFinished(AnimatedSprite pAnimatedSprite, int pRemainingLoopCount, int pInitialLoopCount) {
 
@@ -300,6 +309,9 @@ public abstract class Player extends AnimatedSprite {
 	}
 	
 	public void standUp() {
+		playerCover.setRotationCenterY(playerCover.getY() + 65);
+		playerCover.registerEntityModifier(new RotationModifier(0.2f, -90, 0));
+		
 	    sliding = false;
 	    screamSound.resume();
 	    System.out.println("PLAYER wstaje");
@@ -309,7 +321,7 @@ public abstract class Player extends AnimatedSprite {
 		animate(PLAYER_ANIMATE, 113, 118, false, new IAnimationListener() {
 			
             public void onAnimationStarted(AnimatedSprite pAnimatedSprite, int pInitialLoopCount) {
-
+            	
             }
             public void onAnimationLoopFinished(AnimatedSprite pAnimatedSprite, int pRemainingLoopCount, int pInitialLoopCount) {
 
@@ -325,6 +337,9 @@ public abstract class Player extends AnimatedSprite {
 	
 	public void dieBottom(){
 		if(alive){
+			playerCover.setRotationCenterY(playerCover.getY() + 65);
+		    playerCover.registerEntityModifier(new RotationModifier(0.2f, 0, 90));
+		    
 			alive = false;
 			canRun = false;
 			screamSound.pause();
@@ -340,6 +355,9 @@ public abstract class Player extends AnimatedSprite {
 	
 	public void dieTop(boolean itIsBell){
 		if(alive){
+			playerCover.setRotationCenterY(playerCover.getY() + 65);
+		    playerCover.registerEntityModifier(new RotationModifier(0.2f, 0, -90));
+			
 			alive = false;
 			canRun = false;
 			screamSound.pause();
