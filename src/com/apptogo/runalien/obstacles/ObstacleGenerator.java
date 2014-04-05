@@ -162,6 +162,9 @@ public class ObstacleGenerator {
 				if(obstacle.getBody() != null && obstacle.getBody().getUserData().toString().equals("ballBottom")){
 					player.dieTop(false);
 				}
+				else if(obstacle.getBody() != null && obstacle.getBody().getUserData().toString().equals("ballUpper")){
+					System.out.println("DOTKNALEM KULI");
+				}
 				else if(obstacle.getSprite().getUserData().toString().contains("bottom")){
 					player.dieBottom();
 				}
@@ -398,19 +401,19 @@ public class ObstacleGenerator {
 	}
 	
 	private void setProperSlidingCollisions(){
-		/*
 		for(Obstacle obstacle : usedObstacles){
-			if(obstacle.getBody().getUserData().toString().toLowerCase().contains("upper")){
+			if(obstacle.getBody()!=null && obstacle.getBody().getUserData().equals("ballUpper")){
 				List<Fixture> fixtureList = obstacle.getBody().getFixtureList();
 				for(Fixture fixture : fixtureList){
 					if(player.isSliding()){
+						System.out.println("WYLACZAM KOLIZJE");
 						fixture.setSensor(true);
 					}
 					else
 						fixture.setSensor(false);
 			    }
 			}
-		}*/
+		}
 	}
 	
 	private void releaseUselessObstacles()
