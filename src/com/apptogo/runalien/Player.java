@@ -1,5 +1,7 @@
 package com.apptogo.runalien;
 
+import java.util.Random;
+
 import org.andengine.audio.music.Music;
 import org.andengine.audio.sound.Sound;
 import org.andengine.engine.camera.BoundCamera;
@@ -46,6 +48,7 @@ public abstract class Player extends AnimatedSprite {
 	private boolean boundsFlag = true;
 	private boolean canSpeedUp = true;
 	private boolean slideAfterLanding = false;
+	public Random generator = new Random();
 	
 	public Player(float pX, float pY, VertexBufferObjectManager vbo, BoundCamera camera, PhysicsWorld physicsWorld) {
 		super(pX, pY, ResourcesManager.getInstance().player_region, vbo);
@@ -205,8 +208,13 @@ public abstract class Player extends AnimatedSprite {
 		if(!alive || sliding || !jumping || doubleJumped || chargingDown)
 			return;
     	runSound.pause();
-    	screamSound.pause();
-	    doubleJumpSound.play();
+    	
+    	if(  generator.nextInt(10)%2 == 0 ) 
+		{
+    		screamSound.pause();
+    		doubleJumpSound.play();
+		}
+    	
 		body.setLinearVelocity(new Vector2(body.getLinearVelocity().x, -25));
 		doubleJumped = true;
 	}

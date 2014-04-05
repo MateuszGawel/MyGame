@@ -1,5 +1,7 @@
 package com.apptogo.runalien.scenes;
 
+import java.util.ArrayList;
+
 import org.andengine.engine.camera.hud.HUD;
 import org.andengine.engine.handler.IUpdateHandler;
 import org.andengine.engine.handler.timer.ITimerCallback;
@@ -40,6 +42,7 @@ import com.apptogo.runalien.R;
 import com.apptogo.runalien.ResourcesManager;
 import com.apptogo.runalien.SceneManager;
 import com.apptogo.runalien.SceneManager.SceneType;
+import com.apptogo.runalien.coins.Coin;
 import com.apptogo.runalien.obstacles.ObstacleGenerator;
 import com.apptogo.runalien.obstacles.ObstaclesPoolManager;
 import com.apptogo.runalien.utils.GoogleBaseGameActivity;
@@ -136,6 +139,12 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		ObstaclesPoolManager.getInstance().initializePoolManager(physicsWorld, foregroundLayer);
 		obstacleGenerator = new ObstacleGenerator(this, player);
 		vibrator = (Vibrator)activity.getSystemService(Context.VIBRATOR_SERVICE);
+		
+		//strasznie na pale :<
+		Coin c = null;
+		for(int i=0;i<10000; i+=100) c = new Coin(i, 280, foregroundLayer);
+		
+		c.setPlayer(player);
 	}
 
 	@Override

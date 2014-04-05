@@ -54,6 +54,7 @@ public class ResourcesManager {
 	private BuildableBitmapTextureAtlas menuTextureAtlas;
 	
 	//GAME RESOURCES
+	public ITextureRegion coin_region;
 	public ITextureRegion bottom_1_region;
 	public ITextureRegion bottom_2_region;
 	public ITextureRegion bottom_3_region;
@@ -184,6 +185,7 @@ public class ResourcesManager {
 	    playerTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 2048, 2048, TextureOptions.BILINEAR);
 	    
 	    //obstacle_top_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "obstacle_top.png");
+	    coin_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "coin.png");
 	    bottom_1_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "bottom1.png");
 	    bottom_2_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "bottom2.png");
 	    bottom_3_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "bottom3.png");
