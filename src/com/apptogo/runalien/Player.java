@@ -70,7 +70,7 @@ public abstract class Player extends AnimatedSprite {
 		chargeDownSound = ResourcesManager.getInstance().chargeDownSound;
 		breathe();
 		
-		playerCover = new Sprite(getX() - (getWidth() - 50), getY() - (getHeight() + 50), ResourcesManager.getInstance().playerCover_region, ResourcesManager.getInstance().vbom);
+		playerCover = new Sprite(getX() - (getWidth() - 50), getY() - (getHeight() + 40), ResourcesManager.getInstance().playerCover_region, ResourcesManager.getInstance().vbom);
 		this.attachChild(playerCover);
 	}
 
@@ -283,7 +283,7 @@ public abstract class Player extends AnimatedSprite {
 	        return; 
 	    }
 	    
-	    playerCover.setRotationCenterY(playerCover.getY() + 65);
+	    playerCover.setRotationCenterY(playerCover.getY() + 50);
 	    playerCover.registerEntityModifier(new RotationModifier(0.2f, 0, -90));
 	    
 	    System.out.println("PLAYER wlasnie slizgam");
@@ -313,7 +313,7 @@ public abstract class Player extends AnimatedSprite {
 	}
 	
 	public void standUp() {
-		playerCover.setRotationCenterY(playerCover.getY() + 65);
+		playerCover.setRotationCenterY(playerCover.getY() + 50);
 		playerCover.registerEntityModifier(new RotationModifier(0.2f, -90, 0));
 		
 	    sliding = false;
@@ -341,7 +341,7 @@ public abstract class Player extends AnimatedSprite {
 	
 	public void dieBottom(){
 		if(alive){
-			playerCover.setRotationCenterY(playerCover.getY() + 65);
+			playerCover.setRotationCenterY(playerCover.getY() + 50);
 		    playerCover.registerEntityModifier(new RotationModifier(0.2f, 0, 90));
 		    
 			alive = false;
@@ -359,7 +359,7 @@ public abstract class Player extends AnimatedSprite {
 	
 	public void dieTop(boolean itIsBell){
 		if(alive){
-			playerCover.setRotationCenterY(playerCover.getY() + 65);
+			playerCover.setRotationCenterY(playerCover.getY() + 50);
 		    playerCover.registerEntityModifier(new RotationModifier(0.2f, 0, -90));
 			
 			alive = false;
