@@ -13,19 +13,19 @@ public class ObstaclesPoolManager
 {
 	
 	//Obstacles ammount
-	private final int bottom_1_Ammount = 10;
-	private final int bottom_2_Ammount = 7;
+	private final int bottom_1_Ammount = 5;
+	private final int bottom_2_Ammount = 5;
 	private final int bottom_3_Ammount = 5;
-	private final int bottom_4_Ammount = 3;
+	private final int bottom_4_Ammount = 5;
 	
 	private final int upper_1_Ammount = 5;
 	private final int upper_2_Ammount = 5;
-	private final int upper_3_Ammount = 0;
+	private final int upper_3_Ammount = 5;
 	private final int upper_4_Ammount = 5;
 	
 	private final int crateUpperAmmount = 0;
-	private final int ballUpperAmmount = 3;
-	private final int ballBottomAmmount = 3;
+	private final int ballUpperAmmount = 0;
+	private final int ballBottomAmmount = 0;
 	
 	//Pools
 	public Stack<Bottom_1> bottom_1_Pool;
@@ -97,17 +97,17 @@ public class ObstaclesPoolManager
 	}
 	
 	public void ignoreCollisions(Obstacle obstacle){
-		List<Fixture> fixtureList = obstacle.getBody().getFixtureList();
-		for(Fixture fixture : fixtureList){
-				fixture.setSensor(true);
-	    }
+		//List<Fixture> fixtureList = obstacle.getBody().getFixtureList();
+		//for(Fixture fixture : fixtureList){
+		//		fixture.setSensor(true);
+	    //}
 	}
 	
 	public void setCollisions(Obstacle obstacle){
-		List<Fixture> fixtureList = obstacle.getBody().getFixtureList();
-		for(Fixture fixture : fixtureList){
-				fixture.setSensor(false);
-	    }
+		//List<Fixture> fixtureList = obstacle.getBody().getFixtureList();
+		//for(Fixture fixture : fixtureList){
+		//		fixture.setSensor(false);
+	    //}
 	}
 	//Singleton
 	private static final ObstaclesPoolManager INSTANCE = new ObstaclesPoolManager();

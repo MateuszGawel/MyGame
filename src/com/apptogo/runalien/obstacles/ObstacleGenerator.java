@@ -19,7 +19,7 @@ public class ObstacleGenerator {
 	private Player player;
 	private Scene scene;
 	private List<Obstacle> usedObstacles;
-	private float nextObstaclePosition = 30;
+	private float nextObstaclePosition = 600;
 	public Random generator = new Random();
 	private boolean firstObstacleFlag = true;
 	private ArrayList<Integer> lastRandoms;
@@ -52,7 +52,7 @@ public class ObstacleGenerator {
 
 		int randomFactor = (int)( Math.random() * (difficulty + 1) ); //im wyzsze difficulty tym latwiej grac - wieksze odstepy
 		
-		return (int)( (nextObstaclePosition + difficulty ));
+		return (int)( (nextObstaclePosition + 300 ));
 	}
 	
 	public void startObstacleGenerationAlgorithm(final int tutorialScoreOffset){	
@@ -61,12 +61,13 @@ public class ObstacleGenerator {
 			public void onUpdate(float pSecondsElapsed) {
 				if(obstaclesPoolManager.isNotEmpty())
 				{
-					if(player.getBody().getPosition().x + 50 > nextObstaclePosition && player.isAlive())
+					System.out.println("LOG pozycja playera: " + player.getX() + " nextobstr: " + nextObstaclePosition);
+					if(player.getX() + 500 > nextObstaclePosition && player.isAlive())
 					{
 						int score = (int) Math.round(player.getBody().getPosition().x/10) - tutorialScoreOffset;
 						int minSpace = 4 + (int)(player.getBody().getLinearVelocity().x / 2 );
 						
-						int maxRand = 1 + (((int)((score+10)/5))%15 );
+						int maxRand = 8;// + (((int)((score+10)/3))%15 );
 						
 						int random = generator.nextInt( maxRand );
 						
@@ -91,28 +92,28 @@ public class ObstacleGenerator {
 												
 						switch(random){
 						case 0:
-							generateUpperObstacle(1, -1);
-							break;
-						case 1:
 							generateBottomObstacle(1, -1);
 							break;
+						case 1:
+							generateBottomObstacle(2, -1);
+							break;
 						case 2:
-							generateUpperObstacle(4, -1);
+							generateBottomObstacle(3, -1);
 							break;
 						case 3:
-							generateSmallPyramid(-1);
+							generateBottomObstacle(4, -1);
 							break;
 						case 4:
-							generateRightBigPyramid();
+							generateUpperObstacle(1, -1);
 							break;
 						case 5:
-							generateMuchJumpingSequence(minSpace);
+							generateUpperObstacle(2, -1);
 							break;
 						case 6:
-							generateUpperBottomWall(-1);
+							generateUpperObstacle(3, -1);
 							break;
 						case 7:
-							generateUpDownSequence();
+							generateUpperObstacle(4, -1);
 							break;
 						case 8:
 							generateRightVeryBigPyramid();
@@ -163,44 +164,45 @@ public class ObstacleGenerator {
 			if(!obstaclesPoolManager.bottom_1_Pool.isEmpty())
 			{
 				obstacle = obstaclesPoolManager.bottom_1_Pool.pop();
-				obstacle.getBody().setTransform(nextObstaclePosition, 6.9f, 0);
+				obstacle.getSprite().setX(nextObstaclePosition);
+				System.out.println("LOG ustawiam na: " + nextObstaclePosition);
 				usedObstacles.add(obstacle);
 				if(customMargin<0) nextObstaclePosition = calculateObstaclePosition(); 
 				else nextObstaclePosition = customMargin;
-				ObstaclesPoolManager.getInstance().setCollisions(obstacle);
+				//ObstaclesPoolManager.getInstance().setCollisions(obstacle);
 			} else System.out.println("POOL zabrak這 bottom1");
 			break;
 		case 2:
 			if(!obstaclesPoolManager.bottom_2_Pool.isEmpty())
 			{
 				obstacle = obstaclesPoolManager.bottom_2_Pool.pop();
-				obstacle.getBody().setTransform(nextObstaclePosition, 6.22f, 0);
+				obstacle.getSprite().setX(nextObstaclePosition);
 				usedObstacles.add(obstacle);
 				if(customMargin<0) nextObstaclePosition = calculateObstaclePosition(); 
 				else nextObstaclePosition = customMargin;
-				ObstaclesPoolManager.getInstance().setCollisions(obstacle);
+				//ObstaclesPoolManager.getInstance().setCollisions(obstacle);
 			} else System.out.println("POOL zabrak這 bottom2");
 			break;
 		case 3:
 			if(!obstaclesPoolManager.bottom_3_Pool.isEmpty())
 			{
 				obstacle = obstaclesPoolManager.bottom_3_Pool.pop();
-				obstacle.getBody().setTransform(nextObstaclePosition, 5.54f, 0);
+				obstacle.getSprite().setX(nextObstaclePosition);
 				usedObstacles.add(obstacle);
 				if(customMargin<0) nextObstaclePosition = calculateObstaclePosition(); 
 				else nextObstaclePosition = customMargin;
-				ObstaclesPoolManager.getInstance().setCollisions(obstacle);
+				//ObstaclesPoolManager.getInstance().setCollisions(obstacle);
 			} else System.out.println("POOL zabrak這 bottom3");
 			break;
 		case 4:
 			if(!obstaclesPoolManager.bottom_4_Pool.isEmpty())
 			{
 				obstacle = obstaclesPoolManager.bottom_4_Pool.pop();
-				obstacle.getBody().setTransform(nextObstaclePosition, 4.82f, 0);
+				obstacle.getSprite().setX(nextObstaclePosition);
 				usedObstacles.add(obstacle);
 				if(customMargin<0) nextObstaclePosition = calculateObstaclePosition(); 
 				else nextObstaclePosition = customMargin; 
-				ObstaclesPoolManager.getInstance().setCollisions(obstacle);
+				//ObstaclesPoolManager.getInstance().setCollisions(obstacle);
 			} else System.out.println("POOL zabrak這 bottom4");
 			break;
 		default:
@@ -217,44 +219,44 @@ public class ObstacleGenerator {
 			if(!obstaclesPoolManager.upper_1_Pool.isEmpty())
 			{
 				obstacle = obstaclesPoolManager.upper_1_Pool.pop();
-				obstacle.getBody().setTransform(nextObstaclePosition, 4.3f, 0);
+				obstacle.getSprite().setX(nextObstaclePosition);
 				usedObstacles.add(obstacle);
 				if(customMargin<0) nextObstaclePosition = calculateObstaclePosition(); 
 				else nextObstaclePosition = customMargin;
-				ObstaclesPoolManager.getInstance().setCollisions(obstacle);
+				//ObstaclesPoolManager.getInstance().setCollisions(obstacle);
 			} else System.out.println("POOL zabrak這 upper1");
 			break;
 		case 2:
 			if(!obstaclesPoolManager.upper_2_Pool.isEmpty())
 			{
 				obstacle = obstaclesPoolManager.upper_2_Pool.pop();
-				obstacle.getBody().setTransform(nextObstaclePosition, -1.5f, 0);
+				obstacle.getSprite().setX(nextObstaclePosition);
 				usedObstacles.add(obstacle);
 				if(customMargin<0) nextObstaclePosition = calculateObstaclePosition(); 
 				else nextObstaclePosition = customMargin;
-				ObstaclesPoolManager.getInstance().setCollisions(obstacle);
+				//ObstaclesPoolManager.getInstance().setCollisions(obstacle);
 			} else System.out.println("POOL zabrak這 upper2");
 			break;
 		case 3: // w sumie do niczego nie przydatne chyba
 			if(!obstaclesPoolManager.upper_3_Pool.isEmpty())
 			{
 				obstacle = obstaclesPoolManager.upper_3_Pool.pop();
-				obstacle.getBody().setTransform(nextObstaclePosition, -1f, 0);
+				obstacle.getSprite().setX(nextObstaclePosition);
 				usedObstacles.add(obstacle);
 				if(customMargin<0) nextObstaclePosition = calculateObstaclePosition(); 
 				else nextObstaclePosition = customMargin;
-				ObstaclesPoolManager.getInstance().setCollisions(obstacle);
+				//ObstaclesPoolManager.getInstance().setCollisions(obstacle);
 			} else System.out.println("POOL zabrak這 upper3");
 			break;
 		case 4:
 			if(!obstaclesPoolManager.upper_4_Pool.isEmpty())
 			{
 				obstacle = obstaclesPoolManager.upper_4_Pool.pop();
-				obstacle.getBody().setTransform(nextObstaclePosition, 1.1f, 0);
+				obstacle.getSprite().setX(nextObstaclePosition);
 				usedObstacles.add(obstacle);
 				if(customMargin<0) nextObstaclePosition = calculateObstaclePosition(); 
 				else nextObstaclePosition = customMargin; 
-				ObstaclesPoolManager.getInstance().setCollisions(obstacle);
+				//ObstaclesPoolManager.getInstance().setCollisions(obstacle);
 			} else System.out.println("POOL zabrak這 upper4");
 			break;
 		default:
@@ -379,7 +381,7 @@ public class ObstacleGenerator {
 	}
 	
 	private void setProperSlidingCollisions(){
-		
+		/*
 		for(Obstacle obstacle : usedObstacles){
 			if(obstacle.getBody().getUserData().toString().toLowerCase().contains("upper")){
 				List<Fixture> fixtureList = obstacle.getBody().getFixtureList();
@@ -391,59 +393,60 @@ public class ObstacleGenerator {
 						fixture.setSensor(false);
 			    }
 			}
-		}
+		}*/
 	}
 	
 	private void releaseUselessObstacles()
 	{
+		System.out.println("POOL w pooli: " + usedObstacles.size());
 		for(int u = 0; u < usedObstacles.size(); u++) //tu byl problem z concurrency - uzywalismy foreach z iteratorem i on robil problemy UWAGA NA TO MOZE BYC DZIURAWE
 		{                                             //nawet nie probowac synchronizowac :P probowalem synchronizowac metody/bloki ponad godzine i lipa a tak dziala
 			Obstacle obstacle = usedObstacles.get(u);
 			
-			if(obstacle.getBody().getPosition().x < (player.getBody().getPosition().x -10)) //- 10 zeby znikaly juz poza ekranem
+			if(obstacle.getSprite().getX() < (player.getX() -10)) //- 10 zeby znikaly juz poza ekranem
 			{
 				usedObstacles.remove(obstacle);
-				if(((String)(obstacle.getBody().getUserData())).equals("crateUpper"))
+				if(((String)(obstacle.getSprite().getUserData())).equals("crateUpper"))
 				{
 					obstaclesPoolManager.crateUpperPool.push((CrateUpper)obstacle);
 				}
-				if("bottom1".equals(obstacle.getBody().getUserData()))
+				if("bottom1".equals(obstacle.getSprite().getUserData()))
 				{
 					obstaclesPoolManager.bottom_1_Pool.push((Bottom_1)obstacle);
 				}
-				if("bottom2".equals(obstacle.getBody().getUserData()))
+				if("bottom2".equals(obstacle.getSprite().getUserData()))
 				{
 					obstaclesPoolManager.bottom_2_Pool.push((Bottom_2)obstacle);
 				}
-				if("bottom3".equals(obstacle.getBody().getUserData()))
+				if("bottom3".equals(obstacle.getSprite().getUserData()))
 				{
 					obstaclesPoolManager.bottom_3_Pool.push((Bottom_3)obstacle);
 				}
-				if("bottom4".equals(obstacle.getBody().getUserData()))
+				if("bottom4".equals(obstacle.getSprite().getUserData()))
 				{
 					obstaclesPoolManager.bottom_4_Pool.push((Bottom_4)obstacle);
 				}
-				if("upper1".equals(obstacle.getBody().getUserData()))
+				if("upper1".equals(obstacle.getSprite().getUserData()))
 				{
 					obstaclesPoolManager.upper_1_Pool.push((Upper_1)obstacle);
 				}
-				if("upper2".equals(obstacle.getBody().getUserData()))
+				if("upper2".equals(obstacle.getSprite().getUserData()))
 				{
 					obstaclesPoolManager.upper_2_Pool.push((Upper_2)obstacle);
 				}
-				if("upper3".equals(obstacle.getBody().getUserData()))
+				if("upper3".equals(obstacle.getSprite().getUserData()))
 				{
 					obstaclesPoolManager.upper_3_Pool.push((Upper_3)obstacle);
 				}
-				if("upper4".equals(obstacle.getBody().getUserData()))
+				if("upper4".equals(obstacle.getSprite().getUserData()))
 				{
 					obstaclesPoolManager.upper_4_Pool.push((Upper_4)obstacle);
 				}
-				if(((obstacle.getBody().getUserData())).equals("ballUper"))
+				if(((obstacle.getSprite().getUserData())).equals("ballUper"))
 				{
 					obstaclesPoolManager.ballUpperPool.push((BallUpper)obstacle);
 				}
-				if((obstacle.getBody().getUserData()).equals("ballBottom"))
+				if((obstacle.getSprite().getUserData()).equals("ballBottom"))
 				{
 					obstaclesPoolManager.ballBottomPool.push((BallBottom)obstacle);
 				}
