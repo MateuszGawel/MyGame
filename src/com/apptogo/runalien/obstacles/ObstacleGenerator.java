@@ -19,7 +19,7 @@ public class ObstacleGenerator {
 	private Player player;
 	private Scene scene;
 	private List<Obstacle> usedObstacles;
-	private float nextObstaclePosition = 400;
+	private float nextObstaclePosition = 900;
 	public Random generator = new Random();
 	private boolean firstObstacleFlag = true;
 	private ArrayList<Integer> lastRandoms;
@@ -38,21 +38,20 @@ public class ObstacleGenerator {
 		return player.getX()/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT;
 	}
 	
+	private int getVelocityOffset()
+	{
+		int playerVelocityX = (int)player.getBody().getLinearVelocity().x; 
+		int offset = (playerVelocityX - 13) * 16;
+		
+		return offset;
+	}
 	
 	public int calculateObstaclePosition()
 	{   
-		//return (int)( (player.getBody().getPosition().x + 20 )); bo tak naprawde kolejne przeszkody chcemy planowac wzgledem siebie, a nie playera, ktory dopiero gdzies tam biegnie	
-		int minSpace = 5;
+		int minSpace = 500;
+		int velocityOffset = getVelocityOffset();
 		
-		int playerVelocityX = (int)player.getBody().getLinearVelocity().x; 
-		int difficulty = 10;
-		
-		if( playerVelocityX > 0)
-			difficulty = (int) playerVelocityX ; //podobnie jak tu ;) 
-
-		int randomFactor = (int)( Math.random() * (difficulty + 1) ); //im wyzsze difficulty tym latwiej grac - wieksze odstepy
-		
-		return (int)( (nextObstaclePosition + 400 ));
+		return (int)( (nextObstaclePosition + minSpace + velocityOffset ));
 	}
 	
 	public void startObstacleGenerationAlgorithm(final int tutorialScoreOffset){	
@@ -67,12 +66,12 @@ public class ObstacleGenerator {
 						int score = (int) Math.round(player.getBody().getPosition().x/10) - tutorialScoreOffset;
 						int minSpace = 4 + (int)(player.getBody().getLinearVelocity().x / 2 );
 						
-						int maxRand = 10;// + (((int)((score+10)/3))%15 );
+						int maxRand = (((int)(score/6))%15 );
+						
+						if(maxRand == 0) maxRand = 1;
 						
 						int random = generator.nextInt( maxRand );
-						
-						for(int i=0;i<lastRandoms.size(); i++) System.out.println("RAND : "+lastRandoms.get(i).intValue() );
-						System.out.println("RAND ------------------");
+
 						if( lastRandoms.size() >= 2 ) 
 						{ 
 							//moznaby to przerobic na jakiegos for-a zeby mozna bylo definiowac ilosc mozliwych powtorzen przeszkod ale mysle ze 2 pod rzad to rozsadna ilosc
@@ -89,54 +88,54 @@ public class ObstacleGenerator {
 						}
 						
 						lastRandoms.add(random);
-												
+						
+						int INSEQUENCEDISTANCE = 300;
+						
 						switch(random){
 						case 0:
 							generateBottomObstacle(1, -1);
 							break;
 						case 1:
-							generateBottomObstacle(2, -1);
-							break;
-						case 2:
-							generateBottomObstacle(3, -1);
-							break;
-						case 3:
-							generateBottomObstacle(4, -1);
-							break;
-						case 4:
 							generateUpperObstacle(1, -1);
 							break;
+						case 2:
+							generateSmallPyramid(-1);
+							break;
+						case 3:
+							generateUpperBottomWall(-1);
+							break;
+						case 4:
+							generateUpDownSequence();
+							break;
 						case 5:
-							generateUpperObstacle(2, -1);
+							generateRightBigPyramid();
 							break;
 						case 6:
-							generateUpperObstacle(3, -1);
-							break;
-						case 7:
-							generateUpperObstacle(4, -1);
-							break;
-						case 8:
-							System.out.println("KULA BOTTOM");
-							generateBallBottom();
-							break;
-						case 9:
-							System.out.println("KULA UP");
 							generateBallUpper();
 							break;
-						case 10:
-							generateLeftBigPyramid();
-							break;
-						case 11:
+						case 7:
 							generateBallBottom();
 							break;
+						case 8:
+							generateLeftBigPyramid();							
+							break;
+						case 9:
+							generateMuchJumpingSequence(INSEQUENCEDISTANCE);							
+							break;
+						case 10:
+							generateRightVeryBigPyramid();
+							break;
+						case 11:
+							generateMadWallOpenedSequence(INSEQUENCEDISTANCE);
+							break;
 						case 12:
-							generateMadWallOpenedSequence(minSpace);
+							generateJumpThenSlideSequence(INSEQUENCEDISTANCE);
 							break;
 						case 13:
-							generateJumpThenSlideSequence(minSpace);
+							generateWhatTheSmackSequence(INSEQUENCEDISTANCE);
 							break;
 						case 14:
-							generateWhatTheSmackSequence(minSpace);
+							generateMadWallOpenedSequence(INSEQUENCEDISTANCE);
 							break;
 						}
 					}
@@ -286,9 +285,9 @@ public class ObstacleGenerator {
 	}
 	
 	private void generateSmallPyramid(float distance){
-		generateBottomObstacle(1, nextObstaclePosition+1.40f);
+		generateBottomObstacle(1, nextObstaclePosition+45);
 		generateUpperObstacle(2, nextObstaclePosition);
-		generateBottomObstacle(2, nextObstaclePosition+1.40f);
+		generateBottomObstacle(2, nextObstaclePosition+45);
 		if(distance > 0) generateBottomObstacle(1, nextObstaclePosition + distance);
 		else             generateBottomObstacle(1, -1);  
 	}
@@ -300,48 +299,52 @@ public class ObstacleGenerator {
 	}
 	
 	private void generateUpDownSequence(){
-		generateBottomObstacle(4, nextObstaclePosition + 7f);
+		generateBottomObstacle(4, nextObstaclePosition + 200 + getVelocityOffset());
 		generateUpperObstacle(4, -1);
 	}
 	
 	private void generateRightBigPyramid(){
-		generateBottomObstacle(1, nextObstaclePosition+1.40f);
-		generateBottomObstacle(2, nextObstaclePosition+1.40f);
+		generateBottomObstacle(1, nextObstaclePosition+45f);
+		generateBottomObstacle(2, nextObstaclePosition+45f);
 		generateBottomObstacle(3, -1);
 	}
 	
 	private void generateRightVeryBigPyramid(){
-		generateBottomObstacle(1, nextObstaclePosition+1.40f);
-		generateBottomObstacle(2, nextObstaclePosition+1.40f);
-		generateBottomObstacle(3, nextObstaclePosition+1.40f);
+		generateBottomObstacle(1, nextObstaclePosition+45f);
+		generateBottomObstacle(2, nextObstaclePosition+45f);
+		generateBottomObstacle(3, nextObstaclePosition+45f);
 		generateBottomObstacle(4, -1);
 	}
 	
 	private void generateLeftBigPyramid(){
-		generateBottomObstacle(3, nextObstaclePosition+1.40f);
-		generateBottomObstacle(2, nextObstaclePosition+1.40f);
+		generateBottomObstacle(3, nextObstaclePosition+45f);
+		generateBottomObstacle(2, nextObstaclePosition+45f);
 		generateBottomObstacle(1, -1);
 	}
 	
 	private void generateMuchJumpingSequence(float distance){
-		generateBottomObstacle(1, nextObstaclePosition + distance - 1f);
+		int t_offset = getVelocityOffset();
+		generateBottomObstacle(1, nextObstaclePosition + distance + t_offset - 1f);
 		
-		generateBottomObstacle(1, nextObstaclePosition+1.40f);
-		generateBottomObstacle(2, nextObstaclePosition+distance);
+		generateBottomObstacle(1, nextObstaclePosition + 45f);
+		generateBottomObstacle(2, nextObstaclePosition + distance + t_offset);
 		
-		generateUpperObstacle(1, nextObstaclePosition+distance);
+		generateUpperObstacle(1, nextObstaclePosition + distance + t_offset);
 		
 		generateRightBigPyramid();
 	}
 	
 	private void generateMadWallOpenedSequence(float distance){
-		generateUpperBottomWall(distance);
 		
-		generateUpperObstacle(4, nextObstaclePosition + distance + 3);
+		int t_offset = getVelocityOffset();
+		
+		generateUpperBottomWall(distance + t_offset);
+		
+		generateUpperObstacle(4, nextObstaclePosition + distance + t_offset + 50);
 		
 		generateSmallPyramid(distance);
 		
-		generateUpperObstacle(4, nextObstaclePosition + distance + 3);
+		generateUpperObstacle(4, nextObstaclePosition + distance + t_offset + 50);
 		
 		generateRightVeryBigPyramid();
 		
@@ -349,21 +352,27 @@ public class ObstacleGenerator {
 	}
 
 	private void generateJumpThenSlideSequence(float distance){
-		generateBottomObstacle(1, nextObstaclePosition + distance);
-		generateUpperObstacle(1, nextObstaclePosition + distance + 2);
-		generateBottomObstacle(1, nextObstaclePosition + distance);
-		generateUpperObstacle(1, nextObstaclePosition + distance + 2);
-		generateBottomObstacle(1, nextObstaclePosition + distance);
-		generateUpperObstacle(1, nextObstaclePosition + distance + 2);
+		
+		int t_offset = getVelocityOffset();
+		
+		generateBottomObstacle(1, nextObstaclePosition + t_offset + distance);
+		generateUpperObstacle(1, nextObstaclePosition + t_offset + distance + 50);
+		generateBottomObstacle(1, nextObstaclePosition + t_offset + distance);
+		generateUpperObstacle(1, nextObstaclePosition + t_offset + distance + 50);
+		generateBottomObstacle(1, nextObstaclePosition + t_offset + distance);
+		generateUpperObstacle(1, nextObstaclePosition + t_offset + distance + 50);
 		generateBottomObstacle(1, -1);
 	}
 	
 	private void generateWhatTheSmackSequence(float distance){
-		generateBottomObstacle(3, nextObstaclePosition + distance + 1);
+		
+		int t_offset = getVelocityOffset();
+		
+		generateBottomObstacle(3, nextObstaclePosition + distance + t_offset + 20);
 		generateUpperBottomWall(distance);
-		generateUpperObstacle(1, nextObstaclePosition + distance + 3);
+		generateUpperObstacle(1, nextObstaclePosition + distance + t_offset + 50);
 		generateSmallPyramid(distance);
-		generateUpperObstacle(1, nextObstaclePosition + distance + 3);
+		generateUpperObstacle(1, nextObstaclePosition + distance + t_offset + 50);
 		generateRightBigPyramid();
 		generateUpperObstacle(4, -1);
 	}

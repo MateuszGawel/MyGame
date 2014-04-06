@@ -43,7 +43,7 @@ public abstract class Player extends AnimatedSprite {
 	private boolean flag = true;
 	private boolean flag2 = true;
 	private float runningSpeed = 13;
-	private float nextSpeedUp = 300;
+	private float nextSpeedUp = 50;
 	private float cameraShiftY = -150;
 	private float cameraShiftX = 200;
 	private boolean boundsFlag = true;
@@ -99,8 +99,10 @@ public abstract class Player extends AnimatedSprite {
 				}
 				if(canSpeedUp && body.getPosition().x > nextSpeedUp){
 					System.out.println("PRZYSPIESZAM " + body.getLinearVelocity().x);
-					nextSpeedUp = body.getPosition().x + 300;
+					nextSpeedUp = body.getPosition().x + 200;
 					runningSpeed++;
+					
+					if(runningSpeed >= 30) canSpeedUp = false; //bo szybciej to padaka
 				}
 			}
 		});
