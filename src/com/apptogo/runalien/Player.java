@@ -72,6 +72,7 @@ public abstract class Player extends AnimatedSprite {
 		
 		playerCover = new Sprite(getX() - (getWidth() - 50), getY() - (getHeight() + 40), ResourcesManager.getInstance().playerCover_region, ResourcesManager.getInstance().vbom);
 		this.attachChild(playerCover);
+		playerCover.setVisible(false);
 	}
 
 	public abstract void onDie();

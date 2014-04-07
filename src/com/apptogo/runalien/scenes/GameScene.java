@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import javax.microedition.khronos.opengles.GL10;
+
 import org.andengine.engine.camera.hud.HUD;
 import org.andengine.engine.handler.IUpdateHandler;
 import org.andengine.engine.handler.timer.ITimerCallback;
@@ -194,11 +196,12 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		
 		for(int i = 0; i < groundPoolAmount; i++)
 		{
+			
 			Sprite groundSprite = new Sprite( ( (-200) + (i * 800) ), 240, ResourcesManager.getInstance().ground_region, ResourcesManager.getInstance().vbom);
+			System.out.println("DLUGOSC: " + groundSprite.getWidth());
 			groundSprite.setCullingEnabled(false);
 			Body ground = PhysicsFactory.createBoxBody(physicsWorld, groundSprite, BodyType.StaticBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0.2f));
 			ground.setUserData("ground");
-			
 			groundPool.add(ground);
 			foregroundLayer.attachChild(groundSprite);
 			
@@ -274,7 +277,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 			@Override
 			public void onDie() {
 				saveHighScore();
-				autoParallaxBackground.stop();
+				//autoParallaxBackground.stop();
 				showGameOver();
 				mScoreDbEditor.putBoolean(TUTORIAL_DISPLAYED_LABEL, true);
 				mScoreDbEditor.commit();
@@ -466,7 +469,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 			if (!firstTouch) {
 				player.setRunning();
 				firstTouch = true;
-				autoParallaxBackground.start();
+				//autoParallaxBackground.start();
 				if(!displayTutorial){
 					obstacleGenerator.startObstacleGenerationAlgorithm(tutorialScoreOffset);
 					for(int i=0; i<partOfTutorialCompleted.length; i++)

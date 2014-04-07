@@ -33,9 +33,8 @@ public class BallBottom extends Obstacle{
 
 	public BallBottom(PhysicsWorld physicsWorld, Entity foregroundLayer){
 		
-
 		anchorSprite = new Sprite(anchorX, anchorY, ResourcesManager.getInstance().crate_region, ResourcesManager.getInstance().vbom); 
-		anchorSprite.setCullingEnabled(false);
+		//anchorSprite.setCullingEnabled(false);
 		anchorSprite.setUserData("ballBottomAnchor");
 		anchorBody = PhysicsFactory.createBoxBody(physicsWorld, anchorSprite, BodyType.StaticBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0));
 		anchorBody.setUserData("ballBottomAnchor");
@@ -51,11 +50,9 @@ public class BallBottom extends Obstacle{
 		connectionLine = new Line(anchorX, anchorY, ballX, ballY, ResourcesManager.getInstance().vbom);
 		connectionLine.setColor(new Color(70f/255f, 50f/255f, 10f/255f));
 		connectionLine.setLineWidth(4.0f);
-		connectionLine.setCullingEnabled(false);
 		connectionLine.setVisible(true);
 		
 		sprite = new Sprite(ballX, ballY, ResourcesManager.getInstance().ball_region, ResourcesManager.getInstance().vbom);
-		sprite.setCullingEnabled(false);
 		sprite.setUserData("ballBottom");
 		body = PhysicsFactory.createCircleBody(physicsWorld, sprite, BodyType.DynamicBody, PhysicsFactory.createFixtureDef(200.5f, 0.2f, 0.5f));
 		body.setUserData("ballBottom");
@@ -63,7 +60,6 @@ public class BallBottom extends Obstacle{
 		foregroundLayer.attachChild(connectionLine);
 		foregroundLayer.attachChild(anchorSprite);
 		foregroundLayer.attachChild(sprite);
-		
 		
 		
 		physicsWorld.registerPhysicsConnector(new PhysicsConnector(sprite, body, true, false) {
@@ -79,7 +75,6 @@ public class BallBottom extends Obstacle{
 
 		final RevoluteJointDef revoluteJointDef = new RevoluteJointDef();
 		revoluteJointDef.initialize(anchorBody, body, anchorBody.getWorldCenter());
-		ObstaclesPoolManager.getInstance().ignoreCollisions(this);
 		physicsWorld.createJoint(revoluteJointDef);
 	}
 	
@@ -88,10 +83,14 @@ public class BallBottom extends Obstacle{
 		anchorBody.setTransform(xOffset, (anchorY+20)/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, 0);
 	}
 
+	public float getAnchorPositionX(){
+		return anchorBody.getPosition().x*PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT;
+	}
+	
 	@Override
 	public Sprite getSprite()
 	{
-		return sprite;
+		return anchorSprite;
 	}
 	
 	@Override

@@ -95,20 +95,6 @@ public class ObstaclesPoolManager
 		}
 		
 	}
-	
-	public void ignoreCollisions(Obstacle obstacle){
-		//List<Fixture> fixtureList = obstacle.getBody().getFixtureList();
-		//for(Fixture fixture : fixtureList){
-		//		fixture.setSensor(true);
-	    //}
-	}
-	
-	public void setCollisions(Obstacle obstacle){
-		//List<Fixture> fixtureList = obstacle.getBody().getFixtureList();
-		//for(Fixture fixture : fixtureList){
-		//		fixture.setSensor(false);
-	    //}
-	}
 	//Singleton
 	private static final ObstaclesPoolManager INSTANCE = new ObstaclesPoolManager();
 	public static ObstaclesPoolManager getInstance(){

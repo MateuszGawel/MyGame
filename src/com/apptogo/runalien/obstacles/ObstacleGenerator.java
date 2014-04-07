@@ -158,13 +158,7 @@ public class ObstacleGenerator {
 	private void checkCollisions(){
 		for(Obstacle obstacle : usedObstacles){
 			if(obstacle.getSprite().collidesWith(player.playerCover)){
-				if(obstacle.getBody() != null && obstacle.getBody().getUserData().toString().equals("ballBottom")){
-					player.dieTop(false);
-				}
-				else if(obstacle.getBody() != null && obstacle.getBody().getUserData().toString().equals("ballUpper")){
-					System.out.println("DOTKNALEM KULI");
-				}
-				else if(obstacle.getSprite().getUserData().toString().contains("bottom")){
+				if(obstacle.getSprite().getUserData().toString().contains("bottom")){
 					player.dieBottom();
 				}
 				else if(obstacle.getSprite().getUserData().toString().contains("upper")){
@@ -380,7 +374,6 @@ public class ObstacleGenerator {
 	private void generateBallUpper(){
 		if(!obstaclesPoolManager.ballUpperPool.isEmpty()){
 			BallUpper ball = obstaclesPoolManager.ballUpperPool.pop();
-			ObstaclesPoolManager.getInstance().setCollisions(ball);
 			ball.setTransformX(nextObstaclePosition/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT+10);
 			nextObstaclePosition = calculateObstaclePosition()+200;
 			usedObstacles.add(ball);
@@ -391,7 +384,6 @@ public class ObstacleGenerator {
 	private void generateBallBottom(){
 		if(!obstaclesPoolManager.ballBottomPool.isEmpty()){
 			BallBottom ball = obstaclesPoolManager.ballBottomPool.pop();
-			ObstaclesPoolManager.getInstance().setCollisions(ball);
 			ball.setTransformX(nextObstaclePosition/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT+10);
 			nextObstaclePosition = calculateObstaclePosition()+200;
 			usedObstacles.add(ball);
@@ -410,16 +402,21 @@ public class ObstacleGenerator {
 	}
 	
 	private void setProperSlidingCollisions(){
+		//System.out.println("KOLIZJA check");
 		for(Obstacle obstacle : usedObstacles){
+			//System.out.println("KOLIZJA obstacle: " + obstacle.getSprite().getUserData());
 			if(obstacle.getBody()!=null && obstacle.getBody().getUserData().equals("ballUpper")){
+				System.out.println("KOLIZJA mam kulke: " + obstacle.getSprite().getUserData() + "fixtures: " + obstacle.getBody().getFixtureList().size());
 				List<Fixture> fixtureList = obstacle.getBody().getFixtureList();
 				for(Fixture fixture : fixtureList){
 					if(player.isSliding()){
-						System.out.println("WYLACZAM KOLIZJE");
+						System.out.println("KOLIZJA WYLACZAM KOLIZJE");
 						fixture.setSensor(true);
 					}
-					else
+					else{
+						System.out.println("KOLIZJA WYLACZAM KOLIZJE SPOWROTEM");
 						fixture.setSensor(false);
+					}
 			    }
 			}
 		}
@@ -431,10 +428,10 @@ public class ObstacleGenerator {
 		{                                             //nawet nie probowac synchronizowac :P probowalem synchronizowac metody/bloki ponad godzine i lipa a tak dziala
 			Obstacle obstacle = usedObstacles.get(u);
 			
-			if(obstacle.getSprite().getX() < (player.getX() -50)) //- 10 zeby znikaly juz poza ekranem
+			if(!((String)obstacle.getSprite().getUserData()).contains("ball") && obstacle.getSprite().getX() < (player.getX() -50)) //- 10 zeby znikaly juz poza ekranem
 			{
 				usedObstacles.remove(obstacle);
-				if(((String)(obstacle.getSprite().getUserData())).equals("crateUpper"))
+				if(obstacle.getSprite().getUserData().equals("crateUpper"))
 				{
 					obstaclesPoolManager.crateUpperPool.push((CrateUpper)obstacle);
 				}
@@ -470,15 +467,14 @@ public class ObstacleGenerator {
 				{
 					obstaclesPoolManager.upper_4_Pool.push((Upper_4)obstacle);
 				}
-				if(((obstacle.getSprite().getUserData())).equals("ballUper"))
-				{
-					obstaclesPoolManager.ballUpperPool.push((BallUpper)obstacle);
-				}
-				if((obstacle.getSprite().getUserData()).equals("ballBottom"))
-				{
-					obstaclesPoolManager.ballBottomPool.push((BallBottom)obstacle);
-				}
-				ObstaclesPoolManager.getInstance().ignoreCollisions(obstacle);
+			}
+			else if(obstacle.getSprite().getUserData().equals("ballUpperAnchor") && ((BallUpper)obstacle).getAnchorPositionX() < (player.getX() -50)){
+				usedObstacles.remove(obstacle);
+				obstaclesPoolManager.ballUpperPool.push((BallUpper)obstacle);
+			}
+			else if(obstacle.getSprite().getUserData().equals("ballBottomAnchor") && ((BallBottom)obstacle).getAnchorPositionX() < (player.getX() -50)){
+				usedObstacles.remove(obstacle);
+				obstaclesPoolManager.ballBottomPool.push((BallBottom)obstacle);
 			}
 		}
 	}

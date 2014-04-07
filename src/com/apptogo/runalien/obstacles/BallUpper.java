@@ -12,7 +12,6 @@ import org.andengine.util.color.Color;
 import com.apptogo.runalien.Player;
 import com.apptogo.runalien.ResourcesManager;
 import com.apptogo.runalien.SceneManager;
-import com.apptogo.runalien.SceneManager.SceneType;
 import com.apptogo.runalien.scenes.GameScene;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -26,7 +25,6 @@ public class BallUpper extends Obstacle{
 	private Sprite anchorSprite;
 	private Body anchorBody;
 	Line connectionLine;
-	public Obstacle obstacle;
 	
 	int ballY = 110;
 	int ballX = -500;
@@ -35,7 +33,6 @@ public class BallUpper extends Obstacle{
 
 	public BallUpper(PhysicsWorld physicsWorld, Entity foregroundLayer){
 		
-		obstacle = this;
 		anchorSprite = new Sprite(anchorX, anchorY, ResourcesManager.getInstance().crate_region, ResourcesManager.getInstance().vbom); 
 		anchorSprite.setCullingEnabled(false);
 		anchorSprite.setUserData("ballUpperAnchor");
@@ -65,7 +62,7 @@ public class BallUpper extends Obstacle{
 		foregroundLayer.attachChild(connectionLine);
 		foregroundLayer.attachChild(anchorSprite);
 		foregroundLayer.attachChild(sprite);
-
+		
 		
 		physicsWorld.registerPhysicsConnector(new PhysicsConnector(sprite, body, true, false) {
 			@Override
@@ -80,7 +77,6 @@ public class BallUpper extends Obstacle{
 
 		final RevoluteJointDef revoluteJointDef = new RevoluteJointDef();
 		revoluteJointDef.initialize(anchorBody, body, anchorBody.getWorldCenter());
-		ObstaclesPoolManager.getInstance().ignoreCollisions(this);
 		physicsWorld.createJoint(revoluteJointDef);
 	}
 	
@@ -88,11 +84,15 @@ public class BallUpper extends Obstacle{
 		body.setTransform(xOffset + 10f, ballY/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, 0);
 		anchorBody.setTransform(xOffset, (anchorY+20)/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, 0);
 	}
-
+	
+	public float getAnchorPositionX(){
+		return anchorBody.getPosition().x*PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT;
+	}
+	
 	@Override
 	public Sprite getSprite()
 	{
-		return sprite;
+		return anchorSprite;
 	}
 	
 	@Override
