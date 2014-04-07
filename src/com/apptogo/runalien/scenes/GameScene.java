@@ -157,7 +157,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	@Override
 	public void onBackKeyPressed() {
 		ResourcesManager.getInstance().activity.displayInterstitialAndLoadMenuScene();
-		ObstaclesPoolManager.getInstance().dynamicSpriteBatch.dispose();
 	}
 
 	@Override
@@ -175,6 +174,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		camera.setBoundsEnabled(false);
 		camera.setCenter(400, 240);
 		activity.setgameBannerAdViewInvisibile();
+		ObstaclesPoolManager.getInstance().spriteGroup.detachSelf();
 		//powywalac reszte 
 	}
 

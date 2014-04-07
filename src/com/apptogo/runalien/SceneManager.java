@@ -88,6 +88,7 @@ public class SceneManager {
 	public void replayGameScene(){
 		resourcesManager.unloadGameSounds();
 		resourcesManager.loadGameSounds();
+		gameScene.disposeScene();
 		gameScene = new GameScene();
 		setScene(gameScene);
 	}

@@ -19,7 +19,7 @@ public class ObstaclesPoolManager
 {
 	
 	//Obstacles ammount
-	private final int bottom_1_Ammount = 5;
+	private final int bottom_1_Ammount = 505;
 	private final int bottom_2_Ammount = 5;
 	private final int bottom_3_Ammount = 5;
 	private final int bottom_4_Ammount = 5;
@@ -70,7 +70,7 @@ public class ObstaclesPoolManager
 	}
 	
 	public void initializePoolManager(PhysicsWorld physicsWorld, Entity foregroundLayer){
-		spriteGroup = new SpriteGroup(ResourcesManager.getInstance().gameTextureAtlas, 40, ResourcesManager.getInstance().vbom);
+		spriteGroup = new SpriteGroup(ResourcesManager.getInstance().gameTextureAtlas, 540, ResourcesManager.getInstance().vbom);
 		foregroundLayer.attachChild(spriteGroup);
 		for(int i=bottom_1_Ammount; i>0; i--){
 			bottom_1_Pool.push(new Bottom_1(physicsWorld, foregroundLayer));
