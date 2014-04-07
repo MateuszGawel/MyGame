@@ -157,6 +157,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	@Override
 	public void onBackKeyPressed() {
 		ResourcesManager.getInstance().activity.displayInterstitialAndLoadMenuScene();
+		ObstaclesPoolManager.getInstance().dynamicSpriteBatch.dispose();
 	}
 
 	@Override

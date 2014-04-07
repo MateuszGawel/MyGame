@@ -3,9 +3,15 @@ package com.apptogo.runalien.obstacles;
 import java.util.List;
 import java.util.Stack;
 
+import javax.microedition.khronos.opengles.GL10;
+
 import org.andengine.entity.Entity;
+import org.andengine.entity.sprite.batch.DynamicSpriteBatch;
+import org.andengine.entity.sprite.batch.SpriteBatch;
+import org.andengine.entity.sprite.batch.SpriteGroup;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 
+import com.apptogo.runalien.ResourcesManager;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
 
@@ -42,6 +48,9 @@ public class ObstaclesPoolManager
 	public Stack<BallUpper> ballUpperPool;
 	public Stack<BallBottom> ballBottomPool;
 
+	public DynamicSpriteBatch dynamicSpriteBatch;
+	public SpriteGroup spriteGroup;
+	
 	public ObstaclesPoolManager(){
 
 		bottom_1_Pool = new Stack<Bottom_1>();
@@ -57,9 +66,12 @@ public class ObstaclesPoolManager
 		crateUpperPool = new Stack<CrateUpper>();
 		ballUpperPool = new Stack<BallUpper>();
 		ballBottomPool = new Stack<BallBottom>();
+		
 	}
 	
 	public void initializePoolManager(PhysicsWorld physicsWorld, Entity foregroundLayer){
+		spriteGroup = new SpriteGroup(ResourcesManager.getInstance().gameTextureAtlas, 40, ResourcesManager.getInstance().vbom);
+		foregroundLayer.attachChild(spriteGroup);
 		for(int i=bottom_1_Ammount; i>0; i--){
 			bottom_1_Pool.push(new Bottom_1(physicsWorld, foregroundLayer));
 		}
@@ -94,6 +106,40 @@ public class ObstaclesPoolManager
 			ballUpperPool.push(new BallUpper(physicsWorld, foregroundLayer));
 		}
 		
+
+		/*
+		dynamicSpriteBatch = new DynamicSpriteBatch(ResourcesManager.getInstance().gameTextureAtlas, 40, ResourcesManager.getInstance().vbom) {
+			@Override
+			public boolean onUpdateSpriteBatch() {
+				for(Obstacle obstacle : bottom_1_Pool){
+					this.draw(obstacle.getSprite());
+				}
+				for(Obstacle obstacle : bottom_2_Pool){
+					this.draw(obstacle.getSprite());
+				}
+				for(Obstacle obstacle : bottom_3_Pool){
+					this.draw(obstacle.getSprite());
+				}
+				for(Obstacle obstacle : bottom_4_Pool){
+					this.draw(obstacle.getSprite());
+				}
+				for(Obstacle obstacle : upper_1_Pool){
+					this.draw(obstacle.getSprite());
+				}
+				for(Obstacle obstacle : upper_2_Pool){
+					this.draw(obstacle.getSprite());
+				}
+				for(Obstacle obstacle : upper_3_Pool){
+					this.draw(obstacle.getSprite());
+				}
+				for(Obstacle obstacle : upper_4_Pool){
+					this.draw(obstacle.getSprite());
+				}
+				return true;
+			}
+		};*/
+		//foregroundLayer.attachChild(dynamicSpriteBatch);
+		//dynamicSpriteBatch.setPosition(0, 0);
 	}
 	//Singleton
 	private static final ObstaclesPoolManager INSTANCE = new ObstaclesPoolManager();
