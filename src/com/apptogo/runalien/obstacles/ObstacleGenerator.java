@@ -89,7 +89,7 @@ public class ObstacleGenerator {
 						
 						lastRandoms.add(random);
 						
-						int INSEQUENCEDISTANCE = 300;
+						int INSEQUENCEDISTANCE = 250;
 						
 						switch(random){
 						case 0:
@@ -99,42 +99,45 @@ public class ObstacleGenerator {
 							generateUpperObstacle(1, -1);
 							break;
 						case 2:
-							generateSmallPyramid(-1);
+							generateLoongPyramid(-1);
 							break;
 						case 3:
 							generateUpperBottomWall(-1);
 							break;
 						case 4:
-							generateUpDownSequence();
+							mustDoubleJump(-1);
 							break;
 						case 5:
-							generateRightBigPyramid();
+							generateUpDownSequence();
 							break;
 						case 6:
-							generateBallUpper();
+							generateRightBigPyramid();
 							break;
 						case 7:
-							generateBallBottom();
+							generateBallUpper();
 							break;
 						case 8:
-							generateLeftBigPyramid();							
+							generateBallBottom();
 							break;
 						case 9:
-							generateMuchJumpingSequence(INSEQUENCEDISTANCE);							
+							generateLeftBigPyramid();							
 							break;
 						case 10:
-							generateRightVeryBigPyramid();
+							generateMuchJumpingSequence(INSEQUENCEDISTANCE);							
 							break;
 						case 11:
-							generateMadWallOpenedSequence(INSEQUENCEDISTANCE);
+							generateRightVeryBigPyramid();
 							break;
 						case 12:
-							generateJumpThenSlideSequence(INSEQUENCEDISTANCE);
+							generateMadWallOpenedSequence(INSEQUENCEDISTANCE);
 							break;
 						case 13:
-							generateWhatTheSmackSequence(INSEQUENCEDISTANCE);
+							generateJumpThenSlideSequence(INSEQUENCEDISTANCE);
 							break;
 						case 14:
+							generateWhatTheSmackSequence(INSEQUENCEDISTANCE);
+							break;
+						case 15:
 							generateMadWallOpenedSequence(INSEQUENCEDISTANCE);
 							break;
 						}
@@ -286,6 +289,14 @@ public class ObstacleGenerator {
 		else             generateBottomObstacle(1, -1);  
 	}
 	
+	private void mustDoubleJump(float distance){
+		generateBottomObstacle(1, nextObstaclePosition+45);
+		generateUpperObstacle(2, nextObstaclePosition);
+		generateBottomObstacle(2, nextObstaclePosition+45);
+		if(distance > 0) generateBottomObstacle(2, nextObstaclePosition + distance);
+		else             generateBottomObstacle(2, -1);  
+	}
+	
 	private void generateUpperBottomWall(float distance){
 		generateUpperObstacle(2, nextObstaclePosition);
 		if(distance > 0) generateBottomObstacle(2, nextObstaclePosition + distance);
@@ -391,6 +402,19 @@ public class ObstacleGenerator {
 		else System.out.println("POOL zabrak³o ball bottom");
 	}
 	//Others
+	
+	private void generateLoongPyramid(float distance){
+		generateBottomObstacle(1, nextObstaclePosition+45);
+		generateUpperObstacle(2, nextObstaclePosition);
+		generateBottomObstacle(2, nextObstaclePosition+45);
+		generateBottomObstacle(2, nextObstaclePosition+45);
+		generateUpperObstacle(2, nextObstaclePosition);
+		generateBottomObstacle(2, nextObstaclePosition+45);
+		generateUpperObstacle(2, nextObstaclePosition);
+		generateBottomObstacle(2, nextObstaclePosition+45);
+		if(distance > 0) generateBottomObstacle(1, nextObstaclePosition + distance);
+		else             generateBottomObstacle(1, -1);  
+	}
 	
 	private void ignoreAllCollisions(){
 		//for(Obstacle obstacle : usedObstacles){

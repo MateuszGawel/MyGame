@@ -42,7 +42,7 @@ public abstract class Player extends AnimatedSprite {
 	public Sound bellHit;
 	private boolean flag = true;
 	private boolean flag2 = true;
-	private float runningSpeed = 13;
+	private float runningSpeed = 39;
 	private float nextSpeedUp = 50;
 	private float cameraShiftY = -150;
 	private float cameraShiftX = 200;
