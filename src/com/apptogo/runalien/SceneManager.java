@@ -54,6 +54,7 @@ public class SceneManager {
 	public void loadMenuScene(){
 		setScene(loadingScene);
 		gameScene.disposeScene();
+		gameScene = null;
 		resourcesManager.unloadGameResources();
 		resourcesManager.engine.registerUpdateHandler(new TimerHandler(0.2f, new ITimerCallback()
 		{
@@ -71,12 +72,12 @@ public class SceneManager {
 	public void loadGameScene(){
 		setScene(loadingScene);
 		menuScene.disposeScene();
+		menuScene = null;
 		resourcesManager.unloadMenuTextures();
 		resourcesManager.engine.registerUpdateHandler(new TimerHandler(0.1f, new ITimerCallback()
 		{
 			public void onTimePassed(final TimerHandler pTimerHandler)
 			{
-				//ResourcesManager.getInstance().activity.displayInterstitial();
 				resourcesManager.engine.unregisterUpdateHandler(pTimerHandler);
 				resourcesManager.loadGameResources();
 				gameScene = new GameScene();
@@ -86,11 +87,18 @@ public class SceneManager {
 	}
 	
 	public void replayGameScene(){
-		resourcesManager.unloadGameSounds();
-		resourcesManager.loadGameSounds();
+		setScene(loadingScene);
 		gameScene.disposeScene();
-		gameScene = new GameScene();
-		setScene(gameScene);
+		resourcesManager.engine.registerUpdateHandler(new TimerHandler(0.1f, new ITimerCallback()
+		{
+			public void onTimePassed(final TimerHandler pTimerHandler)
+			{
+				resourcesManager.engine.unregisterUpdateHandler(pTimerHandler);
+				gameScene = new GameScene();
+				setScene(gameScene);
+			}
+		}));
+		
 	}
 	
 	//SETTERS

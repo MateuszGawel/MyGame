@@ -50,6 +50,7 @@ public class ObstaclesPoolManager
 
 	public DynamicSpriteBatch dynamicSpriteBatch;
 	public SpriteGroup spriteGroup;
+	private Entity foregroundLayer;
 	
 	public ObstaclesPoolManager(){
 
@@ -105,7 +106,8 @@ public class ObstaclesPoolManager
 		for(int i=ballUpperAmmount; i>0; i--){
 			ballUpperPool.push(new BallUpper(physicsWorld, foregroundLayer));
 		}
-		
+		this.foregroundLayer = foregroundLayer;
+
 
 		/*
 		dynamicSpriteBatch = new DynamicSpriteBatch(ResourcesManager.getInstance().gameTextureAtlas, 40, ResourcesManager.getInstance().vbom) {
@@ -141,6 +143,26 @@ public class ObstaclesPoolManager
 		//foregroundLayer.attachChild(dynamicSpriteBatch);
 		//dynamicSpriteBatch.setPosition(0, 0);
 	}
+	
+	public void clearPools(){
+		//foregroundLayer.detachChild(spriteGroup);
+		spriteGroup = null;
+		
+		bottom_1_Pool.clear();
+		bottom_2_Pool.clear();
+		bottom_3_Pool.clear();
+		bottom_4_Pool.clear();
+		
+		upper_1_Pool.clear();
+		upper_2_Pool.clear();
+		upper_3_Pool.clear();
+		upper_4_Pool.clear();
+		
+		crateUpperPool.clear();
+		ballUpperPool.clear();
+		ballBottomPool.clear();
+	}
+	
 	//Singleton
 	private static final ObstaclesPoolManager INSTANCE = new ObstaclesPoolManager();
 	public static ObstaclesPoolManager getInstance(){

@@ -157,6 +157,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 
 	@Override
 	public void onBackKeyPressed() {
+		pauseGame();
 		ResourcesManager.getInstance().activity.displayInterstitialAndLoadMenuScene();
 	}
 
@@ -175,8 +176,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		camera.setBoundsEnabled(false);
 		camera.setCenter(400, 240);
 		activity.setgameBannerAdViewInvisibile();
-		//ObstaclesPoolManager.getInstance().spriteGroup.detachSelf();
-		//powywalac reszte 
+		ObstaclesPoolManager.getInstance().clearPools();
 	}
 
 	//GROUND AND BACKGROUND
@@ -444,6 +444,8 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		gamePaused = true;
 		camera.setChaseEntity(null);
 		this.setIgnoreUpdate(true);
+		player.runSound.pause();
+		player.screamSound.pause();
 	}
 	
 	private void resumeGame(){
@@ -565,10 +567,10 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				}
 				
 				//Obstacle Collisions
-				if(player.isAlive() && (("player".equals(x1.getBody().getUserData()) && "ballBottom".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "ballBottom".equals(x1.getBody().getUserData()))))
-					player.dieTop(false);
-				if(player.isAlive() && !player.isSliding() && (("player".equals(x1.getBody().getUserData()) && "ballUpper".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "ballUpper".equals(x1.getBody().getUserData()))))
-					player.dieTop(false);
+				//if(player.isAlive() && (("player".equals(x1.getBody().getUserData()) && "ballBottom".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "ballBottom".equals(x1.getBody().getUserData()))))
+				//	player.dieTop(false);
+				//if(player.isAlive() && !player.isSliding() && (("player".equals(x1.getBody().getUserData()) && "ballUpper".equals(x2.getBody().getUserData())) || ("player".equals(x2.getBody().getUserData()) && "ballUpper".equals(x1.getBody().getUserData()))))
+				//	player.dieTop(false);
 			}
 			
 			@Override

@@ -1,5 +1,7 @@
 package com.apptogo.runalien.obstacles;
 
+import java.util.List;
+
 import org.andengine.entity.Entity;
 import org.andengine.entity.primitive.Line;
 import org.andengine.entity.sprite.Sprite;
@@ -15,6 +17,7 @@ import com.apptogo.runalien.SceneManager;
 import com.apptogo.runalien.scenes.GameScene;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 
@@ -78,6 +81,13 @@ public class BallUpper extends Obstacle{
 		final RevoluteJointDef revoluteJointDef = new RevoluteJointDef();
 		revoluteJointDef.initialize(anchorBody, body, anchorBody.getWorldCenter());
 		physicsWorld.createJoint(revoluteJointDef);
+		
+		
+		List<Fixture> fixtureList = body.getFixtureList();
+		for(Fixture fixture : fixtureList){
+				fixture.setSensor(true);
+	    }
+		
 	}
 	
 	public void setTransformX(float xOffset){
@@ -87,12 +97,13 @@ public class BallUpper extends Obstacle{
 	
 	public float getAnchorPositionX(){
 		return anchorBody.getPosition().x*PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT;
+		
 	}
 	
 	@Override
 	public Sprite getSprite()
 	{
-		return anchorSprite;
+		return sprite;
 	}
 	
 	@Override

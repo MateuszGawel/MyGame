@@ -142,11 +142,7 @@ public class ObstacleGenerator {
 							break;
 						}
 					}
-					else if(!player.isAlive())
-						ignoreAllCollisions();
 				}
-				if(player.isAlive())
-					setProperSlidingCollisions();
 				releaseUselessObstacles();
 			}
 
@@ -166,6 +162,12 @@ public class ObstacleGenerator {
 				}
 				else if(obstacle.getSprite().getUserData().toString().contains("upper")){
 					player.dieTop(true);
+				}
+				else if(obstacle.getSprite().getUserData().toString().equals("ballUpper")){
+					player.dieTop(false);
+				}
+				else if(obstacle.getSprite().getUserData().toString().equals("ballBottom")){
+					player.dieTop(false);
 				}
 			}
 		}
@@ -414,37 +416,8 @@ public class ObstacleGenerator {
 		generateBottomObstacle(2, nextObstaclePosition+45);
 		if(distance > 0) generateBottomObstacle(1, nextObstaclePosition + distance);
 		else             generateBottomObstacle(1, -1);  
-	}
-	
-	private void ignoreAllCollisions(){
-		//for(Obstacle obstacle : usedObstacles){
-		//	List<Fixture> fixtureList = obstacle.getBody().getFixtureList();
-		//	for(Fixture fixture : fixtureList){
-		//		fixture.setSensor(true);
-		//    }
-		//}
-	}
-	
-	private void setProperSlidingCollisions(){
-		//System.out.println("KOLIZJA check");
-		for(Obstacle obstacle : usedObstacles){
-			//System.out.println("KOLIZJA obstacle: " + obstacle.getSprite().getUserData());
-			if(obstacle.getBody()!=null && obstacle.getBody().getUserData().equals("ballUpper")){
-				System.out.println("KOLIZJA mam kulke: " + obstacle.getSprite().getUserData() + "fixtures: " + obstacle.getBody().getFixtureList().size());
-				List<Fixture> fixtureList = obstacle.getBody().getFixtureList();
-				for(Fixture fixture : fixtureList){
-					if(player.isSliding()){
-						System.out.println("KOLIZJA WYLACZAM KOLIZJE");
-						fixture.setSensor(true);
-					}
-					else{
-						System.out.println("KOLIZJA WYLACZAM KOLIZJE SPOWROTEM");
-						fixture.setSensor(false);
-					}
-			    }
-			}
-		}
-	}
+	}	
+
 	
 	private void releaseUselessObstacles()
 	{
@@ -492,12 +465,14 @@ public class ObstacleGenerator {
 					obstaclesPoolManager.upper_4_Pool.push((Upper_4)obstacle);
 				}
 			}
-			else if(obstacle.getSprite().getUserData().equals("ballUpperAnchor") && ((BallUpper)obstacle).getAnchorPositionX() < (player.getX() -50)){
+			else if(obstacle.getSprite().getUserData().equals("ballUpper") && ((BallUpper)obstacle).getAnchorPositionX() < (player.getX() -100)){
 				usedObstacles.remove(obstacle);
+				System.out.println("POOL usuwam uipper");
 				obstaclesPoolManager.ballUpperPool.push((BallUpper)obstacle);
 			}
-			else if(obstacle.getSprite().getUserData().equals("ballBottomAnchor") && ((BallBottom)obstacle).getAnchorPositionX() < (player.getX() -50)){
+			else if(obstacle.getSprite().getUserData().equals("ballBottom") && ((BallBottom)obstacle).getAnchorPositionX() < (player.getX() -100)){
 				usedObstacles.remove(obstacle);
+				System.out.println("POOL usuwam bottom");
 				obstaclesPoolManager.ballBottomPool.push((BallBottom)obstacle);
 			}
 		}
