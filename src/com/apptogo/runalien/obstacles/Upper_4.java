@@ -20,6 +20,7 @@ public class Upper_4 extends Obstacle{
 		sprite = new Sprite(-1000, -120, ResourcesManager.getInstance().upper_4_region, ResourcesManager.getInstance().vbom);
 		//narazie pozycja x jest zero ale ostateznie musi byc minus wpizdu zeby na poczatku ich nie bylo widac
 		sprite.setUserData("upper4");
+		sprite.setCullingEnabled(true);
 		ObstaclesPoolManager.getInstance().spriteGroup.attachChild(sprite);
 		//sprite.setCullingEnabled(false);
 		//body = PhysicsFactory.createBoxBody(physicsWorld, sprite, BodyType.StaticBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0));

@@ -20,7 +20,7 @@ public class CrateBottom extends Obstacle{
 		sprite = new Sprite(-1000, 100, ResourcesManager.getInstance().crate_region, ResourcesManager.getInstance().vbom);
 		//narazie pozycja x jest zero ale ostateznie musi byc minus wpizdu zeby na poczatku ich nie bylo widac
 		sprite.setUserData("crateBottom");
-		sprite.setCullingEnabled(false);
+		sprite.setCullingEnabled(true);
 		body = PhysicsFactory.createBoxBody(physicsWorld, sprite, BodyType.StaticBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0));
 		body.setUserData("crateBottom");
 		foregroundLayer.attachChild(sprite);

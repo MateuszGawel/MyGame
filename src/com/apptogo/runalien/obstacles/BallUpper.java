@@ -37,7 +37,7 @@ public class BallUpper extends Obstacle{
 	public BallUpper(PhysicsWorld physicsWorld, Entity foregroundLayer){
 		
 		anchorSprite = new Sprite(anchorX, anchorY, ResourcesManager.getInstance().crate_region, ResourcesManager.getInstance().vbom); 
-		anchorSprite.setCullingEnabled(false);
+		anchorSprite.setCullingEnabled(true);
 		anchorSprite.setUserData("ballUpperAnchor");
 		anchorBody = PhysicsFactory.createBoxBody(physicsWorld, anchorSprite, BodyType.StaticBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0));
 		anchorBody.setUserData("ballUpperAnchor");
@@ -57,10 +57,11 @@ public class BallUpper extends Obstacle{
 		connectionLine.setVisible(true);
 		
 		sprite = new Sprite(ballX, ballY, ResourcesManager.getInstance().ball_region, ResourcesManager.getInstance().vbom);
-		sprite.setCullingEnabled(false);
+		sprite.setCullingEnabled(true);
 		sprite.setUserData("ballUpper");
 		body = PhysicsFactory.createCircleBody(physicsWorld, sprite, BodyType.DynamicBody, PhysicsFactory.createFixtureDef(200.5f, 0.2f, 0.5f));
 		body.setUserData("ballUpper");
+		//body.setType(BodyType.StaticBody);
 
 		foregroundLayer.attachChild(connectionLine);
 		foregroundLayer.attachChild(anchorSprite);

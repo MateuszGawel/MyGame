@@ -386,9 +386,10 @@ public class ObstacleGenerator {
 	
 	private void generateBallUpper(){
 		if(!obstaclesPoolManager.ballUpperPool.isEmpty()){
+			int ballOffset = 10; //trzeba tym manipulowac wraz z predkoscia playera
 			BallUpper ball = obstaclesPoolManager.ballUpperPool.pop();
-			ball.setTransformX(nextObstaclePosition/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT+10);
-			nextObstaclePosition = calculateObstaclePosition()+200;
+			ball.setTransformX(nextObstaclePosition/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT+ballOffset);
+			nextObstaclePosition = calculateObstaclePosition();
 			usedObstacles.add(ball);
 		}
 		else System.out.println("POOL zabrak³o ball upper");
@@ -396,9 +397,10 @@ public class ObstacleGenerator {
 	
 	private void generateBallBottom(){
 		if(!obstaclesPoolManager.ballBottomPool.isEmpty()){
+			int ballOffset = 15; //trzeba tym manipulowac wraz z predkoscia playera
 			BallBottom ball = obstaclesPoolManager.ballBottomPool.pop();
-			ball.setTransformX(nextObstaclePosition/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT+10);
-			nextObstaclePosition = calculateObstaclePosition()+200;
+			ball.setTransformX(nextObstaclePosition/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT+ballOffset);
+			nextObstaclePosition = calculateObstaclePosition();
 			usedObstacles.add(ball);
 		}
 		else System.out.println("POOL zabrak³o ball bottom");
