@@ -11,17 +11,16 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
-public class Bottom_1 extends Obstacle{
+public class GroundSegment extends Obstacle{
 	
 	private Sprite sprite;
 	private Body body;
 	
-	public Bottom_1(PhysicsWorld physicsWorld, Entity foregroundLayer){
-		sprite = new Sprite(-1000, 200, ResourcesManager.getInstance().bottom_1_region, ResourcesManager.getInstance().vbom);
-		//narazie pozycja x jest zero ale ostateznie musi byc minus wpizdu zeby na poczatku ich nie bylo widac
-		sprite.setUserData("bottom1");
+	public GroundSegment(PhysicsWorld physicsWorld, Entity backgroundLayer){
+		sprite = new Sprite(-200, 232, ResourcesManager.getInstance().ground_region, ResourcesManager.getInstance().vbom);
+		sprite.setUserData("ground");
 		sprite.setCullingEnabled(true);
-		ObstaclesPoolManager.getInstance().spriteGroup.attachChild(sprite);
+		ObstaclesPoolManager.getInstance().groundSpriteGroup.attachChild(sprite);
 	}
 	
 	@Override

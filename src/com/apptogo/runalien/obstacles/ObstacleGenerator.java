@@ -7,9 +7,12 @@ import java.util.Random;
 import org.andengine.engine.handler.IUpdateHandler;
 import org.andengine.entity.Entity;
 import org.andengine.entity.scene.Scene;
+import org.andengine.entity.sprite.Sprite;
+import org.andengine.extension.debugdraw.DebugRenderer;
 import org.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
 
 import com.apptogo.runalien.Player;
+import com.apptogo.runalien.ResourcesManager;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
 
@@ -20,6 +23,7 @@ public class ObstacleGenerator {
 	private Scene scene;
 	private List<Obstacle> usedObstacles;
 	private float nextObstaclePosition = 900;
+	private float nextGroundPosition = -200;
 	public Random generator = new Random();
 	private boolean firstObstacleFlag = true;
 	private ArrayList<Integer> lastRandoms;
@@ -141,6 +145,10 @@ public class ObstacleGenerator {
 							generateMadWallOpenedSequence(INSEQUENCEDISTANCE);
 							break;
 						}
+					}
+					if(player.getX() + 800-1 > nextGroundPosition && player.isAlive()){
+						generateGroundSegment();
+						System.out.println("GROUND generuje");
 					}
 				}
 				releaseUselessObstacles();
@@ -405,6 +413,13 @@ public class ObstacleGenerator {
 		}
 		else System.out.println("POOL zabrak³o ball bottom");
 	}
+	
+	private void generateGroundSegment(){
+		GroundSegment ground = obstaclesPoolManager.groundSegmentPool.pop();
+		ground.getSprite().setX(nextGroundPosition);
+		usedObstacles.add(ground);
+		nextGroundPosition += 800-1;
+	}
 	//Others
 	
 	private void generateLoongPyramid(float distance){
@@ -427,7 +442,7 @@ public class ObstacleGenerator {
 		{                                             //nawet nie probowac synchronizowac :P probowalem synchronizowac metody/bloki ponad godzine i lipa a tak dziala
 			Obstacle obstacle = usedObstacles.get(u);
 			
-			if(!((String)obstacle.getSprite().getUserData()).contains("ball") && obstacle.getSprite().getX() < (player.getX() -50)) //- 10 zeby znikaly juz poza ekranem
+			if(!((String)obstacle.getSprite().getUserData()).contains("ball") && !((String)obstacle.getSprite().getUserData()).equals("ground") && obstacle.getSprite().getX() < (player.getX() -50)) //- 10 zeby znikaly juz poza ekranem
 			{
 				usedObstacles.remove(obstacle);
 				if(obstacle.getSprite().getUserData().equals("crateUpper"))
@@ -467,15 +482,22 @@ public class ObstacleGenerator {
 					obstaclesPoolManager.upper_4_Pool.push((Upper_4)obstacle);
 				}
 			}
-			else if(obstacle.getSprite().getUserData().equals("ballUpper") && ((BallUpper)obstacle).getAnchorPositionX() < (player.getX() -100)){
+			if(obstacle.getSprite().getUserData().equals("ballUpper") && ((BallUpper)obstacle).getAnchorPositionX() < (player.getX() -100)){
 				usedObstacles.remove(obstacle);
 				System.out.println("POOL usuwam uipper");
 				obstaclesPoolManager.ballUpperPool.push((BallUpper)obstacle);
 			}
-			else if(obstacle.getSprite().getUserData().equals("ballBottom") && ((BallBottom)obstacle).getAnchorPositionX() < (player.getX() -100)){
+			if(obstacle.getSprite().getUserData().equals("ballBottom") && ((BallBottom)obstacle).getAnchorPositionX() < (player.getX() -100)){
 				usedObstacles.remove(obstacle);
 				System.out.println("POOL usuwam bottom");
 				obstaclesPoolManager.ballBottomPool.push((BallBottom)obstacle);
+			}
+			if(obstacle.getSprite().getUserData().equals("ground"))
+				System.out.println("GROUND Na stosie pozosta³o: " + obstaclesPoolManager.groundSegmentPool.size() + " a na used jest: " + usedObstacles.size() + " ZIEMIA: " + obstacle.getSprite().getX() + " a player: " + player.getX());
+			if(obstacle.getSprite().getUserData().equals("ground") && obstacle.getSprite().getX() < player.getX() - 800-1){
+				usedObstacles.remove(obstacle);
+				System.out.println("GROUND usuwam");
+				obstaclesPoolManager.groundSegmentPool.push((GroundSegment)obstacle);
 			}
 		}
 	}

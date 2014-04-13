@@ -84,7 +84,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	final int LEVEL_BLOCK_LENGTH = 5;
 	private TexturedPolygon ground;
 	private Vector2[] levelCoordinates;
-	
+	Body groundBody;
 	
 	//background
 	private AutoParallaxBackground autoParallaxBackground;
@@ -143,14 +143,15 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		foregroundLayer = new Entity();
 		createHUD();
 		createPhysics();
-		createGround();
+		//createGround();
+		createGroundBody();
 		setOnSceneTouchListener(this);
 		createBackground();
 		createBestScoreTable();
 		createPlayer();
 		attachChild(backgroundLayer);
 		attachChild(foregroundLayer);
-		ObstaclesPoolManager.getInstance().initializePoolManager(physicsWorld, foregroundLayer);
+		ObstaclesPoolManager.getInstance().initializePoolManager(physicsWorld, foregroundLayer, backgroundLayer);
 		obstacleGenerator = new ObstacleGenerator(this, player);
 		vibrator = (Vibrator)activity.getSystemService(Context.VIBRATOR_SERVICE);
 	}
@@ -203,8 +204,38 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		levelCoordinates[3] = new Vector2(center + 600 , 360);
 	}
 
+	private void createGroundBody(){
+ 		Sprite groundCover = new Sprite(0, 0, ResourcesManager.getInstance().playerCover_region, ResourcesManager.getInstance().vbom);
+ 		groundCover.setUserData("ground");
+		this.attachChild(groundCover);
+		groundCover.setVisible(false);
+ 		groundBody = PhysicsFactory.createBoxBody(physicsWorld, 0, 245, 100, 10, BodyType.StaticBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0.07f));
+ 		groundBody.setUserData("ground");
+		physicsWorld.registerPhysicsConnector(new PhysicsConnector(groundCover, groundBody, true, false) {
+			@Override
+			public void onUpdate(float pSecondsElapsed) {
+				super.onUpdate(pSecondsElapsed);
+				groundBody.setTransform(player.getBody().getPosition().x, groundBody.getPosition().y, 0);
+			}
+		});
+	}
 	private void createGround() {
  		generateLevelCoordinates();
+ 		
+ 		Sprite groundCover = new Sprite(0, 0, ResourcesManager.getInstance().playerCover_region, ResourcesManager.getInstance().vbom);
+ 		groundCover.setUserData("ground");
+		this.attachChild(groundCover);
+		groundCover.setVisible(false);
+ 		groundBody = PhysicsFactory.createBoxBody(physicsWorld, 0, 245, 100, 10, BodyType.StaticBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0.07f));
+ 		groundBody.setUserData("ground");
+		physicsWorld.registerPhysicsConnector(new PhysicsConnector(groundCover, groundBody, true, false) {
+			@Override
+			public void onUpdate(float pSecondsElapsed) {
+				super.onUpdate(pSecondsElapsed);
+				groundBody.setTransform(player.getBody().getPosition().x, groundBody.getPosition().y, 0);
+			}
+		});
+ 		
  		ChainShape myChain = new ChainShape();
  		Vector2[] myV2 = new Vector2[levelCoordinates.length];
  		for (int i = 0; i < levelCoordinates.length; i++) {
@@ -241,7 +272,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
  		Sprite grass = new Sprite(center - 200, 232, ResourcesManager.getInstance().grass_region, vbom);
  		ground.attachChild(grass);
  		center += 800;
-  		//backgroundLayer.attachChild(new DebugRenderer(physicsWorld, vbom));
+  		backgroundLayer.attachChild(new DebugRenderer(physicsWorld, vbom));
   	}
 
 	//MAIN OBJECTS METHODS
@@ -287,11 +318,11 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 								
 				if (player.getBody().getPosition().x > center2) 
 				{
-					createGround();
-					if (backgroundLayer.getChildCount() == 4) 
-					{
-						backgroundLayer.detachChild(backgroundLayer.getFirstChild());
-					}
+					//createGround();
+					//if (backgroundLayer.getChildCount() == 4) 
+					//{
+					//	backgroundLayer.detachChild(backgroundLayer.getFirstChild());
+					//}
 				}
 				
 				if(displayTutorial)

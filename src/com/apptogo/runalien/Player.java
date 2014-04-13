@@ -78,7 +78,7 @@ public abstract class Player extends AnimatedSprite {
 	public abstract void onDie();
 
 	private void createPhysics(final BoundCamera camera, PhysicsWorld physicsWorld) {
-		body = PhysicsFactory.createBoxBody(physicsWorld, 0, 195, 40, 90, BodyType.DynamicBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0.07f));
+		body = PhysicsFactory.createBoxBody(physicsWorld, 0, 195, 40, 90, BodyType.DynamicBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0.3f));
 		body.setUserData("player");
 		body.setFixedRotation(true);
 		

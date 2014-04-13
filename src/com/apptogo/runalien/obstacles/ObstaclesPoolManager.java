@@ -33,6 +33,8 @@ public class ObstaclesPoolManager
 	private final int ballUpperAmmount = 2;
 	private final int ballBottomAmmount = 2;
 	
+	private final int groundSegmentAmmount = 3;
+	
 	//Pools
 	public Stack<Bottom_1> bottom_1_Pool;
 	public Stack<Bottom_2> bottom_2_Pool;
@@ -47,10 +49,14 @@ public class ObstaclesPoolManager
 	public Stack<CrateUpper> crateUpperPool;
 	public Stack<BallUpper> ballUpperPool;
 	public Stack<BallBottom> ballBottomPool;
+	
+	public Stack<GroundSegment> groundSegmentPool;
 
 	public DynamicSpriteBatch dynamicSpriteBatch;
 	public SpriteGroup spriteGroup;
+	public SpriteGroup groundSpriteGroup;
 	private Entity foregroundLayer;
+	private Entity backgroundLayer;
 	
 	public ObstaclesPoolManager(){
 
@@ -68,11 +74,15 @@ public class ObstaclesPoolManager
 		ballUpperPool = new Stack<BallUpper>();
 		ballBottomPool = new Stack<BallBottom>();
 		
+		groundSegmentPool = new Stack<GroundSegment>();
+		
 	}
 	
-	public void initializePoolManager(PhysicsWorld physicsWorld, Entity foregroundLayer){
+	public void initializePoolManager(PhysicsWorld physicsWorld, Entity foregroundLayer, Entity backgroundLayer){
 		spriteGroup = new SpriteGroup(ResourcesManager.getInstance().gameTextureAtlas, 50, ResourcesManager.getInstance().vbom);
 		foregroundLayer.attachChild(spriteGroup);
+		groundSpriteGroup = new SpriteGroup(ResourcesManager.getInstance().gameTextureAtlas, 3, ResourcesManager.getInstance().vbom);
+		backgroundLayer.attachChild(groundSpriteGroup);
 		for(int i=bottom_1_Ammount; i>0; i--){
 			bottom_1_Pool.push(new Bottom_1(physicsWorld, foregroundLayer));
 		}
@@ -105,6 +115,9 @@ public class ObstaclesPoolManager
 		}
 		for(int i=ballUpperAmmount; i>0; i--){
 			ballUpperPool.push(new BallUpper(physicsWorld, foregroundLayer));
+		}
+		for(int i=groundSegmentAmmount; i>0; i--){
+			groundSegmentPool.push(new GroundSegment(physicsWorld, backgroundLayer));
 		}
 		this.foregroundLayer = foregroundLayer;
 
@@ -161,6 +174,8 @@ public class ObstaclesPoolManager
 		crateUpperPool.clear();
 		ballUpperPool.clear();
 		ballBottomPool.clear();
+		
+		groundSegmentPool.clear();
 	}
 	
 	//Singleton
@@ -170,7 +185,7 @@ public class ObstaclesPoolManager
 	}
 
 	public boolean isNotEmpty() {
-		if( bottom_1_Pool.isEmpty() && bottom_2_Pool.isEmpty() && bottom_3_Pool.isEmpty() && bottom_4_Pool.isEmpty() && upper_1_Pool.isEmpty() && upper_2_Pool.isEmpty() && upper_3_Pool.isEmpty() && upper_4_Pool.isEmpty() && crateUpperPool.isEmpty() )
+		if( bottom_1_Pool.isEmpty() && bottom_2_Pool.isEmpty() && bottom_3_Pool.isEmpty() && bottom_4_Pool.isEmpty() && upper_1_Pool.isEmpty() && upper_2_Pool.isEmpty() && upper_3_Pool.isEmpty() && upper_4_Pool.isEmpty() && crateUpperPool.isEmpty() && groundSegmentPool.isEmpty())
 		{
 			return false;
 		}

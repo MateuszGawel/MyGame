@@ -68,6 +68,7 @@ public class ResourcesManager {
 	public ITextureRegion sign_region;
 	public ITextureRegion grass_region;
 	public ITextureRegion playerCover_region;
+	public ITextureRegion ground_region;
 	public ITiledTextureRegion player_region;
 	public ITiledTextureRegion player_slide_region;
 	public BitmapTextureAtlas gameTextureAtlas;
@@ -202,14 +203,15 @@ public class ResourcesManager {
 	    replay_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "replay.png", 76, 296);
 	    menu_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "menu.png", 280, 296);
 	    submit_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "submit.png", 452, 296);
-	    grass_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "grass.png", 1, 374);
-	    game_over_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "game_over.png", 1, 515);
+	    //grass_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "grass.png", 1, 374);
+	    ground_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "dirt.png", 1, 374);
+	    game_over_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "game_over.png", 1, 510);
 	    
 	    playerCover_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "playerCover.png", 650, 296 );
 	    player_region = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(playerTextureAtlas, activity, "player.png", 12, 11);
 	    
-        dirtRepeatingAtlas = new BitmapTextureAtlas(activity.getTextureManager(), 311, 120, TextureOptions.REPEATING_BILINEAR_PREMULTIPLYALPHA);
-        dirt_texture_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(dirtRepeatingAtlas, activity, "dirt.png", 0, 0);
+        //dirtRepeatingAtlas = new BitmapTextureAtlas(activity.getTextureManager(), 311, 120, TextureOptions.REPEATING_BILINEAR_PREMULTIPLYALPHA);
+        //dirt_texture_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(dirtRepeatingAtlas, activity, "dirt.png", 0, 0);
         
         
 		mAutoParallaxBackgroundTexture = new BitmapTextureAtlas(activity.getTextureManager(), 1024, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
@@ -226,7 +228,7 @@ public class ResourcesManager {
 	        this.gameTextureAtlas.load();
 	        this.playerTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 0));
 	        this.playerTextureAtlas.load();
-	        this.dirtRepeatingAtlas.load();
+	        //this.dirtRepeatingAtlas.load();
 	    } 
 	    catch (final TextureAtlasBuilderException e)
 	    {
@@ -236,10 +238,8 @@ public class ResourcesManager {
 	
 	private void unloadGameGraphics(){
 		gameTextureAtlas.unload();
-		dirtRepeatingAtlas.unload();
 		mAutoParallaxBackgroundTexture.unload();
 		activity.getTextureManager().unloadTexture(gameTextureAtlas);
-		activity.getTextureManager().unloadTexture(dirtRepeatingAtlas);
 		activity.getTextureManager().unloadTexture(mAutoParallaxBackgroundTexture);
 	}
 	
