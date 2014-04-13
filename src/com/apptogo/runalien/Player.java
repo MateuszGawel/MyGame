@@ -42,7 +42,7 @@ public abstract class Player extends AnimatedSprite {
 	public Sound bellHit;
 	private boolean flag = true;
 	private boolean flag2 = true;
-	private float runningSpeed = 13;
+	public float runningSpeed = 13;
 	private float nextSpeedUp = 50;
 	private float cameraShiftY = -150;
 	private float cameraShiftX = 200;
@@ -103,7 +103,7 @@ public abstract class Player extends AnimatedSprite {
 					nextSpeedUp = body.getPosition().x + 200;
 					runningSpeed++;
 					
-					if(runningSpeed >= 30) canSpeedUp = false; //bo szybciej to padaka
+					if(runningSpeed >= 27) canSpeedUp = false; //bo szybciej to padaka
 				}
 			}
 		});
