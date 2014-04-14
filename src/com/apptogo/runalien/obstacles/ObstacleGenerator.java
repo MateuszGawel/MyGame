@@ -33,6 +33,8 @@ public class ObstacleGenerator {
 	private long ctr = 0; //do generowania co x-ty raz kazdej przeszkody
 	private boolean firstObstacle = true;
 	private boolean firstObstacleDeadTrigger = false;
+	private boolean startGeneratingObstacles = false;
+	private int offsetAfterTutorial;
 	
 	public ObstacleGenerator(Scene scene, Player player)
 	{
@@ -58,13 +60,18 @@ public class ObstacleGenerator {
 	
 	public int calculateObstaclePosition()
 	{   
-		int minSpace = 500;
+		int minSpace = 400;
 		int velocityOffset = getVelocityOffset();
 		
 		return (int)( (nextObstaclePosition + minSpace + velocityOffset ));
 	}
 	
-	public void startObstacleGenerationAlgorithm(final int tutorialScoreOffset){	
+	public void startGeneratingObstacles(float offsetAfterTutorial){
+		nextObstaclePosition = offsetAfterTutorial+900;
+		startGeneratingObstacles = true;
+	}
+	
+	public void startObstacleGenerationAlgorithm(){	
 		scene.registerUpdateHandler(new IUpdateHandler() {
 			@Override
 			public void onUpdate(float pSecondsElapsed) {
@@ -73,17 +80,20 @@ public class ObstacleGenerator {
 				{
 					if(player.getX() + 800 > nextObstaclePosition && player.isAlive())
 					{
-						int score = (int) Math.round(player.getBody().getPosition().x/10) - tutorialScoreOffset;
+						int score = (int) Math.round(player.getBody().getPosition().x/10);
 						int minSpace = 4 + (int)(player.getBody().getLinearVelocity().x / 2 );
 						ctr++;
 						
-						int maxRand = (int) (player.runningSpeed - 12);
-						int minRand = maxRand - 3;
+						int maxRand = (int) (player.runningSpeed - 9);
+						int minRand = maxRand - 6;
 						
 						if (maxRand == 15) maxRand = 20; //osiagnieto max predkosc
 						if(minRand < 0 || ctr % 4 == 0) minRand = 0;
-						
-						int random = minRand + (int)(Math.random() * ((maxRand - minRand) + 1));
+						int random;
+						if(startGeneratingObstacles)
+							random = minRand + (int)(Math.random() * ((maxRand - minRand) + 1));
+						else
+							random = -1;
 						/*
 						//sprawdzic wydajnosc tutaj
 						if( lastRandoms.size() >= 2 ) 
@@ -177,7 +187,7 @@ public class ObstacleGenerator {
 							break;
 						}
 					}
-					if(player.getX() + 800-1 > nextGroundPosition && player.isAlive()){
+					if(player.getX() + 800-1 > nextGroundPosition){
 						generateGroundSegment();
 						System.out.println("GROUND generuje");
 					}

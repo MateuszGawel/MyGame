@@ -338,11 +338,12 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 			@Override
 			public void onDie() {
 				saveHighScore();
-				//autoParallaxBackground.stop();
+				autoParallaxBackground.stop();
 				showGameOver();
 				mScoreDbEditor.putBoolean(TUTORIAL_DISPLAYED_LABEL, true);
 				mScoreDbEditor.commit();
 				vibrator.vibrate(500);
+				incrementGamesCounter();
 			}
 		};
 		player.setUserData("player");
@@ -535,7 +536,8 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 			nextTutorialPartDelay = player.getBody().getPosition().x + 10;
 			displayTutorial = false;
 			obstacleGenerator.setNextObstaclePosition(player.getBody().getPosition().x + 50);
-			obstacleGenerator.startObstacleGenerationAlgorithm( tutorialScoreOffset );
+			System.out.println("offset " + tutorialScoreOffset + " player: " + player.getX());
+			obstacleGenerator.startGeneratingObstacles(player.getX());
 			player.setCanSpeedUp(true);
 		}
 	}
@@ -546,10 +548,11 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		if (pSceneTouchEvent.isActionDown()) {
 			if (!firstTouch) {
 				player.setRunning();
+				obstacleGenerator.startObstacleGenerationAlgorithm();
 				firstTouch = true;
-				//autoParallaxBackground.start();
+				autoParallaxBackground.start();
 				if(!displayTutorial){
-					obstacleGenerator.startObstacleGenerationAlgorithm(tutorialScoreOffset);
+					obstacleGenerator.startGeneratingObstacles(player.getX());
 					for(int i=0; i<partOfTutorialCompleted.length; i++)
 						partOfTutorialCompleted[i] = true;
 					for(int i=0; i<partOfTutorialDisplayed.length; i++)
