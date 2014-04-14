@@ -12,9 +12,12 @@ import org.andengine.extension.debugdraw.DebugRenderer;
 import org.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
 
 import com.apptogo.runalien.Player;
+import com.apptogo.runalien.R;
 import com.apptogo.runalien.ResourcesManager;
+import com.apptogo.runalien.utils.GoogleBaseGameActivity;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.google.android.gms.games.Games;
 
 public class ObstacleGenerator {
 	
@@ -28,6 +31,8 @@ public class ObstacleGenerator {
 	private boolean firstObstacleFlag = true;
 	private ArrayList<Integer> lastRandoms;
 	private long ctr = 0; //do generowania co x-ty raz kazdej przeszkody
+	private boolean firstObstacle = true;
+	private boolean firstObstacleDeadTrigger = false;
 	
 	public ObstacleGenerator(Scene scene, Player player)
 	{
@@ -99,72 +104,72 @@ public class ObstacleGenerator {
 						lastRandoms.add(random);
 						*/
 						int INSEQUENCEDISTANCE = 250;
-						
-						switch(random){
-						case 0:
-							generateBottomObstacle(1, -1);
-							break;
-						case 1:
-							generateUpperObstacle(1, -1);
-							break;
-						case 2:
-							generateSmallLeftPyramid(-1);
-							break;
-						case 3:
-							generateSmallPyramid(-1);
-							break;
-						case 4:
-							generateUpperBottomWall(-1);
-							break;
-						case 5:
-							generateSmallRightPyramid(-1);
-							break;
-						case 6:
-							generateUpDownSequence();
-							break;
-						case 7:
-							generateInvertedSmallPyramid(-1);
-							break;
-						case 8:
-							generateJumpThenSlideSequence(INSEQUENCEDISTANCE);
-							break;
-						case 9:
-							generateMuchJumpingSequence(INSEQUENCEDISTANCE);
-							break;
-						case 10:
-							generateBallUpper(15);
-							break;
-						case 11:
-							generateBallUpper(45);
-							break;
-						case 12:
-							mustDoubleJump(-1);
-							break;
-						case 13:
-							generateSmallRightBigPyramid();
-							break;
-						case 14:
-							generateRightBigPyramid();				
-							break;
-						case 15:
-							generateRightVeryBigPyramid();
-							break;
-						case 16:
-							generateEgyptSequence(INSEQUENCEDISTANCE);
-							break;
-						case 17:
-							generateMadWallOpenedSequence(INSEQUENCEDISTANCE);
-							break;
-						case 18:
-							generateWhatTheSmackSequence(INSEQUENCEDISTANCE);
-							break;
-						case 19:
-							generateLongJumpThenSlideSequence(INSEQUENCEDISTANCE);
-							break;
-						case 20:
-							generateLoongPyramid(-1);
-							break;
-						}
+
+							switch(random){
+							case 0:
+								generateBottomObstacle(1, -1);
+								break;
+							case 1:
+								generateUpperObstacle(1, -1);
+								break;
+							case 2:
+								generateSmallLeftPyramid(-1);
+								break;
+							case 3:
+								generateSmallPyramid(-1);
+								break;
+							case 4:
+								generateUpperBottomWall(-1);
+								break;
+							case 5:
+								generateSmallRightPyramid(-1);
+								break;
+							case 6:
+								generateUpDownSequence();
+								break;
+							case 7:
+								generateInvertedSmallPyramid(-1);
+								break;
+							case 8:
+								generateJumpThenSlideSequence(INSEQUENCEDISTANCE);
+								break;
+							case 9:
+								generateMuchJumpingSequence(INSEQUENCEDISTANCE);
+								break;
+							case 10:
+								generateBallUpper(15);
+								break;
+							case 11:
+								generateBallUpper(45);
+								break;
+							case 12:
+								mustDoubleJump(-1);
+								break;
+							case 13:
+								generateSmallRightBigPyramid();
+								break;
+							case 14:
+								generateRightBigPyramid();				
+								break;
+							case 15:
+								generateRightVeryBigPyramid();
+								break;
+							case 16:
+								generateEgyptSequence(INSEQUENCEDISTANCE);
+								break;
+							case 17:
+								generateMadWallOpenedSequence(INSEQUENCEDISTANCE);
+								break;
+							case 18:
+								generateWhatTheSmackSequence(INSEQUENCEDISTANCE);
+								break;
+							case 19:
+								generateLongJumpThenSlideSequence(INSEQUENCEDISTANCE);
+								break;
+							case 20:
+								generateLoongPyramid(-1);
+								break;
+							}
 					}
 					if(player.getX() + 800-1 > nextGroundPosition && player.isAlive()){
 						generateGroundSegment();
@@ -184,12 +189,24 @@ public class ObstacleGenerator {
 	
 	private void checkCollisions(){
 		for(Obstacle obstacle : usedObstacles){
-			if(obstacle.getSprite().collidesWith(player.playerCover)){
+			if(player.isAlive() && obstacle.getSprite().collidesWith(player.playerCover)){
 				if(obstacle.getSprite().getUserData().toString().contains("bottom")){
 					player.dieBottom();
+					if(obstacle.getSprite().getX() < 1000){
+						System.out.println("DIE ON FIRST");
+						if(((GoogleBaseGameActivity)ResourcesManager.getInstance().activity).isSignedIn()){
+							Games.Achievements.unlock(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQAg");						
+						}
+					}
 				}
 				else if(obstacle.getSprite().getUserData().toString().contains("upper")){
 					player.dieTop(true);
+					if(obstacle.getSprite().getX() < 1000){
+						System.out.println("DIE ON FIRST");
+						if(((GoogleBaseGameActivity)ResourcesManager.getInstance().activity).isSignedIn()){
+							Games.Achievements.unlock(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQAg");						
+						}
+					}
 				}
 				else if(obstacle.getSprite().getUserData().toString().equals("ballUpper")){
 					player.dieTop(false);
@@ -568,8 +585,6 @@ private void generateWhatTheSmackSequence(float distance){
 				System.out.println("POOL usuwam bottom");
 				obstaclesPoolManager.ballBottomPool.push((BallBottom)obstacle);
 			}
-			if(obstacle.getSprite().getUserData().equals("ground"))
-				System.out.println("GROUND Na stosie pozosta³o: " + obstaclesPoolManager.groundSegmentPool.size() + " a na used jest: " + usedObstacles.size() + " ZIEMIA: " + obstacle.getSprite().getX() + " a player: " + player.getX());
 			if(obstacle.getSprite().getUserData().equals("ground") && obstacle.getSprite().getX() < player.getX() - 800-1){
 				usedObstacles.remove(obstacle);
 				System.out.println("GROUND usuwam");

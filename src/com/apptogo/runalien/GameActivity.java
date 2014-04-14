@@ -15,22 +15,31 @@ import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
 import org.andengine.entity.scene.Scene;
 import org.andengine.opengl.view.RenderSurfaceView;
 import org.andengine.ui.activity.BaseGameActivity;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
 
+import com.apptogo.runalien.utils.GameHelper;
 import com.apptogo.runalien.utils.GoogleBaseGameActivity;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.games.Games;
 
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.IntentSender.SendIntentException;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -191,7 +200,6 @@ public class GameActivity extends GoogleBaseGameActivity implements ConnectionCa
         .addTestDevice("5F32613150315ED40B2E9FDCC884795A")
         .addTestDevice("B4CDA4E066371C22AA6C995811986124")
         .build();
-
         // Begin loading your interstitial.
         interstitial.loadAd(interestitialAdRequest);
 	}	
@@ -294,5 +302,4 @@ public class GameActivity extends GoogleBaseGameActivity implements ConnectionCa
 		// TODO Auto-generated method stub
 		
 	}
-	
 }

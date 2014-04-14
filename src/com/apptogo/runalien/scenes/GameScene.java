@@ -121,6 +121,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	private static final String HIGHSCORE_DB_NAME = "MyGameHighscores";
 	private static final String HIGHSCORE_LABEL = "score";
 	private static final String TUTORIAL_DISPLAYED_LABEL = "firstGame";
+	private static final String GAMES_COUNTER_LABEL = "gamesCounter";
 	private SharedPreferences mScoreDb = activity.getSharedPreferences(HIGHSCORE_DB_NAME, Context.MODE_PRIVATE);
 	private SharedPreferences.Editor mScoreDbEditor = this.mScoreDb.edit();
 	public int score = 0;
@@ -442,6 +443,21 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		}
 	}
 
+	public void incrementGamesCounter(){
+		int counter = this.mScoreDb.getInt(GAMES_COUNTER_LABEL, 0);
+		System.out.println("COUNTER pobralem: " + counter);
+		counter++;
+		this.mScoreDbEditor.putInt(GAMES_COUNTER_LABEL, counter);
+		this.mScoreDbEditor.commit();
+		if(((GoogleBaseGameActivity)ResourcesManager.getInstance().activity).isSignedIn()){
+			if(counter>=10)
+				Games.Achievements.unlock(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQEQ");	
+			else if(counter>=50)
+				Games.Achievements.unlock(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQBg");	
+			else if(counter>=200)
+				Games.Achievements.unlock(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQBw");	
+		}
+	}
 	public boolean saveHighScore() {
 		if (score > loadHighScore())
 			this.mScoreDbEditor.putInt(HIGHSCORE_LABEL, this.score);
