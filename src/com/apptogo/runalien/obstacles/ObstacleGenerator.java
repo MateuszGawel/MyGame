@@ -104,72 +104,78 @@ public class ObstacleGenerator {
 						lastRandoms.add(random);
 						*/
 						int INSEQUENCEDISTANCE = 250;
-
-							switch(random){
-							case 0:
-								generateBottomObstacle(1, -1);
-								break;
-							case 1:
-								generateUpperObstacle(1, -1);
-								break;
-							case 2:
-								generateSmallLeftPyramid(-1);
-								break;
-							case 3:
-								generateSmallPyramid(-1);
-								break;
-							case 4:
-								generateUpperBottomWall(-1);
-								break;
-							case 5:
-								generateSmallRightPyramid(-1);
-								break;
-							case 6:
-								generateUpDownSequence();
-								break;
-							case 7:
-								generateInvertedSmallPyramid(-1);
-								break;
-							case 8:
-								generateJumpThenSlideSequence(INSEQUENCEDISTANCE);
-								break;
-							case 9:
-								generateMuchJumpingSequence(INSEQUENCEDISTANCE);
-								break;
-							case 10:
-								generateBallUpper(15);
-								break;
-							case 11:
-								generateBallUpper(45);
-								break;
-							case 12:
-								mustDoubleJump(-1);
-								break;
-							case 13:
-								generateSmallRightBigPyramid();
-								break;
-							case 14:
-								generateRightBigPyramid();				
-								break;
-							case 15:
-								generateRightVeryBigPyramid();
-								break;
-							case 16:
-								generateEgyptSequence(INSEQUENCEDISTANCE);
-								break;
-							case 17:
-								generateMadWallOpenedSequence(INSEQUENCEDISTANCE);
-								break;
-							case 18:
-								generateWhatTheSmackSequence(INSEQUENCEDISTANCE);
-								break;
-							case 19:
-								generateLongJumpThenSlideSequence(INSEQUENCEDISTANCE);
-								break;
-							case 20:
-								generateLoongPyramid(-1);
-								break;
-							}
+				
+						switch(random){
+						case 0:
+							generateBottomObstacle(1, -1);
+							break;
+						case 1:
+							generateUpperObstacle(1, -1);
+							break;
+						case 2:
+							generateSmallLeftPyramid(-1);
+							break;
+						case 3:
+							generateSmallPyramid(-1);
+							break;
+						case 4:
+							generateUpperBottomWall(-1);
+							break;
+						case 5:
+							generateDoubleSlideWithJump(INSEQUENCEDISTANCE);
+							break;
+						case 6:
+							generateUpDownSequence();
+							break;
+						case 7:
+							generateInvertedSmallPyramid(-1);
+							break;
+						case 8:
+							generateJumpThenSlideSequence(INSEQUENCEDISTANCE);
+							break;
+						case 9:
+							generateMuchJumpingSequence(INSEQUENCEDISTANCE);
+							break;
+						case 10:
+							double x = player.runningSpeed;
+							double ballOffset = ((-(5.0/98.0))*(((13.0*x)*((19.0*x)-753.0))+85220.0));
+							generateBallUpper((int)ballOffset);
+							break;
+						case 11:
+							x = player.runningSpeed;
+							ballOffset = ((-(5.0/98.0))*(((13.0*x)*((19.0*x)-753.0))+85220.0));
+							generateBallBottom((int)ballOffset);
+							break;
+						case 12:
+							mustDoubleJump(-1);
+							break;
+						case 13:
+							generateSmallRightBigPyramid();
+							break;
+						case 14:
+							generateRightBigPyramid();				
+							break;
+						case 15:
+							generateRightVeryBigPyramid();
+							break;
+						case 16:
+							generateEgyptSequence(INSEQUENCEDISTANCE);
+							break;
+						case 17:
+							generateMadWallOpenedSequence(INSEQUENCEDISTANCE);
+							break;
+						case 18: 
+							generateWhatTheSmackSequence(INSEQUENCEDISTANCE);
+							break;
+						case 19:
+							generateLongJumpThenSlideSequence(INSEQUENCEDISTANCE);
+							break;
+						case 20:
+							generateLoongPyramid(-1);
+							break;
+						default:
+							break;
+						}
 					}
 					if(player.getX() + 800-1 > nextGroundPosition && player.isAlive()){
 						generateGroundSegment();
@@ -329,168 +335,225 @@ public class ObstacleGenerator {
 	}
 	
 	private void generateSmallLeftPyramid(float distance){
-		generateBottomObstacle(1, nextObstaclePosition+45);
-		if(distance > 0) generateBottomObstacle(2, nextObstaclePosition + distance);
-		else             generateBottomObstacle(2, -1);  
+		if(obstaclesPoolManager.bottom_1_Pool.size() >= 1 && obstaclesPoolManager.bottom_2_Pool.size() >= 1)
+		{
+			generateBottomObstacle(1, nextObstaclePosition+45);
+			if(distance > 0) generateBottomObstacle(2, nextObstaclePosition + distance);
+			else             generateBottomObstacle(2, -1); 
+		}
 	}
 	
 	private void generateSmallRightPyramid(float distance){
-		generateBottomObstacle(2, nextObstaclePosition+45);
-		if(distance > 0) generateBottomObstacle(1, nextObstaclePosition + distance);
-		else             generateBottomObstacle(1, -1);  
+		if(obstaclesPoolManager.bottom_1_Pool.size() >= 1 && obstaclesPoolManager.bottom_2_Pool.size() >= 1)
+		{
+			generateBottomObstacle(2, nextObstaclePosition+45);
+			if(distance > 0) generateBottomObstacle(1, nextObstaclePosition + distance);
+			else             generateBottomObstacle(1, -1);  
+		}
 	}
 	
 	private void generateSmallPyramid(float distance){
-		generateBottomObstacle(1, nextObstaclePosition+45);
-		generateUpperObstacle(2, nextObstaclePosition);
-		generateBottomObstacle(2, nextObstaclePosition+45);
-		if(distance > 0) generateBottomObstacle(1, nextObstaclePosition + distance);
-		else             generateBottomObstacle(1, -1);  
+		if(obstaclesPoolManager.bottom_1_Pool.size() >= 2 && obstaclesPoolManager.bottom_2_Pool.size() >= 1 && obstaclesPoolManager.upper_2_Pool.size() >= 1)
+		{
+			generateBottomObstacle(1, nextObstaclePosition+45);
+			generateUpperObstacle(2, nextObstaclePosition);
+			generateBottomObstacle(2, nextObstaclePosition+45);
+			if(distance > 0) generateBottomObstacle(1, nextObstaclePosition + distance);
+			else             generateBottomObstacle(1, -1); 
+		}
 	}
 	
 	private void generateInvertedSmallPyramid(float distance){
-		generateBottomObstacle(2, nextObstaclePosition+45);
-		generateBottomObstacle(1, nextObstaclePosition+45);
-		if(distance > 0) generateBottomObstacle(2, nextObstaclePosition + distance);
-		else             generateBottomObstacle(2, -1);  
+		if(obstaclesPoolManager.bottom_1_Pool.size() >= 1 && obstaclesPoolManager.bottom_2_Pool.size() >= 2)
+		{
+			generateBottomObstacle(2, nextObstaclePosition+45);
+			generateBottomObstacle(1, nextObstaclePosition+45);
+			if(distance > 0) generateBottomObstacle(2, nextObstaclePosition + distance);
+			else             generateBottomObstacle(2, -1);  
+		}
 	}
 	
 	private void mustDoubleJump(float distance){
-		generateBottomObstacle(1, nextObstaclePosition+45);
-		generateUpperObstacle(2, nextObstaclePosition);
-		generateBottomObstacle(2, nextObstaclePosition+45);
-		if(distance > 0) generateBottomObstacle(2, nextObstaclePosition + distance);
-		else             generateBottomObstacle(2, -1);  
+		if(obstaclesPoolManager.bottom_1_Pool.size() >= 2 && obstaclesPoolManager.bottom_2_Pool.size() >= 2 && obstaclesPoolManager.bottom_4_Pool.size() >= 1 && obstaclesPoolManager.upper_2_Pool.size() >= 1)
+		{
+			generateBottomObstacle(1, nextObstaclePosition+45);
+			generateUpperObstacle(2, nextObstaclePosition);
+			generateBottomObstacle(2, nextObstaclePosition+45);
+			generateBottomObstacle(1, nextObstaclePosition+45);
+			generateBottomObstacle(2, nextObstaclePosition+45);
+			if(distance > 0) generateBottomObstacle(4, nextObstaclePosition + distance);
+			else             generateBottomObstacle(4, -1);
+		}
 	}
 	
 	private void generateUpperBottomWall(float distance){
-		generateUpperObstacle(2, nextObstaclePosition);
-		if(distance > 0) generateBottomObstacle(2, nextObstaclePosition + distance);
-		else             generateBottomObstacle(2, -1);
+		if(obstaclesPoolManager.bottom_2_Pool.size() >= 1 && obstaclesPoolManager.upper_2_Pool.size() >= 1)
+		{
+			generateUpperObstacle(2, nextObstaclePosition);
+			if(distance > 0) generateBottomObstacle(2, nextObstaclePosition + distance);
+			else             generateBottomObstacle(2, -1);
+		}
 	}
 	
 	private void generateUpDownSequence(){
-		generateBottomObstacle(4, nextObstaclePosition + 200 + getVelocityOffset());
-		generateUpperObstacle(4, -1);
+		if(obstaclesPoolManager.bottom_4_Pool.size() >= 1 && obstaclesPoolManager.upper_4_Pool.size() >= 1)
+		{
+			generateBottomObstacle(4, nextObstaclePosition + 200 + getVelocityOffset());
+			generateUpperObstacle(4, -1);
+		}
 	}
 	
 	private void generateRightBigPyramid(){
-		generateBottomObstacle(1, nextObstaclePosition+45f);
-		generateBottomObstacle(2, nextObstaclePosition+45f);
-		generateBottomObstacle(3, -1);
+		if(obstaclesPoolManager.bottom_1_Pool.size() >= 1 && obstaclesPoolManager.bottom_2_Pool.size() >= 1 && obstaclesPoolManager.bottom_3_Pool.size() >= 1)
+		{
+			generateBottomObstacle(1, nextObstaclePosition+45f);
+			generateBottomObstacle(2, nextObstaclePosition+45f);
+			generateBottomObstacle(3, -1);
+		}
 	}
 	
 	private void generateSmallLeftBigPyramid(){
-		generateBottomObstacle(2, nextObstaclePosition+45f);
-		generateBottomObstacle(3, -1);
+		if(obstaclesPoolManager.bottom_2_Pool.size() >= 1 && obstaclesPoolManager.bottom_3_Pool.size() >= 1)
+		{
+			generateBottomObstacle(2, nextObstaclePosition+45f);
+			generateBottomObstacle(3, -1);
+		}
 	}
 	
 	private void generateSmallRightBigPyramid(){
-		generateBottomObstacle(3, nextObstaclePosition+45f);
-		generateBottomObstacle(2, -1);
+		if(obstaclesPoolManager.bottom_2_Pool.size() >= 1 && obstaclesPoolManager.bottom_3_Pool.size() >= 1)
+		{
+			generateBottomObstacle(3, nextObstaclePosition+45f);
+			generateBottomObstacle(2, -1);
+		}
 	}
 	
 	private void generateRightVeryBigPyramid(){
-		generateBottomObstacle(1, nextObstaclePosition+45f);
-		generateBottomObstacle(2, nextObstaclePosition+45f);
-		generateBottomObstacle(3, nextObstaclePosition+45f);
-		generateBottomObstacle(4, -1);
+		if(obstaclesPoolManager.bottom_1_Pool.size() >= 1 && obstaclesPoolManager.bottom_2_Pool.size() >= 1 && obstaclesPoolManager.bottom_3_Pool.size() >= 1 && obstaclesPoolManager.bottom_4_Pool.size() >= 1)
+		{
+			generateBottomObstacle(1, nextObstaclePosition+45f);
+			generateBottomObstacle(2, nextObstaclePosition+45f);
+			generateBottomObstacle(3, nextObstaclePosition+45f);
+			generateBottomObstacle(4, -1);
+		}
 	}
 	
 	private void generateLeftBigPyramid(){
-		generateBottomObstacle(3, nextObstaclePosition+45f);
-		generateBottomObstacle(2, nextObstaclePosition+45f);
-		generateBottomObstacle(1, -1);
+		if(obstaclesPoolManager.bottom_1_Pool.size() >= 1 && obstaclesPoolManager.bottom_2_Pool.size() >= 1 && obstaclesPoolManager.bottom_3_Pool.size() >= 1)
+		{
+			generateBottomObstacle(3, nextObstaclePosition+45f);
+			generateBottomObstacle(2, nextObstaclePosition+45f);
+			generateBottomObstacle(1, -1);
+		}
 	}
 	
 	private void generateMuchJumpingSequence(float distance){
-		int t_offset = getVelocityOffset();
-		generateBottomObstacle(1, nextObstaclePosition + distance + t_offset - 1f);
-		
-		generateBottomObstacle(1, nextObstaclePosition + 45f);
-		generateBottomObstacle(2, nextObstaclePosition + distance + t_offset);
-		
-		generateUpperObstacle(1, nextObstaclePosition + distance + t_offset);
-		
-		generateRightBigPyramid();
+		if(obstaclesPoolManager.bottom_1_Pool.size() >= 3 && obstaclesPoolManager.bottom_2_Pool.size() >= 2 && obstaclesPoolManager.bottom_3_Pool.size() >= 1 && obstaclesPoolManager.upper_1_Pool.size() >= 1)
+		{
+			int t_offset = getVelocityOffset();
+			generateBottomObstacle(1, nextObstaclePosition + distance + t_offset - 1f);
+			
+			generateBottomObstacle(1, nextObstaclePosition + 45f);
+			generateBottomObstacle(2, nextObstaclePosition + distance + t_offset);
+			
+			generateUpperObstacle(1, nextObstaclePosition + distance + t_offset);
+			
+			generateRightBigPyramid();
+		}
 	}
 	
 	private void generateMadWallOpenedSequence(float distance){
-		
-		int t_offset = getVelocityOffset();
-		
-		generateUpperBottomWall(distance + t_offset);
-		
-		generateUpperObstacle(4, nextObstaclePosition + distance + t_offset + 50);
-		
-		generateSmallPyramid(distance);
-		
-		generateUpperObstacle(4, nextObstaclePosition + distance + t_offset + 50);
-		
-		generateRightVeryBigPyramid();
-		
-		generateLeftBigPyramid();
+		if(obstaclesPoolManager.bottom_1_Pool.size() >= 4 && obstaclesPoolManager.bottom_2_Pool.size() >= 4 && obstaclesPoolManager.bottom_3_Pool.size() >= 2 && obstaclesPoolManager.bottom_4_Pool.size() >= 1 && obstaclesPoolManager.upper_2_Pool.size() >= 2 && obstaclesPoolManager.upper_4_Pool.size() >= 2)
+		{
+			int t_offset = getVelocityOffset();
+			
+			generateUpperBottomWall(distance + t_offset);
+			
+			generateUpperObstacle(4, nextObstaclePosition + distance + t_offset + 50);
+			
+			generateSmallPyramid(distance);
+			
+			generateUpperObstacle(4, nextObstaclePosition + distance + t_offset + 50);
+			
+			generateRightVeryBigPyramid();
+			
+			generateLeftBigPyramid();
+		}
+	}
+	
+	private void generateDoubleSlideWithJump(float distance){
+		if(obstaclesPoolManager.bottom_1_Pool.size() >= 2 && obstaclesPoolManager.bottom_2_Pool.size() >= 1 && obstaclesPoolManager.upper_1_Pool.size() >= 2 && obstaclesPoolManager.upper_2_Pool.size() >= 1)
+		{
+			int t_offset = getVelocityOffset();
+	
+			generateUpperObstacle(1, nextObstaclePosition + distance + t_offset + 50);
+			generateSmallPyramid(distance + t_offset);
+			generateUpperObstacle(1, -1);
+		}
+
 	}
 	
 	private void generateEgyptSequence(float distance){
-			
-			int t_offset = getVelocityOffset();
-			
-			generateSmallPyramid(-1);
-			
-			generateLeftBigPyramid();
-			
-			generateRightVeryBigPyramid();
-			
-			generateRightVeryBigPyramid();
-			
-			
+			if(obstaclesPoolManager.bottom_1_Pool.size() >= 5 && obstaclesPoolManager.bottom_2_Pool.size() >= 4 && obstaclesPoolManager.bottom_3_Pool.size() >= 3 && obstaclesPoolManager.bottom_4_Pool.size() >= 2 && obstaclesPoolManager.upper_2_Pool.size() >= 1)
+			{
+				int t_offset = getVelocityOffset();
+				
+				generateSmallPyramid(distance + t_offset);
+				generateRightVeryBigPyramid();
+				generateLeftBigPyramid();
+				generateRightVeryBigPyramid();
+			}
 		}
 
 	private void generateJumpThenSlideSequence(float distance){
-		
-		int t_offset = getVelocityOffset();
-		
-		generateBottomObstacle(1, nextObstaclePosition + t_offset + distance);
-		generateUpperObstacle(1, nextObstaclePosition + t_offset + distance + 50);
-		generateBottomObstacle(1, nextObstaclePosition + t_offset + distance);
-		generateUpperObstacle(1, nextObstaclePosition + t_offset + distance + 50);
-		generateBottomObstacle(1, nextObstaclePosition + t_offset + distance);
-		generateUpperObstacle(1, nextObstaclePosition + t_offset + distance + 50);
-		generateBottomObstacle(1, -1);
+		if(obstaclesPoolManager.bottom_1_Pool.size() >= 4 && obstaclesPoolManager.upper_1_Pool.size() >= 3)
+		{
+			int t_offset = getVelocityOffset();
+			
+			generateBottomObstacle(1, nextObstaclePosition + t_offset + distance);
+			generateUpperObstacle(1, nextObstaclePosition + t_offset + distance + 50);
+			generateBottomObstacle(1, nextObstaclePosition + t_offset + distance);
+			generateUpperObstacle(1, nextObstaclePosition + t_offset + distance + 50);
+			generateBottomObstacle(1, nextObstaclePosition + t_offset + distance);
+			generateUpperObstacle(1, nextObstaclePosition + t_offset + distance + 50);
+			generateBottomObstacle(1, -1);
+		}
 	}
 	
 private void generateWhatTheSmackSequence(float distance){
-		
-		int t_offset = getVelocityOffset();
-		
-		generateBottomObstacle(3, nextObstaclePosition + distance + t_offset + 20);
-		generateUpperBottomWall(distance);
-		generateUpperObstacle(1, nextObstaclePosition + distance + t_offset + 50);
-		generateSmallPyramid(distance);
-		generateUpperObstacle(1, nextObstaclePosition + distance + t_offset + 50);
-		generateRightBigPyramid();
-		generateUpperObstacle(4, -1);
+		if(obstaclesPoolManager.bottom_1_Pool.size() >= 3 && obstaclesPoolManager.bottom_2_Pool.size() >= 3 && obstaclesPoolManager.bottom_3_Pool.size() >= 2 && obstaclesPoolManager.upper_1_Pool.size() >= 2 && obstaclesPoolManager.upper_2_Pool.size() >= 2 && obstaclesPoolManager.upper_4_Pool.size() >= 1)
+		{
+			int t_offset = getVelocityOffset();
+			
+			generateBottomObstacle(3, nextObstaclePosition + distance + t_offset + 20);
+			generateUpperBottomWall(distance + t_offset);
+			generateUpperObstacle(1, nextObstaclePosition + distance + t_offset + 50);
+			generateSmallPyramid(distance + t_offset);
+			generateUpperObstacle(1, nextObstaclePosition + distance + t_offset + 50);
+			generateRightBigPyramid();
+			generateUpperObstacle(4, -1);
+		}
 	}
 
 	private void generateLongJumpThenSlideSequence(float distance){
-		
-		int t_offset = getVelocityOffset();
-		
-		generateBottomObstacle(2, nextObstaclePosition + 45);
-		generateBottomObstacle(2, nextObstaclePosition + 45);
-		generateBottomObstacle(2, nextObstaclePosition + 45);
-		generateBottomObstacle(2, nextObstaclePosition + 45);
-		generateBottomObstacle(2, nextObstaclePosition + t_offset + distance);
-		generateUpperObstacle(4, nextObstaclePosition + 45);
-		generateUpperObstacle(4, -1);
+		if(obstaclesPoolManager.upper_4_Pool.size() >= 1 && obstaclesPoolManager.bottom_2_Pool.size() >= 2 && obstaclesPoolManager.bottom_3_Pool.size() >= 3)
+		{
+			int t_offset = getVelocityOffset();
+			
+			generateBottomObstacle(3, nextObstaclePosition + 45);
+			generateBottomObstacle(2, nextObstaclePosition + 45);
+			generateBottomObstacle(3, nextObstaclePosition + 45);
+			generateBottomObstacle(2, nextObstaclePosition + 45);
+			generateBottomObstacle(3, nextObstaclePosition + t_offset + distance);
+			generateUpperObstacle(4, -1);
+		}
 	}
 	
 	private void generateBallUpper(int ballOffset){
 		if(!obstaclesPoolManager.ballUpperPool.isEmpty()){
 			BallUpper ball = obstaclesPoolManager.ballUpperPool.pop();
 			ball.setTransformX((nextObstaclePosition + ballOffset)/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
-			nextObstaclePosition = calculateObstaclePosition();
+			nextObstaclePosition = calculateObstaclePosition() + ballOffset;
 			usedObstacles.add(ball);
 		}
 		else System.out.println("POOL zabrak³o ball upper");
@@ -500,7 +563,7 @@ private void generateWhatTheSmackSequence(float distance){
 		if(!obstaclesPoolManager.ballBottomPool.isEmpty()){
 			BallBottom ball = obstaclesPoolManager.ballBottomPool.pop();
 			ball.setTransformX((nextObstaclePosition + ballOffset)/PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
-			nextObstaclePosition = calculateObstaclePosition();
+			nextObstaclePosition = calculateObstaclePosition() + ballOffset;
 			usedObstacles.add(ball);
 		}
 		else System.out.println("POOL zabrak³o ball bottom");
@@ -512,20 +575,24 @@ private void generateWhatTheSmackSequence(float distance){
 		usedObstacles.add(ground);
 		nextGroundPosition += 800-1;
 	}
+
 	//Others
 	
 	private void generateLoongPyramid(float distance){
-		generateBottomObstacle(1, nextObstaclePosition+45);
-		generateUpperObstacle(2, nextObstaclePosition);
-		generateBottomObstacle(2, nextObstaclePosition+45);
-		generateUpperObstacle(2, nextObstaclePosition);
-		generateBottomObstacle(2, nextObstaclePosition+45);
-		generateUpperObstacle(2, nextObstaclePosition);
-		generateBottomObstacle(2, nextObstaclePosition+45);
-		generateUpperObstacle(2, nextObstaclePosition);
-		generateBottomObstacle(2, nextObstaclePosition+45);
-		if(distance > 0) generateBottomObstacle(1, nextObstaclePosition + distance);
-		else             generateBottomObstacle(1, -1);  
+		if(obstaclesPoolManager.bottom_1_Pool.size() >= 3 && obstaclesPoolManager.bottom_2_Pool.size() >= 3 && obstaclesPoolManager.upper_2_Pool.size() >= 4)
+		{
+			generateBottomObstacle(1, nextObstaclePosition+45);
+			generateUpperObstacle(2, nextObstaclePosition);
+			generateBottomObstacle(2, nextObstaclePosition+45);
+			generateUpperObstacle(2, nextObstaclePosition);
+			generateBottomObstacle(1, nextObstaclePosition+45);
+			generateUpperObstacle(2, nextObstaclePosition);
+			generateBottomObstacle(2, nextObstaclePosition+45);
+			generateUpperObstacle(2, nextObstaclePosition);
+			generateBottomObstacle(1, nextObstaclePosition+45);
+			if(distance > 0) generateBottomObstacle(2, nextObstaclePosition + distance);
+			else             generateBottomObstacle(2, -1);  
+		}
 	}	
 
 	
@@ -535,7 +602,7 @@ private void generateWhatTheSmackSequence(float distance){
 		{                                             //nawet nie probowac synchronizowac :P probowalem synchronizowac metody/bloki ponad godzine i lipa a tak dziala
 			Obstacle obstacle = usedObstacles.get(u);
 			
-			if(!((String)obstacle.getSprite().getUserData()).contains("ball") && !((String)obstacle.getSprite().getUserData()).equals("ground") && obstacle.getSprite().getX() < (player.getX() -50)) //- 10 zeby znikaly juz poza ekranem
+			if(!((String)obstacle.getSprite().getUserData()).contains("ball") && !((String)obstacle.getSprite().getUserData()).equals("ground") && obstacle.getSprite().getX() < (player.getX() - 300)) //- 10 zeby znikaly juz poza ekranem
 			{
 				usedObstacles.remove(obstacle);
 				if(obstacle.getSprite().getUserData().equals("crateUpper"))
@@ -590,6 +657,7 @@ private void generateWhatTheSmackSequence(float distance){
 				System.out.println("GROUND usuwam");
 				obstaclesPoolManager.groundSegmentPool.push((GroundSegment)obstacle);
 			}
+
 		}
 	}
 
