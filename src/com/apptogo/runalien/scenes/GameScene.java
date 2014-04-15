@@ -128,6 +128,10 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	private Text bestScoreText;
 	private Text scoreText; //actual score top-left corner
 	
+	//ustawienia
+	private boolean vibrate = activity.preferences.getBoolean(activity.VIBRATIONS_LABEL, true);
+	private boolean playSound = activity.preferences.getBoolean(activity.SOUNDS_LABEL, true);
+	
 	//lines
 	Line line;
 	float nextLineX = 400f;
@@ -334,7 +338,9 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	}
 
 	private void createPlayer() {
-		player = new Player(120, 145, vbom, camera, physicsWorld) {
+		boolean play = activity.preferences.getBoolean(activity.SOUNDS_LABEL, true);
+		System.out.println("MUTE "+ (play?"1":"0") );
+		player = new Player(120, 145, vbom, camera, physicsWorld, play) {
 			@Override
 			public void onDie() {
 				saveHighScore();
@@ -342,7 +348,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				showGameOver();
 				mScoreDbEditor.putBoolean(TUTORIAL_DISPLAYED_LABEL, true);
 				mScoreDbEditor.commit();
-				vibrator.vibrate(500);
+				if(vibrate) vibrator.vibrate(500);
 				incrementGamesCounter();
 			}
 		};
@@ -355,7 +361,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		sReplay = new Sprite(0, 0, ResourcesManager.getInstance().replay_region, vbom) {
 			@Override
 			public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
-				ResourcesManager.getInstance().clickSound.play();
+				if(playSound) ResourcesManager.getInstance().clickSound.play();
 				//sceneManager.replayGameScene();
 				activity.setgameBannerAdViewInvisibile();
 				activity.displayInterstitialIfReadyAndReplay();
@@ -365,7 +371,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		sMenu = new Sprite(0, 0, ResourcesManager.getInstance().menu_region, vbom) {
 			@Override
 			public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
-				ResourcesManager.getInstance().clickSound.play();
+				if(playSound) ResourcesManager.getInstance().clickSound.play();
 				//sceneManager.loadMenuScene();
 				ResourcesManager.getInstance().activity.displayInterstitialAndLoadMenuScene();
 				return true;
@@ -374,7 +380,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		sSubmit = new Sprite(0, 0, ResourcesManager.getInstance().submit_region, vbom) {
 			@Override
 			public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
-				ResourcesManager.getInstance().clickSound.play();
+				if(playSound) ResourcesManager.getInstance().clickSound.play();
 
 				if(((GoogleBaseGameActivity)activity).isSignedIn()){
 					Games.Leaderboards.submitScore(ResourcesManager.getInstance().activity.getGoogleApiClient(), activity.getResources().getString(R.string.leaderboard_highscores), score);
@@ -420,7 +426,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 			public void onTimePassed(final TimerHandler pTimerHandler) {
 				resourcesManager.engine.unregisterUpdateHandler(pTimerHandler);
 				SceneManager.getInstance().getCurrentScene().unregisterUpdateHandler(pTimerHandler);
-				ResourcesManager.getInstance().whooshSound.play();
+				if(playSound) ResourcesManager.getInstance().whooshSound.play();
 				activity.setgameBannerAdViewVisibile();
 			}
 		}));
@@ -612,7 +618,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 							player.land();
 					}
 					if(!player.isAlive()){
-						resourcesManager.fallDownSound.play();
+						player.fallDownSound.play();
 					}
 				}
 				

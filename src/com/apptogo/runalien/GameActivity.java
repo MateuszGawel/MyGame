@@ -36,6 +36,7 @@ import com.google.android.gms.games.Games;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.IntentSender.SendIntentException;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -58,6 +59,12 @@ public class GameActivity extends GoogleBaseGameActivity implements ConnectionCa
 	private int gameCounter = 0;
     private FrameLayout frameLayout;
     private FrameLayout.LayoutParams gameBannerAdViewLayoutParams;
+    
+    public static final String VIBRASOUND_PREFERENCES = "VIBRASOUND_PREFERENCES";
+    public SharedPreferences preferences;
+    public SharedPreferences.Editor preferencesEditor;
+    public static final String VIBRATIONS_LABEL = "VIBRATIONS";
+    public static final String SOUNDS_LABEL = "SOUNDS";
     
 	@Override
 	public EngineOptions onCreateEngineOptions() {
@@ -94,6 +101,14 @@ public class GameActivity extends GoogleBaseGameActivity implements ConnectionCa
 	                sceneManager.createMenuScene();
 	            }
 	    }));
+	    
+	    //workaround
+	    this.preferences = this.getSharedPreferences(VIBRASOUND_PREFERENCES, Context.MODE_PRIVATE);
+	    this.preferencesEditor = this.preferences.edit();
+	    
+	    preferences.getBoolean(VIBRATIONS_LABEL, true);
+	    preferences.getBoolean(SOUNDS_LABEL, true);
+	    
 	    pOnPopulateSceneCallback.onPopulateSceneFinished();
 	}
 	

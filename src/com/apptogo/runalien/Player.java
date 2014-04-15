@@ -40,6 +40,7 @@ public abstract class Player extends AnimatedSprite {
 	public Sound doubleJumpSound;
 	public Sound chargeDownSound;
 	public Sound bellHit;
+	public Sound fallDownSound;
 	private boolean flag = true;
 	private boolean flag2 = true;
 	public float runningSpeed = 13;  //13 16 19 22 25 27
@@ -52,22 +53,24 @@ public abstract class Player extends AnimatedSprite {
 	public Random generator = new Random();
 	public Sprite playerCover;
 	
-	public Player(float pX, float pY, VertexBufferObjectManager vbo, BoundCamera camera, PhysicsWorld physicsWorld) {
+	public Player(float pX, float pY, VertexBufferObjectManager vbo, BoundCamera camera, PhysicsWorld physicsWorld, boolean playS) {
 		super(pX, pY, ResourcesManager.getInstance().player_region, vbo);
 		createPhysics(camera, physicsWorld);
 		camera.setChaseEntity(this);
+		
 		bellHit = ResourcesManager.getInstance().bellHit;
 		runSound = ResourcesManager.getInstance().runSound;
 		screamSound = ResourcesManager.getInstance().screamSound;
 		jumpSound = ResourcesManager.getInstance().jumpSound;
 		landingSound = ResourcesManager.getInstance().landingSound;
-		landingSound.setVolume(0.5f);
 		slideSound = ResourcesManager.getInstance().slideSound;
 		dieSound = ResourcesManager.getInstance().dieSound;
-		dieSound.setVolume(0.6f);
 		doubleJumpSound = ResourcesManager.getInstance().doubleJumpSound;
-		doubleJumpSound.setVolume(0.5f);
 		chargeDownSound = ResourcesManager.getInstance().chargeDownSound;
+		fallDownSound = ResourcesManager.getInstance().fallDownSound;
+		
+		setSoundVolume(playS);
+		
 		breathe();
 		
 		playerCover = new Sprite(getX() - (getWidth() - 50), getY() - (getHeight() + 40), ResourcesManager.getInstance().playerCover_region, ResourcesManager.getInstance().vbom);
@@ -75,6 +78,29 @@ public abstract class Player extends AnimatedSprite {
 		playerCover.setVisible(false);
 	}
 
+	private void setSoundVolume(boolean play)
+	{
+		if(play)
+		{
+			landingSound.setVolume(0.5f);
+			dieSound.setVolume(0.6f);
+			doubleJumpSound.setVolume(0.5f);
+		}
+		else
+		{
+			bellHit.setVolume(0.0f);
+			runSound.setVolume(0.0f);
+			screamSound.setVolume(0.0f);
+			jumpSound.setVolume(0.0f);
+			landingSound.setVolume(0.0f);
+			slideSound.setVolume(0.0f);
+			dieSound.setVolume(0.0f);
+			doubleJumpSound.setVolume(0.0f);
+			chargeDownSound.setVolume(0.0f);
+			fallDownSound.setVolume(0.0f);
+		}
+	}
+	
 	public abstract void onDie();
 
 	private void createPhysics(final BoundCamera camera, PhysicsWorld physicsWorld) {
