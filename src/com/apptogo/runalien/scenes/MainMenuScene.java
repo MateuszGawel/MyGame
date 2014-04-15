@@ -138,7 +138,11 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 			}
 			return true;
 		case MENU_ACHIEVMENTS:
-			System.out.println("KLIKNIETO ACHIEVMENTS");
+			if(((GoogleBaseGameActivity)activity).isSignedIn())
+				((GoogleBaseGameActivity)activity).startActivityForResult(Games.Achievements.getAchievementsIntent(((GoogleBaseGameActivity)activity).getApiClient()), 0);
+			else{
+				resourcesManager.gameHelper.manualConnect();
+			}
 			return true;
 		case MENU_FACEBOOK:
 			System.out.println("KLIKNIETO FACEBOOK");

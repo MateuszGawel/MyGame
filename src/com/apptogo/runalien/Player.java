@@ -138,7 +138,6 @@ public abstract class Player extends AnimatedSprite {
 
 	public void setRunning() {
 		canRun = true;
-		runSound.setVolume(0.5f);
 		runSound.play();
 		runSound.setLooping(true);
 		screamSound.play();
@@ -277,7 +276,6 @@ public abstract class Player extends AnimatedSprite {
 	public void land(){
 		if(alive){
 			if(chargingDown){
-				chargeDownSound.setVolume(0.5f);
 				chargeDownSound.play();
 			}
 			landingSound.play();
