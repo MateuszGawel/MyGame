@@ -87,7 +87,7 @@ public class ObstacleGenerator {
 						int maxRand = (int) (player.runningSpeed - 9);
 						int minRand = maxRand - 6;
 						
-						if (maxRand == 15) maxRand = 20; //osiagnieto max predkosc
+						if (maxRand == 15) maxRand = 21; //osiagnieto max predkosc
 						if(minRand < 0 || ctr % 4 == 0) minRand = 0;
 						int random;
 						if(startGeneratingObstacles)
@@ -126,61 +126,63 @@ public class ObstacleGenerator {
 							generateSmallLeftPyramid(-1);
 							break;
 						case 3:
-							generateSmallRightPyramid(-1);
+							generateUpperBottomWall(-1);
 							break;
 						case 4:
-							generateUpperBottomWall(-1);
+							generateSmallRightPyramid(-1);
 							break;
 						case 5:
 							generateDoubleSlideWithJump(INSEQUENCEDISTANCE);
 							break;
 						case 6:
-							generateSmallPyramid(-1);
+							generateUpDownSequence();
 							break;
 						case 7:
-							generateInvertedSmallPyramid(-1);
+							generateSmallPyramid(-1);
 							break;
 						case 8:
-							generateJumpThenSlideSequence(INSEQUENCEDISTANCE);
-							break;
+							generateJumpThenSlideSequence(INSEQUENCEDISTANCE);							
 						case 9:
-							generateMuchJumpingSequence(INSEQUENCEDISTANCE);
+							generateInvertedSmallPyramid(-1);
 							break;
 						case 10:
+							generateMuchJumpingSequence(INSEQUENCEDISTANCE);
+							break;
+						case 11:
 							double x = player.runningSpeed;
 							double ballOffset = ((-(5.0/98.0))*(((13.0*x)*((19.0*x)-753.0))+85220.0));
 							generateBallUpper((int)ballOffset);
 							break;
-						case 11:
+						case 12:
 							x = player.runningSpeed;
 							ballOffset = ((-(5.0/98.0))*(((13.0*x)*((19.0*x)-753.0))+85220.0));
 							generateBallBottom((int)ballOffset);
 							break;
-						case 12:
+						case 13:
 							mustDoubleJump(-1);
 							break;
-						case 13:
+						case 14:
 							generateSmallRightBigPyramid();
 							break;
-						case 14:
+						case 15:
 							generateRightBigPyramid();				
 							break;
-						case 15:
+						case 16:
 							generateRightVeryBigPyramid();
 							break;
-						case 16:
+						case 17:
 							generateEgyptSequence(INSEQUENCEDISTANCE);
 							break;
-						case 17:
+						case 18:
 							generateMadWallOpenedSequence(INSEQUENCEDISTANCE);
 							break;
-						case 18: 
+						case 19: 
 							generateWhatTheSmackSequence(INSEQUENCEDISTANCE);
 							break;
-						case 19:
+						case 20:
 							generateLongJumpThenSlideSequence(INSEQUENCEDISTANCE);
 							break;
-						case 20:
+						case 21:
 							generateLoongPyramid(-1);
 							break;
 						default:
