@@ -94,7 +94,7 @@ public class ObstacleGenerator {
 							random = minRand + (int)(Math.random() * ((maxRand - minRand) + 1));
 						else
 							random = -1;
-						/*
+						
 						//sprawdzic wydajnosc tutaj
 						if( lastRandoms.size() >= 2 ) 
 						{ 
@@ -112,7 +112,7 @@ public class ObstacleGenerator {
 						}
 						
 						lastRandoms.add(random);
-						*/
+						
 						int INSEQUENCEDISTANCE = 250;
 				
 						switch(random){
@@ -126,7 +126,7 @@ public class ObstacleGenerator {
 							generateSmallLeftPyramid(-1);
 							break;
 						case 3:
-							generateSmallPyramid(-1);
+							generateSmallRightPyramid(-1);
 							break;
 						case 4:
 							generateUpperBottomWall(-1);
@@ -135,7 +135,7 @@ public class ObstacleGenerator {
 							generateDoubleSlideWithJump(INSEQUENCEDISTANCE);
 							break;
 						case 6:
-							generateUpDownSequence();
+							generateSmallPyramid(-1);
 							break;
 						case 7:
 							generateInvertedSmallPyramid(-1);

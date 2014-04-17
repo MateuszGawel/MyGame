@@ -124,12 +124,18 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	//LISTENERS
 	@Override
 	public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem, float pMenuItemLocalX, float pMenuItemLocalY) {
-		if( activity.preferences.getBoolean(activity.SOUNDS_LABEL, true) ) ResourcesManager.getInstance().clickSound.play();
+		
 		switch(pMenuItem.getID()){
 		case MENU_PLAY:
+			
+			if( activity.preferences.getBoolean(activity.SOUNDS_LABEL, true) ) ResourcesManager.getInstance().clickSound.play();
+			
 			sceneManager.loadGameScene();
 			return true;
 		case MENU_OPTIONS:
+			
+			if( activity.preferences.getBoolean(activity.SOUNDS_LABEL, true) ) ResourcesManager.getInstance().clickSound.play();
+			
 			if(((GoogleBaseGameActivity)activity).isSignedIn())
 				((GoogleBaseGameActivity)activity).startActivityForResult(Games.Leaderboards.getLeaderboardIntent(((GoogleBaseGameActivity)activity).getApiClient(), activity.getResources().getString(R.string.leaderboard_highscores)), 0);
 			else{
@@ -138,6 +144,9 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 			}
 			return true;
 		case MENU_ACHIEVMENTS:
+			
+			if( activity.preferences.getBoolean(activity.SOUNDS_LABEL, true) ) ResourcesManager.getInstance().clickSound.play();
+			
 			if(((GoogleBaseGameActivity)activity).isSignedIn())
 				((GoogleBaseGameActivity)activity).startActivityForResult(Games.Achievements.getAchievementsIntent(((GoogleBaseGameActivity)activity).getApiClient()), 0);
 			else{
@@ -145,6 +154,9 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 			}
 			return true;
 		case MENU_FACEBOOK:
+			
+			if( activity.preferences.getBoolean(activity.SOUNDS_LABEL, true) ) ResourcesManager.getInstance().clickSound.play();
+			
 			System.out.println("KLIKNIETO FACEBOOK");
 			return true;
 		case MENU_VIBRATIONS:
@@ -155,7 +167,11 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 			
 			prefV = activity.preferences.getBoolean(activity.VIBRATIONS_LABEL, true);
 
-			if(prefV) pMenuItem.setAlpha(1.0f);
+			if(prefV) 
+			{
+				pMenuItem.setAlpha(1.0f);
+				((Vibrator)activity.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(500);
+			}
 			else      pMenuItem.setAlpha(0.2f);
 			
 			return true;
@@ -167,7 +183,11 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 			
 			prefS = activity.preferences.getBoolean(activity.SOUNDS_LABEL, true);
 
-			if(prefS) pMenuItem.setAlpha(1.0f);
+			if(prefS) 
+			{
+				pMenuItem.setAlpha(1.0f);
+				if( activity.preferences.getBoolean(activity.SOUNDS_LABEL, true) ) ResourcesManager.getInstance().clickSound.play();
+			}
 			else      pMenuItem.setAlpha(0.2f);
 			
 			return true;
