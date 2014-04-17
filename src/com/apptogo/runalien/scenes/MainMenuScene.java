@@ -47,6 +47,11 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
         activity.finish();
         System.exit(0);
 	}
+	
+	@Override
+	public void onMenuKeyPressed() {
+		return;
+	}
 
 	@Override
 	public SceneType getSceneType() {

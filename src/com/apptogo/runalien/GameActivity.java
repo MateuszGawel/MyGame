@@ -19,6 +19,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import com.apptogo.runalien.scenes.GameScene;
 import com.apptogo.runalien.utils.GameHelper;
 import com.apptogo.runalien.utils.GoogleBaseGameActivity;
 import com.google.android.gms.ads.AdListener;
@@ -120,6 +121,9 @@ public class GameActivity extends GoogleBaseGameActivity implements ConnectionCa
 		if(keyCode == KeyEvent.KEYCODE_BACK){
 			sceneManager.getCurrentScene().onBackKeyPressed();
 		}
+		else if(keyCode == KeyEvent.KEYCODE_MENU){
+			sceneManager.getCurrentScene().onMenuKeyPressed();
+		}
 		return false;
 	}
     
@@ -202,7 +206,7 @@ public class GameActivity extends GoogleBaseGameActivity implements ConnectionCa
 		    }
 		});
 	}
-	
+		
 	public void loadInterstitial(){
 		//Create the interstitial.
         interstitial = new InterstitialAd(this);

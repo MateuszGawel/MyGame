@@ -28,7 +28,12 @@ public class SplashScene extends BaseScene{
 
 	@Override
 	public void onBackKeyPressed() {
-		
+		return;
+	}
+	
+	@Override
+	public void onMenuKeyPressed() {
+		return;
 	}
 
 	@Override

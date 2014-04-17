@@ -38,6 +38,7 @@ import android.content.SharedPreferences;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -103,6 +104,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	Sprite sReplay;
 	Sprite sMenu;
 	Sprite sSubmit;
+	Sprite sPause;
 
 	//tutorial
 	private Text tapToJump;
@@ -139,6 +141,9 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	//layers
 	Entity backgroundLayer;
 	Entity foregroundLayer;
+	
+	//pause menu
+	private boolean isPaused = false;
 
 	//OVERRIDEN METHODS
 	@Override
@@ -165,6 +170,20 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	public void onBackKeyPressed() {
 		pauseGame();
 		ResourcesManager.getInstance().activity.displayInterstitialAndLoadMenuScene();
+	}
+	
+	@Override
+	public void onMenuKeyPressed() {
+		if(!gamePaused) 
+		{
+			pauseGame();
+			gamePaused = true;
+		}
+		else         
+		{
+			resumeGame();
+			gamePaused = false;
+		}
 	}
 
 	@Override
@@ -431,6 +450,21 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 			}
 		}));
 		
+	}
+	
+	private void showPause() {
+		sPause = new Sprite(0, 0, ResourcesManager.getInstance().pause_region, vbom);
+
+		this.registerUpdateHandler(new TimerHandler(1f, new ITimerCallback() {
+			public void onTimePassed(final TimerHandler pTimerHandler) {
+				resourcesManager.engine.unregisterUpdateHandler(pTimerHandler);
+				SceneManager.getInstance().getCurrentScene().unregisterUpdateHandler(pTimerHandler);
+
+				sPause.setPosition(400-sPause.getWidth()/2, -300);
+				sPause.registerEntityModifier(new MoveYModifier(1f, sPause.getY(), 120, org.andengine.util.modifier.ease.EaseElasticInOut.getInstance()));
+				gameHUD.attachChild(sPause);
+			}
+		}));		
 	}
 
 	//SCORE METHODS

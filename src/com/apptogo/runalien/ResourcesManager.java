@@ -82,6 +82,7 @@ public class ResourcesManager {
 	public ITextureRegion replay_region;
 	public ITextureRegion menu_region;
 	public ITextureRegion submit_region;
+	public ITextureRegion pause_region;
 	
 	BitmapTextureAtlas dirtRepeatingAtlas;
 	public ITextureRegion dirt_texture_region;
@@ -214,6 +215,7 @@ public class ResourcesManager {
 	    //grass_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "grass.png", 1, 374);
 	    ground_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "dirt.png", 1, 374);
 	    game_over_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "game_over.png", 1, 510);
+	    pause_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "pause.png", 1, 570);
 	    
 	    playerCover_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "playerCover.png", 650, 296 );
 	    player_region = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(playerTextureAtlas, activity, "player.png", 12, 11);
