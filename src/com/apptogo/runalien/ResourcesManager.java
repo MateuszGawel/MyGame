@@ -52,7 +52,7 @@ public class ResourcesManager {
 	public ITextureRegion play_region;
 	public ITextureRegion ranking_region;
 	public ITextureRegion achievments_region;
-	public ITextureRegion facebook_region;
+	public ITextureRegion googlep_region;
 	public ITextureRegion vibrations_region;
 	public ITextureRegion sounds_region;
 	private BuildableBitmapTextureAtlas menuTextureAtlas;
@@ -136,7 +136,7 @@ public class ResourcesManager {
 		play_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "play.png");
 		ranking_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "ranking.png");
 		achievments_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "achievments.png");
-		facebook_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "facebook.png");
+		googlep_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "googlep.png");
 		vibrations_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "vibrations.png");
 		sounds_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "sounds.png");
 		

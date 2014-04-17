@@ -10,7 +10,9 @@ import org.andengine.opengl.util.GLState;
 import org.andengine.engine.camera.Camera;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Vibrator;
 
 import com.apptogo.runalien.BaseScene;
@@ -21,6 +23,7 @@ import com.apptogo.runalien.SceneManager.SceneType;
 import com.apptogo.runalien.obstacles.ObstaclesPoolManager;
 import com.apptogo.runalien.utils.GoogleBaseGameActivity;
 import com.google.android.gms.games.Games;
+import com.google.android.gms.plus.PlusShare;
 
 public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener{
 
@@ -28,7 +31,7 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	private final int MENU_PLAY = 0;
 	private final int MENU_OPTIONS = 1;
 	private final int MENU_ACHIEVMENTS = 2;
-	private final int MENU_FACEBOOK = 3;
+	private final int MENU_GOOGLEP = 3;
 	private final int MENU_VIBRATIONS = 4;
 	private final int MENU_SOUNDS = 5;
 		
@@ -72,14 +75,14 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 		final IMenuItem playMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(MENU_PLAY, resourcesManager.play_region, vbom), 1.2f, 1);
 		final IMenuItem rankingMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(MENU_OPTIONS, resourcesManager.ranking_region, vbom), 1.2f, 1);
 		final IMenuItem achievmentsMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(MENU_ACHIEVMENTS, resourcesManager.achievments_region, vbom), 1.2f, 1);
-		final IMenuItem facebookMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(MENU_FACEBOOK, resourcesManager.facebook_region, vbom), 1.2f, 1);
+		final IMenuItem googlepMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(MENU_GOOGLEP, resourcesManager.googlep_region, vbom), 1.2f, 1);
 		final IMenuItem vibrationsMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(MENU_VIBRATIONS, resourcesManager.vibrations_region, vbom), 1.2f, 1);
 		final IMenuItem soundsMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(MENU_SOUNDS, resourcesManager.sounds_region, vbom), 1.2f, 1);
 		
 		menuChildScene.addMenuItem(playMenuItem);
 		menuChildScene.addMenuItem(rankingMenuItem);
 		menuChildScene.addMenuItem(achievmentsMenuItem);
-		menuChildScene.addMenuItem(facebookMenuItem);
+		menuChildScene.addMenuItem(googlepMenuItem);
 		menuChildScene.addMenuItem(vibrationsMenuItem);
 		menuChildScene.addMenuItem(soundsMenuItem);
 		
@@ -89,7 +92,7 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 		playMenuItem.setPosition(255, 270); 
 		rankingMenuItem.setPosition(255, 365); 
 		achievmentsMenuItem.setPosition(20, 410); 
-		facebookMenuItem.setPosition(100, 410);
+		googlepMenuItem.setPosition(100, 410);
 		vibrationsMenuItem.setPosition(670, 20);
 		soundsMenuItem.setPosition(740, 20);
 		
@@ -158,11 +161,10 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 				resourcesManager.gameHelper.manualConnect();
 			}
 			return true;
-		case MENU_FACEBOOK:
+		case MENU_GOOGLEP:
 			
 			if( activity.preferences.getBoolean(activity.SOUNDS_LABEL, true) ) ResourcesManager.getInstance().clickSound.play();
 			
-			System.out.println("KLIKNIETO FACEBOOK");
 			return true;
 		case MENU_VIBRATIONS:
 			prefV = !activity.preferences.getBoolean(activity.VIBRATIONS_LABEL, true);

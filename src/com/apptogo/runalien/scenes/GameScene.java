@@ -143,7 +143,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	Entity foregroundLayer;
 	
 	//pause menu
-	private boolean isPaused = false;
+	private boolean canPause = true;
 
 	//OVERRIDEN METHODS
 	@Override
@@ -168,21 +168,38 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 
 	@Override
 	public void onBackKeyPressed() {
-		pauseGame();
-		ResourcesManager.getInstance().activity.displayInterstitialAndLoadMenuScene();
+		if(gamePaused)
+		{
+			hidePause();
+			setOnSceneTouchListener(this);
+			resumeGame();
+			gamePaused = false;
+		}
+		else
+		{
+			pauseGame();
+			ResourcesManager.getInstance().activity.displayInterstitialAndLoadMenuScene();
+		}
 	}
 	
 	@Override
 	public void onMenuKeyPressed() {
-		if(!gamePaused) 
+		if(canPause)
 		{
-			pauseGame();
-			gamePaused = true;
-		}
-		else         
-		{
-			resumeGame();
-			gamePaused = false;
+			if(!gamePaused) 
+			{
+				setOnSceneTouchListener(null);
+				showPause();
+				pauseGame();
+				gamePaused = true;
+			}
+			else         
+			{
+				hidePause();
+				setOnSceneTouchListener(this);
+				resumeGame();
+				gamePaused = false;
+			}
 		}
 	}
 
@@ -306,6 +323,9 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		scoreText.setText("SCORE: 0");
 		gameHUD.attachChild(scoreText);
 		camera.setHUD(gameHUD);
+		
+		sPause = new Sprite(-1000, 0, ResourcesManager.getInstance().pause_region, vbom);
+		gameHUD.attachChild(sPause);
 
 		tapToJump = new Text(0, 0, ResourcesManager.getInstance().mainFont, "Tap right site of the screen to jump", new TextOptions(), vbom);
 		tapToJump.setPosition(2000, 400);
@@ -362,6 +382,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		player = new Player(120, 145, vbom, camera, physicsWorld, play) {
 			@Override
 			public void onDie() {
+				canPause = false; //zeby nie mozna bylo juz wlaczyc pauzy
 				saveHighScore();
 				autoParallaxBackground.stop();
 				showGameOver();
@@ -452,19 +473,14 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		
 	}
 	
-	private void showPause() {
-		sPause = new Sprite(0, 0, ResourcesManager.getInstance().pause_region, vbom);
-
-		this.registerUpdateHandler(new TimerHandler(1f, new ITimerCallback() {
-			public void onTimePassed(final TimerHandler pTimerHandler) {
-				resourcesManager.engine.unregisterUpdateHandler(pTimerHandler);
-				SceneManager.getInstance().getCurrentScene().unregisterUpdateHandler(pTimerHandler);
-
-				sPause.setPosition(400-sPause.getWidth()/2, -300);
-				sPause.registerEntityModifier(new MoveYModifier(1f, sPause.getY(), 120, org.andengine.util.modifier.ease.EaseElasticInOut.getInstance()));
-				gameHUD.attachChild(sPause);
-			}
-		}));		
+	private void showPause()
+	{
+		sPause.setPosition( player.playerCover.getX()+160, 120 );
+	}
+	
+	private void hidePause()
+	{
+		sPause.setPosition( player.playerCover.getX() - 1000, 240 );
 	}
 
 	//SCORE METHODS
@@ -534,9 +550,11 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		this.setIgnoreUpdate(true);
 		player.runSound.pause();
 		player.screamSound.pause();
+		
 	}
 	
 	private void resumeGame(){
+		firstTouch = true;
 		gamePaused = false;
 		camera.setChaseEntity(player);
 		this.setIgnoreUpdate(false);
