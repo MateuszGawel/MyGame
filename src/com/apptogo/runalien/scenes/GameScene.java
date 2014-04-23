@@ -170,10 +170,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	public void onBackKeyPressed() {
 		if(gamePaused)
 		{
-			hidePause();
-			setOnSceneTouchListener(this);
 			resumeGame();
-			gamePaused = false;
 		}
 		else
 		{
@@ -188,21 +185,14 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		{
 			if(!gamePaused) 
 			{
-				setOnSceneTouchListener(null);
-				showPause();
 				pauseGame();
-				gamePaused = true;
 			}
 			else         
 			{
-				hidePause();
-				setOnSceneTouchListener(this);
 				resumeGame();
-				gamePaused = false;
 			}
 		}
 	}
-
 	@Override
 	public SceneType getSceneType() {
 		return SceneType.SCENE_GAME;
@@ -558,7 +548,9 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		}
 	}
 	
-	private void pauseGame(){
+	public void pauseGame(){
+		setOnSceneTouchListener(null);
+		showPause();
 		gamePaused = true;
 		camera.setChaseEntity(null);
 		this.setIgnoreUpdate(true);
@@ -567,8 +559,10 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		
 	}
 	
-	private void resumeGame(){
-		firstTouch = true;
+	public void resumeGame(){
+		hidePause();
+		setOnSceneTouchListener(this);	
+		//firstTouch = true;
 		gamePaused = false;
 		camera.setChaseEntity(player);
 		this.setIgnoreUpdate(false);
@@ -618,6 +612,10 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	@Override
 	public boolean onSceneTouchEvent(Scene pScene, TouchEvent pSceneTouchEvent) {
 		if (pSceneTouchEvent.isActionDown()) {
+			if(gamePaused) 
+			{
+				resumeGame();
+			}
 			if (!firstTouch) {
 				player.setRunning();
 				obstacleGenerator.startObstacleGenerationAlgorithm();
@@ -663,7 +661,8 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		}
 		return false;
 	}
-
+	
+	
 	private ContactListener contactListener() {
 		ContactListener contactListener = new ContactListener() {
 			@Override

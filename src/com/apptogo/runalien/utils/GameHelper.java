@@ -27,6 +27,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
+import com.apptogo.runalien.SceneManager;
+import com.apptogo.runalien.SceneManager.SceneType;
+import com.apptogo.runalien.scenes.GameScene;
 import com.google.android.gms.appstate.AppStateManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -367,6 +370,12 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
 
     /** Call this method from your Activity's onStop(). */
     public void onStop() {
+    	
+    	if(SceneManager.getInstance().getCurrentSceneType() == SceneType.SCENE_GAME){
+    		GameScene gameScene = (GameScene)SceneManager.getInstance().getCurrentScene();
+    		gameScene.pauseGame();
+    	}
+    	
         debugLog("onStop");
         assertConfigured("onStop");
         if (mGoogleApiClient.isConnected()) {
