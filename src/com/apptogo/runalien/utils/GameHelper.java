@@ -283,7 +283,7 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
             createApiClientBuilder();
         }
 
-        mGoogleApiClient = mGoogleApiClientBuilder.build();
+        mGoogleApiClient = mGoogleApiClientBuilder.addApi(Plus.API).addScope(Plus.SCOPE_PLUS_LOGIN).build();
         mGoogleApiClientBuilder = null;
         mSetupDone = true;
     }
