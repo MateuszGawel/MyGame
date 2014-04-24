@@ -92,6 +92,7 @@ public class ResourcesManager {
 	public ITextureRegion mParallaxLayerMid;
 	public ITextureRegion mParallaxLayerFront;
 	
+	public Music menuMusic;
 	public Music runSound;
 	public Music screamSound;
 	public Sound jumpSound;
@@ -167,6 +168,7 @@ public class ResourcesManager {
 	public void loadMenuSounds(){
 		try {
 			clickSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/clickSound.ogg");
+			menuMusic = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/runalien.ogg");
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -255,7 +257,6 @@ public class ResourcesManager {
 	
 	public void loadGameSounds(){
 		try{
-			
 		    runSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/runSound.ogg");
 		    screamSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/screamSound.ogg");
 		    landingSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/landingSound.ogg");
@@ -273,9 +274,11 @@ public class ResourcesManager {
 		{
 		    e.printStackTrace();
 		}
+		System.out.println("POSZLO2");
 	}
 	
 	public void unloadGameSounds(){
+		menuMusic.stop();
 		runSound.stop();
 		screamSound.stop();
 		landingSound.stop();
@@ -289,6 +292,7 @@ public class ResourcesManager {
 		bellHit.stop();
 
 		
+		menuMusic.release();
 		runSound.release();
 		screamSound.release();
 		landingSound.release();

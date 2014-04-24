@@ -1,5 +1,6 @@
 package com.apptogo.runalien.scenes;
 
+import org.andengine.audio.music.Music;
 import org.andengine.entity.scene.menu.MenuScene;
 import org.andengine.entity.scene.menu.MenuScene.IOnMenuItemClickListener;
 import org.andengine.entity.scene.menu.item.IMenuItem;
@@ -37,6 +38,7 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 		
 	private boolean prefV;
 	private boolean prefS;
+	private boolean musicIsPlaying = false;
 	
 	@Override
 	public void createScene() {
@@ -63,6 +65,7 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 
 	@Override
 	public void disposeScene() {
+				
 		this.detachSelf();
 		this.dispose();
 	}
@@ -114,6 +117,13 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 		activity.preferencesEditor.putBoolean(activity.VIBRATIONS_LABEL, prefV);
 		activity.preferencesEditor.putBoolean(activity.SOUNDS_LABEL, prefS);
 		activity.preferencesEditor.commit();
+		
+		if( activity.preferences.getBoolean(activity.SOUNDS_LABEL, true) )
+		{
+			ResourcesManager.getInstance().menuMusic.play();
+			ResourcesManager.getInstance().menuMusic.setLooping(true);
+			musicIsPlaying = true;
+		}
 	}
 	
 	private void createBackground(){
@@ -137,6 +147,8 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 		case MENU_PLAY:
 			
 			if( activity.preferences.getBoolean(activity.SOUNDS_LABEL, true) ) ResourcesManager.getInstance().clickSound.play();
+			
+			ResourcesManager.getInstance().menuMusic.pause();
 			
 			sceneManager.loadGameScene();
 			return true;
@@ -198,10 +210,23 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 
 			if(prefS) 
 			{
+				if(!musicIsPlaying)
+				{
+					musicIsPlaying = true;
+					ResourcesManager.getInstance().menuMusic.play();
+					ResourcesManager.getInstance().menuMusic.setLooping(true);
+				}
+
+				ResourcesManager.getInstance().menuMusic.setVolume(1f);
+
 				pMenuItem.setAlpha(1.0f);
 				if( activity.preferences.getBoolean(activity.SOUNDS_LABEL, true) ) ResourcesManager.getInstance().clickSound.play();
 			}
-			else      pMenuItem.setAlpha(0.2f);
+			else      
+			{
+				ResourcesManager.getInstance().menuMusic.setVolume(0f);
+				pMenuItem.setAlpha(0.2f);
+			}
 			
 			return true;
 		default:
