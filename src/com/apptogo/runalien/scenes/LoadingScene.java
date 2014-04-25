@@ -25,6 +25,7 @@ public class LoadingScene extends BaseScene{
 	public void onMenuKeyPressed() {
 		return;
 	}
+	
 
 	@Override
 	public SceneType getSceneType() {

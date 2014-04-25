@@ -8,6 +8,7 @@ import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import com.apptogo.runalien.SceneManager.SceneType;
 
 import android.app.Activity;
+import android.view.KeyEvent;
 
 public abstract class BaseScene extends Scene{
 	

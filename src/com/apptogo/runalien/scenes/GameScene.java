@@ -170,10 +170,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	public void onBackKeyPressed() {
 		if(gamePaused)
 		{
-			hidePause();
-			setOnSceneTouchListener(this);
 			resumeGame();
-			gamePaused = false;
 		}
 		else
 		{
@@ -188,21 +185,14 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		{
 			if(!gamePaused) 
 			{
-				setOnSceneTouchListener(null);
-				showPause();
 				pauseGame();
-				gamePaused = true;
 			}
 			else         
 			{
-				hidePause();
-				setOnSceneTouchListener(this);
 				resumeGame();
-				gamePaused = false;
 			}
 		}
 	}
-
 	@Override
 	public SceneType getSceneType() {
 		return SceneType.SCENE_GAME;
@@ -358,6 +348,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 					}
 					displayTutorial();
 					setScore(score);
+					setDistanceAchievements();
 				}
 								
 				if (player.getBody().getPosition().x > center2) 
@@ -389,7 +380,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				mScoreDbEditor.putBoolean(TUTORIAL_DISPLAYED_LABEL, true);
 				mScoreDbEditor.commit();
 				if(vibrate) vibrator.vibrate(500);
-				incrementGamesCounter();
+				incrementAchievements();
 			}
 		};
 		player.setUserData("player");
@@ -500,8 +491,18 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		}
 	}
 
-	public void incrementGamesCounter(){
-		int counter = this.mScoreDb.getInt(GAMES_COUNTER_LABEL, 0);
+	public void setDistanceAchievements(){
+		if(((GoogleBaseGameActivity)ResourcesManager.getInstance().activity).isSignedIn()){
+			if(score == 50)
+				Games.Achievements.unlock(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQAw");	
+			else if(score == 200)
+				Games.Achievements.unlock(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQBA");	
+			else if(score == 1000)
+				Games.Achievements.unlock(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQBQ");	
+		}
+	}
+	public void incrementAchievements(){
+		/*int counter = this.mScoreDb.getInt(GAMES_COUNTER_LABEL, 0);
 		System.out.println("COUNTER pobralem: " + counter);
 		counter++;
 		this.mScoreDbEditor.putInt(GAMES_COUNTER_LABEL, counter);
@@ -513,7 +514,10 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				Games.Achievements.unlock(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQBg");	
 			else if(counter>=200)
 				Games.Achievements.unlock(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQBw");	
-		}
+		}*/
+		Games.Achievements.increment(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQBw", 1);
+		Games.Achievements.increment(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQEQ", 1);
+		Games.Achievements.increment(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQBg", 1);
 	}
 	public boolean saveHighScore() {
 		if (score > loadHighScore())
@@ -544,7 +548,9 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		}
 	}
 	
-	private void pauseGame(){
+	public void pauseGame(){
+		setOnSceneTouchListener(null);
+		showPause();
 		gamePaused = true;
 		camera.setChaseEntity(null);
 		this.setIgnoreUpdate(true);
@@ -553,8 +559,10 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		
 	}
 	
-	private void resumeGame(){
-		firstTouch = true;
+	public void resumeGame(){
+		hidePause();
+		setOnSceneTouchListener(this);	
+		//firstTouch = true;
 		gamePaused = false;
 		camera.setChaseEntity(player);
 		this.setIgnoreUpdate(false);
@@ -604,6 +612,10 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	@Override
 	public boolean onSceneTouchEvent(Scene pScene, TouchEvent pSceneTouchEvent) {
 		if (pSceneTouchEvent.isActionDown()) {
+			if(gamePaused) 
+			{
+				resumeGame();
+			}
 			if (!firstTouch) {
 				player.setRunning();
 				obstacleGenerator.startObstacleGenerationAlgorithm();
@@ -649,7 +661,8 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		}
 		return false;
 	}
-
+	
+	
 	private ContactListener contactListener() {
 		ContactListener contactListener = new ContactListener() {
 			@Override
