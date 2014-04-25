@@ -16,6 +16,8 @@
 
 package com.apptogo.runalien.utils;
 
+import org.andengine.entity.scene.menu.MenuScene;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -27,6 +29,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
+import com.apptogo.runalien.ResourcesManager;
 import com.apptogo.runalien.SceneManager;
 import com.apptogo.runalien.SceneManager.SceneType;
 import com.apptogo.runalien.scenes.GameScene;
@@ -334,7 +337,11 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
     public void onStart(Activity act) {
         mActivity = act;
         mAppContext = act.getApplicationContext();
-
+        /*
+    	if(SceneManager.getInstance() != null && SceneManager.getInstance().getCurrentSceneType() == SceneType.SCENE_MENU){
+    		if(ResourcesManager.getInstance()!=null && ResourcesManager.getInstance().menuMusic!=null && !ResourcesManager.getInstance().menuMusic.isReleased() && !ResourcesManager.getInstance().menuMusic.isPlaying())
+    			ResourcesManager.getInstance().menuMusic.play();
+    	}*/
         debugLog("onStart");
         assertConfigured("onStart");
 
@@ -374,6 +381,10 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
     	if(SceneManager.getInstance().getCurrentSceneType() == SceneType.SCENE_GAME){
     		GameScene gameScene = (GameScene)SceneManager.getInstance().getCurrentScene();
     		gameScene.pauseGame();
+    	}
+    	if(SceneManager.getInstance().getCurrentSceneType() == SceneType.SCENE_MENU){
+    		if(!ResourcesManager.getInstance().menuMusic.isReleased() && ResourcesManager.getInstance().menuMusic.isPlaying())
+    			ResourcesManager.getInstance().menuMusic.pause();
     	}
     	
         debugLog("onStop");

@@ -176,8 +176,19 @@ public class ResourcesManager {
 		}
 	}
 	
-	public void unloadMenuTextures(){
+	public void unloadMenuResources(){
+		unloadMenuTextures();
+		unloadMenuSounds();
+	}
+	
+	private void unloadMenuTextures(){
 		menuTextureAtlas.unload();
+	}
+	
+	public void unloadMenuSounds(){
+		menuMusic.stop();
+		
+		menuMusic.release();
 	}
 
 	//GAME RESOURCES METHODS
@@ -277,8 +288,10 @@ public class ResourcesManager {
 		System.out.println("POSZLO2");
 	}
 	
+
+	
 	public void unloadGameSounds(){
-		menuMusic.stop();
+
 		runSound.stop();
 		screamSound.stop();
 		landingSound.stop();
@@ -292,7 +305,7 @@ public class ResourcesManager {
 		bellHit.stop();
 
 		
-		menuMusic.release();
+
 		runSound.release();
 		screamSound.release();
 		landingSound.release();

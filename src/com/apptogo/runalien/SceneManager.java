@@ -61,7 +61,7 @@ public class SceneManager {
 			public void onTimePassed(final TimerHandler pTimerHandler)
 			{
 				resourcesManager.engine.unregisterUpdateHandler(pTimerHandler);
-				ResourcesManager.getInstance().loadMenuTextures();
+				ResourcesManager.getInstance().loadMenuResources();
 				menuScene = new MainMenuScene(); 
 				setScene(menuScene);
 			}
@@ -73,7 +73,7 @@ public class SceneManager {
 		setScene(loadingScene);
 		menuScene.disposeScene();
 		menuScene = null;
-		resourcesManager.unloadMenuTextures();
+		resourcesManager.unloadMenuResources();
 		resourcesManager.engine.registerUpdateHandler(new TimerHandler(0.1f, new ITimerCallback()
 		{
 			public void onTimePassed(final TimerHandler pTimerHandler)
