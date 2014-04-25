@@ -384,7 +384,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 			public void onDie() {
 				canPause = false; //zeby nie mozna bylo juz wlaczyc pauzy
 				saveHighScore();
-				autoParallaxBackground.stop();
+				//autoParallaxBackground.stop();
 				showGameOver();
 				mScoreDbEditor.putBoolean(TUTORIAL_DISPLAYED_LABEL, true);
 				mScoreDbEditor.commit();
@@ -608,7 +608,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				player.setRunning();
 				obstacleGenerator.startObstacleGenerationAlgorithm();
 				firstTouch = true;
-				autoParallaxBackground.start();
+				//autoParallaxBackground.start();
 				if(!displayTutorial){
 					obstacleGenerator.startGeneratingObstacles(player.getX());
 					for(int i=0; i<partOfTutorialCompleted.length; i++)
