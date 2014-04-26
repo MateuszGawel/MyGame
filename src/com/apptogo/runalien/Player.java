@@ -9,6 +9,7 @@ import org.andengine.engine.camera.Camera;
 import org.andengine.engine.handler.IUpdateHandler;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
+import org.andengine.entity.modifier.IEntityModifier;
 import org.andengine.entity.modifier.RotationModifier;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.Sprite;
@@ -17,6 +18,9 @@ import org.andengine.extension.physics.box2d.PhysicsConnector;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
+
+import android.content.Context;
+import android.os.Vibrator;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -51,7 +55,11 @@ public abstract class Player extends AnimatedSprite {
 	private boolean canSpeedUp = true;
 	private boolean slideAfterLanding = false;
 	public Random generator = new Random();
+	Vibrator vibrator;
 	public Sprite playerCover;
+	private IEntityModifier playerCoverModifier;
+	private boolean standingUp = false;
+	private boolean vibrate = ResourcesManager.getInstance().activity.preferences.getBoolean(ResourcesManager.getInstance().activity.VIBRATIONS_LABEL, true);
 	
 	public Player(float pX, float pY, VertexBufferObjectManager vbo, BoundCamera camera, PhysicsWorld physicsWorld, boolean playS) {
 		super(pX, pY, ResourcesManager.getInstance().player_region, vbo);
@@ -76,6 +84,8 @@ public abstract class Player extends AnimatedSprite {
 		playerCover = new Sprite(getX() - (getWidth() - 50), getY() - (getHeight() + 40), ResourcesManager.getInstance().playerCover_region, ResourcesManager.getInstance().vbom);
 		this.attachChild(playerCover);
 		playerCover.setVisible(false);
+		vibrator = (Vibrator)ResourcesManager.getInstance().activity.getSystemService(Context.VIBRATOR_SERVICE);
+		
 	}
 
 	private void setSoundVolume(boolean play)
@@ -126,7 +136,7 @@ public abstract class Player extends AnimatedSprite {
 				}
 				if(canSpeedUp && body.getPosition().x > nextSpeedUp){
 					System.out.println("PRZYSPIESZAM " + body.getLinearVelocity().x);
-					nextSpeedUp = body.getPosition().x + 130;
+					nextSpeedUp = body.getPosition().x + 100;
 					runningSpeed++;
 					
 					if(runningSpeed >= 27) canSpeedUp = false; //bo szybciej to padaka
@@ -224,6 +234,7 @@ public abstract class Player extends AnimatedSprite {
 	    }
 	    else if(sliding){
 	    	standUp();
+	    	sliding = false;
 	    }
     	runSound.pause();
     	screamSound.pause();
@@ -305,45 +316,76 @@ public abstract class Player extends AnimatedSprite {
 	}
 	
 	public void slide() {
-	    if (jumping || sliding || !alive) 
+	    if (jumping || !alive) 
 	    {
 	        return; 
 	    }
-	    
-	    playerCover.setRotationCenterY(playerCover.getY() + 50);
-	    playerCover.registerEntityModifier(new RotationModifier(0.2f, 0, -90));
-	    
-	    System.out.println("PLAYER wlasnie slizgam");
-    	runSound.pause();
-    	screamSound.pause();
-    	slideSound.play();
-	    sliding = true;
-	    long[] PLAYER_ANIMATE = new long[7];
-		for(int i=0; i<7; i++)
-			PLAYER_ANIMATE[i]=20;
-		PLAYER_ANIMATE[6]=500;
-		animate(PLAYER_ANIMATE, 106, 112, false, new IAnimationListener() {
-			
-            public void onAnimationStarted(AnimatedSprite pAnimatedSprite, int pInitialLoopCount) {
-            		
-            }
-            public void onAnimationLoopFinished(AnimatedSprite pAnimatedSprite, int pRemainingLoopCount, int pInitialLoopCount) {
-
-            }
-            public void onAnimationFrameChanged(AnimatedSprite pAnimatedSprite, int pOldFrameIndex, int pNewFrameIndex) {
-            	
-            }
-            public void onAnimationFinished(AnimatedSprite pAnimatedSprite) {
-                standUp();
-	        }
-	    });
+	    if(!sliding){
+	    	standingUp = false;
+		    playerCover.setRotationCenterY(playerCover.getY() + 50);
+		    playerCover.registerEntityModifier(new RotationModifier(0.2f, 0, -90));
+		    
+		    System.out.println("PLAYER wlasnie slizgam");
+	    	runSound.pause();
+	    	screamSound.pause();
+	    	slideSound.play();
+		    sliding = true;
+		    long[] PLAYER_ANIMATE = new long[7];
+			for(int i=0; i<7; i++)
+				PLAYER_ANIMATE[i]=20;
+			PLAYER_ANIMATE[6]=500;
+			animate(PLAYER_ANIMATE, 106, 112, false, new IAnimationListener() {
+				
+	            public void onAnimationStarted(AnimatedSprite pAnimatedSprite, int pInitialLoopCount) {
+	            		
+	            }
+	            public void onAnimationLoopFinished(AnimatedSprite pAnimatedSprite, int pRemainingLoopCount, int pInitialLoopCount) {
+	
+	            }
+	            public void onAnimationFrameChanged(AnimatedSprite pAnimatedSprite, int pOldFrameIndex, int pNewFrameIndex) {
+	            	
+	            }
+	            public void onAnimationFinished(AnimatedSprite pAnimatedSprite) {
+	                standUp();
+		        }
+		    });
+	    }
+	    else{
+	    	playerCover.unregisterEntityModifier(playerCoverModifier);
+			playerCover.registerEntityModifier(new RotationModifier(0.2f, playerCover.getRotation(), -90));
+	    	//playerCover.setRotation(-90);
+	    	runSound.pause();
+	    	screamSound.pause();
+			if(standingUp) slideSound.play();
+			standingUp = false;
+		    sliding = true;
+		    long[] PLAYER_ANIMATE = new long[2];
+		    PLAYER_ANIMATE[0]=500;
+			PLAYER_ANIMATE[1]=1;
+			animate(PLAYER_ANIMATE, 111, 112, false, new IAnimationListener() {
+				
+	            public void onAnimationStarted(AnimatedSprite pAnimatedSprite, int pInitialLoopCount) {
+	            		
+	            }
+	            public void onAnimationLoopFinished(AnimatedSprite pAnimatedSprite, int pRemainingLoopCount, int pInitialLoopCount) {
+	
+	            }
+	            public void onAnimationFrameChanged(AnimatedSprite pAnimatedSprite, int pOldFrameIndex, int pNewFrameIndex) {
+	            	
+	            }
+	            public void onAnimationFinished(AnimatedSprite pAnimatedSprite) {
+	                standUp();
+		        }
+		    });
+	    }
 	}
 	
 	public void standUp() {
 		playerCover.setRotationCenterY(playerCover.getY() + 50);
-		playerCover.registerEntityModifier(new RotationModifier(0.2f, -90, 0));
-		
-	    sliding = false;
+		playerCoverModifier = new RotationModifier(0.2f, -90, 0);
+		playerCover.registerEntityModifier(playerCoverModifier);
+		standingUp = true;
+    	
 	    screamSound.resume();
 	    System.out.println("PLAYER wstaje");
 	    long[] PLAYER_ANIMATE = new long[6];
@@ -362,6 +404,8 @@ public abstract class Player extends AnimatedSprite {
             }
             public void onAnimationFinished(AnimatedSprite pAnimatedSprite) {
             	run();
+            	standingUp = false;
+            	sliding = false;
 	        }
 	    });
 	}
@@ -376,11 +420,25 @@ public abstract class Player extends AnimatedSprite {
 			screamSound.pause();
 			runSound.pause();
 			dieSound.play();
+			if(vibrate) vibrator.vibrate(300);
 			long[] PLAYER_ANIMATE = new long[13];
 			for(int i=0; i<13; i++)
 				PLAYER_ANIMATE[i]=20;
-			animate(PLAYER_ANIMATE, 24, 36, false);
-			onDie();
+			animate(PLAYER_ANIMATE, 24, 36, false, new IAnimationListener() {
+				
+	            public void onAnimationStarted(AnimatedSprite pAnimatedSprite, int pInitialLoopCount) {
+	            	
+	            }
+	            public void onAnimationLoopFinished(AnimatedSprite pAnimatedSprite, int pRemainingLoopCount, int pInitialLoopCount) {
+
+	            }
+	            public void onAnimationFrameChanged(AnimatedSprite pAnimatedSprite, int pOldFrameIndex, int pNewFrameIndex) {
+	            	
+	            }
+	            public void onAnimationFinished(AnimatedSprite pAnimatedSprite) {
+	    			onDie();
+		        }
+		    });
 		}
 	}
 	
@@ -396,10 +454,25 @@ public abstract class Player extends AnimatedSprite {
 			dieSound.play();
 			if(itIsBell) bellHit.play();
 			long[] PLAYER_ANIMATE = new long[13];
+			if(vibrate) vibrator.vibrate(300);
 			for(int i=0; i<13; i++)
 				PLAYER_ANIMATE[i]=20;
-			animate(PLAYER_ANIMATE, 36, 48, false);
-			onDie();
+			
+			animate(PLAYER_ANIMATE, 36, 48, false, new IAnimationListener() {
+				
+	            public void onAnimationStarted(AnimatedSprite pAnimatedSprite, int pInitialLoopCount) {
+	            	
+	            }
+	            public void onAnimationLoopFinished(AnimatedSprite pAnimatedSprite, int pRemainingLoopCount, int pInitialLoopCount) {
+
+	            }
+	            public void onAnimationFrameChanged(AnimatedSprite pAnimatedSprite, int pOldFrameIndex, int pNewFrameIndex) {
+	            	
+	            }
+	            public void onAnimationFinished(AnimatedSprite pAnimatedSprite) {
+	    			onDie();
+		        }
+		    });
 		}
 	}
 	

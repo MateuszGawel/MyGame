@@ -78,7 +78,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	private PhysicsWorld physicsWorld;
 	private Player player;
 	ObstacleGenerator obstacleGenerator;
-	Vibrator vibrator;
 	
 	
 	//ground
@@ -132,7 +131,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	private Text scoreText; //actual score top-left corner
 	
 	//ustawienia
-	private boolean vibrate = activity.preferences.getBoolean(activity.VIBRATIONS_LABEL, true);
+
 	private boolean playSound = activity.preferences.getBoolean(activity.SOUNDS_LABEL, true);
 	
 	//lines
@@ -161,7 +160,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		createBestScoreTable();
 		attachChild(backgroundLayer);
 		attachChild(foregroundLayer);
-		vibrator = (Vibrator)activity.getSystemService(Context.VIBRATOR_SERVICE);
+
 		createPlayer();
 		ObstaclesPoolManager.getInstance().initializePoolManager(physicsWorld, foregroundLayer, backgroundLayer);
 		obstacleGenerator = new ObstacleGenerator(this, player);
@@ -243,7 +242,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
  		groundCover.setUserData("ground");
 		this.attachChild(groundCover);
 		groundCover.setVisible(false);
- 		groundBody = PhysicsFactory.createBoxBody(physicsWorld, 0, 245, 500, 10, BodyType.StaticBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0.07f));
+ 		groundBody = PhysicsFactory.createBoxBody(physicsWorld, 0, 250, 500, 10, BodyType.StaticBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0.07f));
  		groundBody.setUserData("ground");
 		physicsWorld.registerPhysicsConnector(new PhysicsConnector(groundCover, groundBody, true, false) {
 			@Override
@@ -389,7 +388,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				showGameOver();
 				mScoreDbEditor.putBoolean(TUTORIAL_DISPLAYED_LABEL, true);
 				mScoreDbEditor.commit();
-				if(vibrate) vibrator.vibrate(500);
 				incrementAchievements();
 				//if(playSound) ResourcesManager.getInstance().gameMusic.pause();
 			}
