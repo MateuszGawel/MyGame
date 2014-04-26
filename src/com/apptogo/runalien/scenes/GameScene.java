@@ -22,6 +22,7 @@ import org.andengine.entity.scene.background.ParallaxBackground.ParallaxEntity;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
+import org.andengine.entity.util.FPSLogger;
 import org.andengine.extension.debugdraw.DebugRenderer;
 import org.andengine.extension.physics.box2d.FixedStepPhysicsWorld;
 import org.andengine.extension.physics.box2d.PhysicsConnector;
@@ -148,7 +149,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	//OVERRIDEN METHODS
 	@Override
 	public void createScene() {
-		
+		ResourcesManager.getInstance().engine.registerUpdateHandler(new FPSLogger());
 		backgroundLayer = new Entity();
 		foregroundLayer = new Entity();
 		createHUD();
