@@ -158,12 +158,14 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		setOnSceneTouchListener(this);
 		createBackground();
 		createBestScoreTable();
-		createPlayer();
 		attachChild(backgroundLayer);
 		attachChild(foregroundLayer);
+		vibrator = (Vibrator)activity.getSystemService(Context.VIBRATOR_SERVICE);
+		createPlayer();
 		ObstaclesPoolManager.getInstance().initializePoolManager(physicsWorld, foregroundLayer, backgroundLayer);
 		obstacleGenerator = new ObstacleGenerator(this, player);
-		vibrator = (Vibrator)activity.getSystemService(Context.VIBRATOR_SERVICE);
+		
+		
 	}
 
 	@Override
@@ -240,7 +242,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
  		groundCover.setUserData("ground");
 		this.attachChild(groundCover);
 		groundCover.setVisible(false);
- 		groundBody = PhysicsFactory.createBoxBody(physicsWorld, 0, 245, 100, 10, BodyType.StaticBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0.07f));
+ 		groundBody = PhysicsFactory.createBoxBody(physicsWorld, 0, 245, 500, 10, BodyType.StaticBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0.07f));
  		groundBody.setUserData("ground");
 		physicsWorld.registerPhysicsConnector(new PhysicsConnector(groundCover, groundBody, true, false) {
 			@Override
@@ -303,7 +305,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
  		Sprite grass = new Sprite(center - 200, 232, ResourcesManager.getInstance().grass_region, vbom);
  		ground.attachChild(grass);
  		center += 800;
-  		backgroundLayer.attachChild(new DebugRenderer(physicsWorld, vbom));
+  		//backgroundLayer.attachChild(new DebugRenderer(physicsWorld, vbom));
   	}
 
 	//MAIN OBJECTS METHODS
@@ -362,7 +364,8 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				
 				if(displayTutorial)
 					generateTutorial();
-
+				if(player.getY() > 1000)
+					player.dieTop(false);
 			}
 		});
 	}
@@ -515,9 +518,11 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 			else if(counter>=200)
 				Games.Achievements.unlock(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQBw");	
 		}*/
-		Games.Achievements.increment(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQBw", 1);
-		Games.Achievements.increment(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQEQ", 1);
-		Games.Achievements.increment(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQBg", 1);
+		if(((GoogleBaseGameActivity)ResourcesManager.getInstance().activity).isSignedIn()){
+			Games.Achievements.increment(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQBw", 1);
+			Games.Achievements.increment(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQEQ", 1);
+			Games.Achievements.increment(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQBg", 1);
+		}
 	}
 	public boolean saveHighScore() {
 		if (score > loadHighScore())
