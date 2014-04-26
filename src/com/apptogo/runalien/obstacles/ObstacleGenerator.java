@@ -81,11 +81,11 @@ public class ObstacleGenerator {
 					if(player.getX() + 800 > nextObstaclePosition && player.isAlive())
 					{
 						int score = (int) Math.round(player.getBody().getPosition().x/10);
-						int minSpace = 4 + (int)(player.getBody().getLinearVelocity().x / 2 );
+						int minSpace = 5 + (int)(player.getBody().getLinearVelocity().x / 2 );
 						ctr++;
 						
 						int maxRand = (int) (player.runningSpeed - 9);
-						int minRand = maxRand - 6;
+						int minRand = maxRand - 4;
 						
 						if (maxRand == 15) maxRand = 21; //osiagnieto max predkosc
 						if(minRand < 0 || ctr % 4 == 0) minRand = 0;
@@ -126,27 +126,27 @@ public class ObstacleGenerator {
 							generateSmallLeftPyramid(-1);
 							break;
 						case 3:
-							generateUpperBottomWall(-1);
+							generateUpperObstacle(4, -1);
 							break;
 						case 4:
-							generateSmallRightPyramid(-1);
+							generateUpperBottomWall(-1);
 							break;
 						case 5:
 							generateDoubleSlideWithJump(INSEQUENCEDISTANCE);
 							break;
 						case 6:
-							generateUpDownSequence();
-							break;
-						case 7:
 							generateSmallPyramid(-1);
 							break;
+						case 7:
+							generateMuchJumpingSequence(INSEQUENCEDISTANCE);
+							break;
 						case 8:
-							generateJumpThenSlideSequence(INSEQUENCEDISTANCE);							
+							generateUpDownSequence();						
 						case 9:
 							generateInvertedSmallPyramid(-1);
 							break;
 						case 10:
-							generateMuchJumpingSequence(INSEQUENCEDISTANCE);
+							generateJumpThenSlideSequence(INSEQUENCEDISTANCE);	
 							break;
 						case 11:
 							double x = player.runningSpeed;
@@ -368,7 +368,8 @@ public class ObstacleGenerator {
 		if(obstaclesPoolManager.bottom_1_Pool.size() >= 2 && obstaclesPoolManager.bottom_2_Pool.size() >= 1 && obstaclesPoolManager.upper_2_Pool.size() >= 1)
 		{
 			generateBottomObstacle(1, nextObstaclePosition+45);
-			generateUpperObstacle(2, nextObstaclePosition);
+			
+			if( this.player.runningSpeed > 16 ) generateUpperObstacle(2, nextObstaclePosition); //zeby nie generowaly sie na samym poczatku
 			generateBottomObstacle(2, nextObstaclePosition+45);
 			if(distance > 0) generateBottomObstacle(1, nextObstaclePosition + distance);
 			else             generateBottomObstacle(1, -1); 

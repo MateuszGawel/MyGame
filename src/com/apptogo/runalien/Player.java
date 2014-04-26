@@ -126,7 +126,7 @@ public abstract class Player extends AnimatedSprite {
 				}
 				if(canSpeedUp && body.getPosition().x > nextSpeedUp){
 					System.out.println("PRZYSPIESZAM " + body.getLinearVelocity().x);
-					nextSpeedUp = body.getPosition().x + 100;
+					nextSpeedUp = body.getPosition().x + 130;
 					runningSpeed++;
 					
 					if(runningSpeed >= 27) canSpeedUp = false; //bo szybciej to padaka

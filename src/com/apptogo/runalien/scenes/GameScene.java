@@ -107,10 +107,10 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	Sprite sPause;
 
 	//tutorial
-	private Text tapToJump;
-	private Text tapToDoubleJump;
-	private Text tapToSlide;
-	private Text tapToChargeDown;
+	private Sprite tapToJump;
+	private Sprite tapToDoubleJump;
+	private Sprite tapToSlide;
+	private Sprite tapToChargeDown;
 	private float nextTutorialPartDelay;
 	private boolean[] partOfTutorialDisplayed = {false, false, false, false};
 	private boolean[] partOfTutorialCompleted = {false, false, false, false};
@@ -317,14 +317,20 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		sPause = new Sprite(-1000, 0, ResourcesManager.getInstance().pause_region, vbom);
 		gameHUD.attachChild(sPause);
 
-		tapToJump = new Text(0, 0, ResourcesManager.getInstance().mainFont, "Tap right site of the screen to jump", new TextOptions(), vbom);
-		tapToJump.setPosition(2000, 400);
-		tapToDoubleJump = new Text(0, 0, ResourcesManager.getInstance().mainFont, "Tap right side of the screen TWO TIMES to double jump", new TextOptions(), vbom);
-		tapToDoubleJump.setPosition(2000, 400);
-		tapToSlide = new Text(0, 0, ResourcesManager.getInstance().mainFont, "Tap left side of the screen to jump", new TextOptions(), vbom);
-		tapToSlide.setPosition(-2000, 400);
-		tapToChargeDown = new Text(0, 0, ResourcesManager.getInstance().mainFont, "Tap left site of the screen in air to charge down", new TextOptions(), vbom);
-		tapToChargeDown.setPosition(-2000, 400);
+		//tapToJump = new Text(0, 0, ResourcesManager.getInstance().mainFont, "Tap right site of the screen to jump", new TextOptions(), vbom);
+		//tapToJump.setPosition(2000, 400);
+		
+		tapToJump = new Sprite(2000, 400, ResourcesManager.getInstance().jumpTutorial_region, vbom);
+		tapToDoubleJump = new Sprite(2000, 400, ResourcesManager.getInstance().doubleJumpTutorial_region, vbom);
+		tapToSlide = new Sprite(-2000, 400, ResourcesManager.getInstance().slideTutorial_region, vbom);
+		tapToChargeDown = new Sprite(-2000, 400, ResourcesManager.getInstance().chargeDownTutorial_region, vbom);
+		
+		//tapToDoubleJump = new Text(0, 0, ResourcesManager.getInstance().mainFont, "Tap right side of the screen TWO TIMES to double jump", new TextOptions(), vbom);
+		//tapToDoubleJump.setPosition(2000, 400);
+		//tapToSlide = new Text(0, 0, ResourcesManager.getInstance().mainFont, "Tap left side of the screen to jump", new TextOptions(), vbom);
+		//tapToSlide.setPosition(-2000, 400);
+		//tapToChargeDown = new Text(0, 0, ResourcesManager.getInstance().mainFont, "Tap left site of the screen in air to charge down", new TextOptions(), vbom);
+		//tapToChargeDown.setPosition(-2000, 400);
 	}
 
 	private void createPhysics() {
@@ -571,28 +577,28 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	private void generateTutorial(){
 		player.setCanSpeedUp(false);
 		if(player.getBody().getPosition().x > 5 && !partOfTutorialDisplayed[0]){
-			tapToJump.setText("Tap right side of the screen to jump");
+			//tapToJump.setText("Tap right side of the screen to jump");
 			gameHUD.attachChild(tapToJump);
-			tapToJump.registerEntityModifier(new MoveXModifier(12.5f, tapToJump.getX(), 320, EaseElasticInOut.getInstance()));
+			tapToJump.registerEntityModifier(new MoveXModifier(12.5f, tapToJump.getX(), 10, EaseElasticInOut.getInstance()));
 			partOfTutorialDisplayed[0] = true;
 		}
 		else if(player.getBody().getPosition().x > nextTutorialPartDelay && !partOfTutorialDisplayed[1] && partOfTutorialCompleted[0]){
 			tapToJump.registerEntityModifier(new MoveXModifier(12.5f, tapToJump.getX(), -1000, EaseElasticInOut.getInstance()));
-			tapToDoubleJump.setText("Tap right side of the screen TWO TIMES to double jump");
+			//tapToDoubleJump.setText("Tap right side of the screen TWO TIMES to double jump");
 			gameHUD.attachChild(tapToDoubleJump);
-			tapToDoubleJump.registerEntityModifier(new MoveXModifier(12.5f, tapToDoubleJump.getX(), 50, EaseElasticInOut.getInstance()));
+			tapToDoubleJump.registerEntityModifier(new MoveXModifier(12.5f, tapToDoubleJump.getX(), 10, EaseElasticInOut.getInstance()));
 			partOfTutorialDisplayed[1] = true;
 		}
 		else if(player.getBody().getPosition().x > nextTutorialPartDelay && !partOfTutorialDisplayed[2] && partOfTutorialCompleted[1]){
 			tapToDoubleJump.registerEntityModifier(new MoveXModifier(12.5f, tapToDoubleJump.getX(), -1000, EaseElasticInOut.getInstance()));
-			tapToSlide.setText("Tap left side of the screen to slide");
+			//tapToSlide.setText("Tap left side of the screen to slide");
 			gameHUD.attachChild(tapToSlide);
 			tapToSlide.registerEntityModifier(new MoveXModifier(12.5f, tapToSlide.getX(), 10, EaseElasticInOut.getInstance()));
 			partOfTutorialDisplayed[2] = true;
 		}
 		else if(player.getBody().getPosition().x > nextTutorialPartDelay && !partOfTutorialDisplayed[3] && partOfTutorialCompleted[2]){
 			tapToSlide.registerEntityModifier(new MoveXModifier(12.5f, tapToSlide.getX(), 1000, EaseElasticInOut.getInstance()));
-			tapToChargeDown.setText("Tap left side of the screen in air to charge down");
+			//tapToChargeDown.setText("Tap left side of the screen in air to charge down");
 			gameHUD.attachChild(tapToChargeDown);
 			tapToChargeDown.registerEntityModifier(new MoveXModifier(12.5f, tapToChargeDown.getX(), 10, EaseElasticInOut.getInstance()));
 			partOfTutorialDisplayed[3] = true;

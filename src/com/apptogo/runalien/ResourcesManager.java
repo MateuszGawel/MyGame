@@ -78,6 +78,12 @@ public class ResourcesManager {
 	public BitmapTextureAtlas gameTextureAtlas;
 	public BuildableBitmapTextureAtlas playerTextureAtlas;
 	
+	public BitmapTextureAtlas tutorialTextureAtlas;
+	public ITextureRegion jumpTutorial_region;
+	public ITextureRegion doubleJumpTutorial_region;
+	public ITextureRegion slideTutorial_region ;
+	public ITextureRegion chargeDownTutorial_region;
+	
 	public ITextureRegion game_over_region;
 	public ITextureRegion replay_region;
 	public ITextureRegion menu_region;
@@ -204,7 +210,16 @@ public class ResourcesManager {
 	
 	public void loadGameGraphics(){
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/game/");
-	    gameTextureAtlas = new BitmapTextureAtlas(activity.getTextureManager(), 1024, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+	    
+		tutorialTextureAtlas =  new BitmapTextureAtlas(activity.getTextureManager(), 1024, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+		tutorialTextureAtlas.addEmptyTextureAtlasSource(0, 0, 1024, 1024);
+		
+		jumpTutorial_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(tutorialTextureAtlas, activity, "tutorial/jump.png", 1, 1);
+		doubleJumpTutorial_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(tutorialTextureAtlas, activity, "tutorial/doubleJump.png", 1, 41);
+		slideTutorial_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(tutorialTextureAtlas, activity, "tutorial/slide.png", 1, 81);
+		chargeDownTutorial_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(tutorialTextureAtlas, activity, "tutorial/chargeDown.png", 1, 121);
+		
+		gameTextureAtlas = new BitmapTextureAtlas(activity.getTextureManager(), 1024, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 	    gameTextureAtlas.addEmptyTextureAtlasSource(0, 0, 1024, 1024);
 	    
 	    playerTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 2048, 2048, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
@@ -248,7 +263,8 @@ public class ResourcesManager {
 	    try 
 	    {
 	        //this.gameTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(5, 5, 5));
-	        this.gameTextureAtlas.load();
+	        this.tutorialTextureAtlas.load();
+	    	this.gameTextureAtlas.load();
 	        this.playerTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 0));
 	        this.playerTextureAtlas.load();
 	        //this.dirtRepeatingAtlas.load();
@@ -260,8 +276,10 @@ public class ResourcesManager {
 	}
 	
 	private void unloadGameGraphics(){
+		tutorialTextureAtlas.unload();
 		gameTextureAtlas.unload();
 		mAutoParallaxBackgroundTexture.unload();
+		activity.getTextureManager().unloadTexture(tutorialTextureAtlas);
 		activity.getTextureManager().unloadTexture(gameTextureAtlas);
 		activity.getTextureManager().unloadTexture(mAutoParallaxBackgroundTexture);
 	}
