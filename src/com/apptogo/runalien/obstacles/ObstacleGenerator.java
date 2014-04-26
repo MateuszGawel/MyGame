@@ -60,9 +60,9 @@ public class ObstacleGenerator {
 	
 	public int calculateObstaclePosition()
 	{   
-		int minSpace = 400;
+		int minSpace = 360;
 		
-		if( this.player.runningSpeed < 16 ) minSpace = 330;
+		if( this.player.runningSpeed < 16 ) minSpace = 320;
 		
 		int velocityOffset = getVelocityOffset();
 		
@@ -87,10 +87,9 @@ public class ObstacleGenerator {
 						int minSpace = 5 + (int)(player.getBody().getLinearVelocity().x / 2 );
 						ctr++;
 						
-						int maxRand = (int) (player.runningSpeed - 9);
-						int minRand = maxRand - 4;
-						
-						if (maxRand == 15) maxRand = 21; //osiagnieto max predkosc
+						int maxRand = (int) (player.runningSpeed*1.5 - 14);
+						int minRand = maxRand - 5;
+						//if (maxRand == 15) maxRand = 21; //osiagnieto max predkosc
 						if(minRand < 0 || ctr % 4 == 0) minRand = 0;
 						int random;
 						if(startGeneratingObstacles)
@@ -144,7 +143,7 @@ public class ObstacleGenerator {
 							generateMuchJumpingSequence(INSEQUENCEDISTANCE);
 							break;
 						case 8:
-							generateUpDownSequence();						
+							generateRightBigPyramid();				
 						case 9:
 							generateInvertedSmallPyramid(-1);
 							break;
@@ -162,13 +161,13 @@ public class ObstacleGenerator {
 							generateBallBottom((int)ballOffset);
 							break;
 						case 13:
-							mustDoubleJump(-1);
+							generateUpDownSequence();	
 							break;
 						case 14:
 							generateSmallRightBigPyramid();
 							break;
 						case 15:
-							generateRightBigPyramid();				
+							mustDoubleJump(-1);				
 							break;
 						case 16:
 							generateRightVeryBigPyramid();
@@ -414,7 +413,7 @@ public class ObstacleGenerator {
 	private void generateUpDownSequence(){
 		if(obstaclesPoolManager.bottom_4_Pool.size() >= 1 && obstaclesPoolManager.upper_4_Pool.size() >= 1)
 		{
-			generateBottomObstacle(4, nextObstaclePosition + 200 + getVelocityOffset());
+			generateBottomObstacle(4, nextObstaclePosition + 300 + getVelocityOffset());
 			generateUpperObstacle(4, -1);
 		}
 	}
