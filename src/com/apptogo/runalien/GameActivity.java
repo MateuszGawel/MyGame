@@ -166,7 +166,6 @@ public class GameActivity extends GoogleBaseGameActivity implements ConnectionCa
 	}
 	 
 	public void loadGameBanner(){
-		
         //ustawienie widoku
         gameBannerAdView = new AdView(this);
         gameBannerAdView.setAdUnitId("ca-app-pub-9012477671085567/2504348939");
