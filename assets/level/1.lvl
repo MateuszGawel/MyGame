@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<level width="1000" height="780">   
-	<entity x="0" type="player"/> 
-    <entity x="100" type="obstacle_top"/>
-    <entity x="300" type="obstacle_bottom"/>
-</level>
