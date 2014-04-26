@@ -95,6 +95,7 @@ public class ResourcesManager {
 	public Music menuMusic;
 	public Music runSound;
 	public Music screamSound;
+	public Music gameMusic;
 	public Sound jumpSound;
 	public Sound landingSound;
 	public Sound slideSound;
@@ -270,6 +271,7 @@ public class ResourcesManager {
 		try{
 		    runSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/runSound.ogg");
 		    screamSound = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/screamSound.ogg");
+		    gameMusic = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/gameMusic.ogg");
 		    landingSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/landingSound.ogg");
 		    jumpSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/jumpSound.ogg");
 		    slideSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/slideSound.ogg");
@@ -294,6 +296,7 @@ public class ResourcesManager {
 
 		runSound.stop();
 		screamSound.stop();
+		gameMusic.stop();
 		landingSound.stop();
 		jumpSound.stop();
 		whooshSound.stop();
@@ -308,6 +311,7 @@ public class ResourcesManager {
 
 		runSound.release();
 		screamSound.release();
+		gameMusic.release();
 		landingSound.release();
 		jumpSound.release();
 		whooshSound.release();
