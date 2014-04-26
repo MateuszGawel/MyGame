@@ -61,6 +61,9 @@ public class ObstacleGenerator {
 	public int calculateObstaclePosition()
 	{   
 		int minSpace = 400;
+		
+		if( this.player.runningSpeed < 16 ) minSpace = 330;
+		
 		int velocityOffset = getVelocityOffset();
 		
 		return (int)( (nextObstaclePosition + minSpace + velocityOffset ));
