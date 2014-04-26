@@ -390,7 +390,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				mScoreDbEditor.commit();
 				if(vibrate) vibrator.vibrate(500);
 				incrementAchievements();
-				if(playSound) ResourcesManager.getInstance().gameMusic.pause();
+				//if(playSound) ResourcesManager.getInstance().gameMusic.pause();
 			}
 		};
 		player.setUserData("player");
@@ -568,7 +568,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		this.setIgnoreUpdate(true);
 		player.runSound.pause();
 		player.screamSound.pause();
-		ResourcesManager.getInstance().gameMusic.pause();
+		//ResourcesManager.getInstance().gameMusic.pause();
 	}
 	
 	public void resumeGame(){
@@ -578,7 +578,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		gamePaused = false;
 		camera.setChaseEntity(player);
 		this.setIgnoreUpdate(false);
-		ResourcesManager.getInstance().gameMusic.resume();
+		//ResourcesManager.getInstance().gameMusic.resume();
 	}
 	
 	private void generateTutorial(){
@@ -634,11 +634,11 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				obstacleGenerator.startObstacleGenerationAlgorithm();
 				firstTouch = true;
 				autoParallaxBackground.start();
-				if(playSound){
-					ResourcesManager.getInstance().gameMusic.setLooping(true);
-					ResourcesManager.getInstance().gameMusic.seekTo(0);
-					ResourcesManager.getInstance().gameMusic.play();
-				}
+				//if(playSound){
+				//	ResourcesManager.getInstance().gameMusic.setLooping(true);
+				//	ResourcesManager.getInstance().gameMusic.seekTo(0);
+				//	ResourcesManager.getInstance().gameMusic.play();
+				//}
 				
 				if(!displayTutorial){
 					obstacleGenerator.startGeneratingObstacles(player.getX());
