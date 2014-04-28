@@ -139,7 +139,7 @@ public abstract class Player extends AnimatedSprite {
 					nextSpeedUp = body.getPosition().x + 100;
 					runningSpeed++;
 					
-					if(runningSpeed >= 27) canSpeedUp = false; //bo szybciej to padaka
+					if(runningSpeed >= 24) canSpeedUp = false; //bo szybciej to padaka
 				}
 			}
 		});

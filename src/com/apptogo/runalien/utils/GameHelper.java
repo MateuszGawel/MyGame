@@ -380,7 +380,7 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
     	
     	if(SceneManager.getInstance().getCurrentSceneType() == SceneType.SCENE_GAME){
     		GameScene gameScene = (GameScene)SceneManager.getInstance().getCurrentScene();
-    		gameScene.pauseGame();
+    		gameScene.pauseGame(true);
     	}
     	if(SceneManager.getInstance().getCurrentSceneType() == SceneType.SCENE_MENU){
     		if(!ResourcesManager.getInstance().menuMusic.isReleased() && ResourcesManager.getInstance().menuMusic.isPlaying())

@@ -70,6 +70,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.games.Games;
+import com.google.android.gms.internal.ba;
 
 public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	
@@ -98,6 +99,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	private boolean firstGroundBlock = true;
 	private boolean gamePaused = false;
 	private boolean displayTutorial = false;
+	private boolean isTutorialTableShowed = false;
 
 	//gameover sprites
 	Sprite sGameOver;
@@ -129,6 +131,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	public int score = 0;
 	private Text bestScoreText;
 	private Text scoreText; //actual score top-left corner
+
 	
 	//ustawienia
 
@@ -176,7 +179,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		}
 		else
 		{
-			pauseGame();
+			pauseGame(false);
 			ResourcesManager.getInstance().activity.displayInterstitialAndLoadMenuScene();
 		}
 	}
@@ -187,7 +190,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		{
 			if(!gamePaused) 
 			{
-				pauseGame();
+				pauseGame(true);
 			}
 			else         
 			{
@@ -367,7 +370,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 					//	backgroundLayer.detachChild(backgroundLayer.getFirstChild());
 					//}
 				}
-				
+				createTutorialTable();
 				if(displayTutorial)
 					generateTutorial();
 				if(player.getY() > 1000)
@@ -483,6 +486,16 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		sPause.setPosition( player.playerCover.getX() - 1000, 240 );
 	}
 
+	
+	private void createTutorialTable() {
+		if(!displayTutorial && !isTutorialTableShowed){
+			Sprite sTable = new Sprite(-130, 270, resourcesManager.tutorialTable_region, resourcesManager.vbom);
+			backgroundLayer.attachChild(sTable);
+			isTutorialTableShowed = true;
+		}
+	}
+	
+	
 	//SCORE METHODS
 	private void createBestScoreTable() {
 		Sprite sSign = new Sprite(600, 50, resourcesManager.sign_region, resourcesManager.vbom);
@@ -559,9 +572,9 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		}
 	}
 	
-	public void pauseGame(){
+	public void pauseGame(boolean displayPause){
 		setOnSceneTouchListener(null);
-		showPause();
+		if(displayPause) showPause();
 		gamePaused = true;
 		camera.setChaseEntity(null);
 		this.setIgnoreUpdate(true);

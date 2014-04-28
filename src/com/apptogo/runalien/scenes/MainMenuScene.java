@@ -177,7 +177,7 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 			if( activity.preferences.getBoolean(activity.SOUNDS_LABEL, true) ) ResourcesManager.getInstance().clickSound.play();
 			
 			Intent shareIntent = new PlusShare.Builder(activity)
-			.setContentUrl(Uri.parse("https://play.google.com/store/apps/details?id=com.android.chrome"))
+			.setContentUrl(Uri.parse("https://play.google.com/store/apps/details?id=com.apptogo.runalien"))
 			.setContentDeepLinkId("/pages/",null, null, null)
 			.setText("I enjoy playing Run Alien! Try to beat my score.")
 			.getIntent();
