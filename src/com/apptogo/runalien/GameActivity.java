@@ -57,6 +57,7 @@ public class GameActivity extends GoogleBaseGameActivity implements ConnectionCa
 	SceneManager sceneManager;
 	AdView gameBannerAdView;
 	private InterstitialAd interstitial;
+	private InterstitialAd interstitialMiddleGame;
 	private int gameCounter = 0;
     private FrameLayout frameLayout;
     private FrameLayout.LayoutParams gameBannerAdViewLayoutParams;
@@ -163,6 +164,7 @@ public class GameActivity extends GoogleBaseGameActivity implements ConnectionCa
         
         //INTERSTITIAL
         loadInterstitial();
+        loadInterstitialMiddleGame();
 	}
 	 
 	public void loadGameBanner(){
@@ -218,9 +220,25 @@ public class GameActivity extends GoogleBaseGameActivity implements ConnectionCa
         .addTestDevice("5F32613150315ED40B2E9FDCC884795A")
         .addTestDevice("B4CDA4E066371C22AA6C995811986124")
         .build();
+
         // Begin loading your interstitial.
         interstitial.loadAd(interestitialAdRequest);
+
 	}	
+	
+	public void loadInterstitialMiddleGame(){
+        interstitialMiddleGame = new InterstitialAd(this);
+        interstitialMiddleGame.setAdUnitId("ca-app-pub-9012477671085567/8064590933");
+        
+	    AdRequest interestitialMiddleGameAdRequest = new AdRequest.Builder()
+        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+        .addTestDevice("4C8EA9CBB8BB046BCA4404AEAC8B25CA")
+        .addTestDevice("5F32613150315ED40B2E9FDCC884795A")
+        .addTestDevice("B4CDA4E066371C22AA6C995811986124")
+        .build();
+	    
+        interstitialMiddleGame.loadAd(interestitialMiddleGameAdRequest);
+	}
 
 	public void displayInterstitialAndLoadMenuScene() {
 		this.runOnUiThread(new Runnable() {
@@ -276,20 +294,20 @@ public class GameActivity extends GoogleBaseGameActivity implements ConnectionCa
 		this.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				interstitial.setAdListener(new AdListener() {
+				interstitialMiddleGame.setAdListener(new AdListener() {
 					@Override
 					public void onAdClosed() {
 						super.onAdClosed();
 						SceneManager.getInstance().replayGameScene();
-						loadInterstitial();
+						loadInterstitialMiddleGame();
 					}
 				});
 				gameCounter++;
-				if (interstitial.isLoaded() && gameCounter % 15 == 0) {
-					interstitial.show();
+				if (interstitialMiddleGame.isLoaded() && gameCounter % 10 == 0) {
+					interstitialMiddleGame.show();
 				}
 				else{
-					System.out.println("No interestitial loaded");
+					System.out.println("No interestitialMiddleGame loaded");
 					SceneManager.getInstance().replayGameScene();
 			 	}
 			 		
