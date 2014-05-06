@@ -112,5 +112,10 @@ public class BallUpper extends Obstacle{
 	{
 		return body;
 	}
+	@Override
+	public void resetPosition() {
+		setTransformX(-1000);
+		
+	}
 
 }

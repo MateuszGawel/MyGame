@@ -285,8 +285,8 @@ public class GameActivity extends GoogleBaseGameActivity implements ConnectionCa
 					}
 				});
 				gameCounter++;
-				if (interstitial.isLoaded() && gameCounter % 8 == 0) {
-					//interstitial.show();
+				if (interstitial.isLoaded() && gameCounter % 15 == 0) {
+					interstitial.show();
 				}
 				else{
 					System.out.println("No interestitial loaded");

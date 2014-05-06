@@ -57,6 +57,7 @@ public class ObstaclesPoolManager
 	public SpriteGroup groundSpriteGroup;
 	private Entity foregroundLayer;
 	private Entity backgroundLayer;
+	private boolean initialized = false;
 	
 	public ObstaclesPoolManager(){
 
@@ -79,85 +80,56 @@ public class ObstaclesPoolManager
 	}
 	
 	public void initializePoolManager(PhysicsWorld physicsWorld, Entity foregroundLayer, Entity backgroundLayer){
-		spriteGroup = new SpriteGroup(ResourcesManager.getInstance().gameTextureAtlas, 100, ResourcesManager.getInstance().vbom);
-		foregroundLayer.attachChild(spriteGroup);
-		
-		groundSpriteGroup = new SpriteGroup(ResourcesManager.getInstance().gameTextureAtlas, 3, ResourcesManager.getInstance().vbom);
-		backgroundLayer.attachChild(groundSpriteGroup);
-
-		for(int i=bottom_1_Ammount; i>0; i--){
-			bottom_1_Pool.push(new Bottom_1(physicsWorld, foregroundLayer));
-		}
-		for(int i=bottom_2_Ammount; i>0; i--){
-			bottom_2_Pool.push(new Bottom_2(physicsWorld, foregroundLayer));
-		}
-		for(int i=bottom_3_Ammount; i>0; i--){
-			bottom_3_Pool.push(new Bottom_3(physicsWorld, foregroundLayer));
-		}
-		for(int i=bottom_4_Ammount; i>0; i--){
-			bottom_4_Pool.push(new Bottom_4(physicsWorld, foregroundLayer));
-		}
-		for(int i=upper_1_Ammount; i>0; i--){
-			upper_1_Pool.push(new Upper_1(physicsWorld, foregroundLayer));
-		}
-		for(int i=upper_2_Ammount; i>0; i--){
-			upper_2_Pool.push(new Upper_2(physicsWorld, foregroundLayer));
-		}
-		for(int i=upper_3_Ammount; i>0; i--){
-			upper_3_Pool.push(new Upper_3(physicsWorld, foregroundLayer));
-		}
-		for(int i=upper_4_Ammount; i>0; i--){
-			upper_4_Pool.push(new Upper_4(physicsWorld, foregroundLayer));
-		}
-		for(int i=crateUpperAmmount; i>0; i--){
-			crateUpperPool.push(new CrateUpper(physicsWorld, foregroundLayer));
-		}
-		for(int i=ballBottomAmmount; i>0; i--){
-			ballBottomPool.push(new BallBottom(physicsWorld, foregroundLayer));
-		}
-		for(int i=ballUpperAmmount; i>0; i--){
-			ballUpperPool.push(new BallUpper(physicsWorld, foregroundLayer));
-		}
-		for(int i=groundSegmentAmmount; i>0; i--){
-			groundSegmentPool.push(new GroundSegment(physicsWorld, backgroundLayer));
-		}
-
-		this.foregroundLayer = foregroundLayer;
-
-
-		/*
-		dynamicSpriteBatch = new DynamicSpriteBatch(ResourcesManager.getInstance().gameTextureAtlas, 40, ResourcesManager.getInstance().vbom) {
-			@Override
-			public boolean onUpdateSpriteBatch() {
-				for(Obstacle obstacle : bottom_1_Pool){
-					this.draw(obstacle.getSprite());
-				}
-				for(Obstacle obstacle : bottom_2_Pool){
-					this.draw(obstacle.getSprite());
-				}
-				for(Obstacle obstacle : bottom_3_Pool){
-					this.draw(obstacle.getSprite());
-				}
-				for(Obstacle obstacle : bottom_4_Pool){
-					this.draw(obstacle.getSprite());
-				}
-				for(Obstacle obstacle : upper_1_Pool){
-					this.draw(obstacle.getSprite());
-				}
-				for(Obstacle obstacle : upper_2_Pool){
-					this.draw(obstacle.getSprite());
-				}
-				for(Obstacle obstacle : upper_3_Pool){
-					this.draw(obstacle.getSprite());
-				}
-				for(Obstacle obstacle : upper_4_Pool){
-					this.draw(obstacle.getSprite());
-				}
-				return true;
+		if(!initialized){
+			spriteGroup = new SpriteGroup(ResourcesManager.getInstance().gameTextureAtlas, 100, ResourcesManager.getInstance().vbom);
+			//foregroundLayer.attachChild(spriteGroup);
+			
+			groundSpriteGroup = new SpriteGroup(ResourcesManager.getInstance().gameTextureAtlas, 3, ResourcesManager.getInstance().vbom);
+			//backgroundLayer.attachChild(groundSpriteGroup);
+	
+			for(int i=bottom_1_Ammount; i>0; i--){
+				bottom_1_Pool.push(new Bottom_1(physicsWorld, foregroundLayer));
 			}
-		};*/
-		//foregroundLayer.attachChild(dynamicSpriteBatch);
-		//dynamicSpriteBatch.setPosition(0, 0);
+			for(int i=bottom_2_Ammount; i>0; i--){
+				bottom_2_Pool.push(new Bottom_2(physicsWorld, foregroundLayer));
+			}
+			for(int i=bottom_3_Ammount; i>0; i--){
+				bottom_3_Pool.push(new Bottom_3(physicsWorld, foregroundLayer));
+			}
+			for(int i=bottom_4_Ammount; i>0; i--){
+				bottom_4_Pool.push(new Bottom_4(physicsWorld, foregroundLayer));
+			}
+			for(int i=upper_1_Ammount; i>0; i--){
+				upper_1_Pool.push(new Upper_1(physicsWorld, foregroundLayer));
+			}
+			for(int i=upper_2_Ammount; i>0; i--){
+				upper_2_Pool.push(new Upper_2(physicsWorld, foregroundLayer));
+			}
+			for(int i=upper_3_Ammount; i>0; i--){
+				upper_3_Pool.push(new Upper_3(physicsWorld, foregroundLayer));
+			}
+			for(int i=upper_4_Ammount; i>0; i--){
+				upper_4_Pool.push(new Upper_4(physicsWorld, foregroundLayer));
+			}
+			for(int i=crateUpperAmmount; i>0; i--){
+				crateUpperPool.push(new CrateUpper(physicsWorld, foregroundLayer));
+			}
+			for(int i=ballBottomAmmount; i>0; i--){
+				ballBottomPool.push(new BallBottom(physicsWorld, foregroundLayer));
+			}
+			for(int i=ballUpperAmmount; i>0; i--){
+				ballUpperPool.push(new BallUpper(physicsWorld, foregroundLayer));
+			}
+			for(int i=groundSegmentAmmount; i>0; i--){
+				groundSegmentPool.push(new GroundSegment(physicsWorld, backgroundLayer));
+			}
+			this.initialized = true;
+			this.foregroundLayer = foregroundLayer;
+		}
+		spriteGroup.detachSelf();
+		foregroundLayer.attachChild(spriteGroup);
+		groundSpriteGroup.detachSelf();
+		backgroundLayer.attachChild(groundSpriteGroup);
 	}
 	
 	public void clearPools(){

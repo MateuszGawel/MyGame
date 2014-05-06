@@ -35,5 +35,10 @@ public class GroundSegment extends Obstacle{
 	{
 		return null;
 	}
+	@Override
+	public void resetPosition() {
+		sprite.setPosition(-200, 232);
+		
+	}
 
 }

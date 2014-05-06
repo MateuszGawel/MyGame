@@ -167,7 +167,8 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		createPlayer();
 		ObstaclesPoolManager.getInstance().initializePoolManager(physicsWorld, foregroundLayer, backgroundLayer);
 		obstacleGenerator = new ObstacleGenerator(this, player);
-		
+		//backgroundLayer.attachChild(new DebugRenderer(physicsWorld, vbom));
+		obstacleGenerator.resetPools();
 		
 	}
 
@@ -213,7 +214,8 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		camera.setBoundsEnabled(false);
 		camera.setCenter(400, 240);
 		activity.setgameBannerAdViewInvisibile();
-		ObstaclesPoolManager.getInstance().clearPools();
+		//ObstaclesPoolManager.getInstance().clearPools();
+		//obstacleGenerator.resetPools();
 	}
 
 	//GROUND AND BACKGROUND
@@ -245,7 +247,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
  		groundCover.setUserData("ground");
 		this.attachChild(groundCover);
 		groundCover.setVisible(false);
- 		groundBody = PhysicsFactory.createBoxBody(physicsWorld, 0, 250, 500, 10, BodyType.StaticBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0.07f));
+ 		groundBody = PhysicsFactory.createBoxBody(physicsWorld, 100, 300, 1000, 110, BodyType.StaticBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0.07f));
  		groundBody.setUserData("ground");
 		physicsWorld.registerPhysicsConnector(new PhysicsConnector(groundCover, groundBody, true, false) {
 			@Override
@@ -517,9 +519,9 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		if(((GoogleBaseGameActivity)ResourcesManager.getInstance().activity).isSignedIn()){
 			if(score == 50)
 				Games.Achievements.unlock(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQAw");	
-			else if(score == 200)
+			else if(score == 100)
 				Games.Achievements.unlock(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQBA");	
-			else if(score == 1000)
+			else if(score == 300)
 				Games.Achievements.unlock(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQBQ");	
 		}
 	}

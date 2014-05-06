@@ -3,6 +3,7 @@ package com.apptogo.runalien.obstacles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Stack;
 
 import org.andengine.engine.handler.IUpdateHandler;
 import org.andengine.entity.Entity;
@@ -267,12 +268,15 @@ public class ObstacleGenerator {
 							break;
 						}
 					}
-					if(player.getX() + 800-1 > nextGroundPosition){
+					if(player.getX() + 800-1 > nextGroundPosition && player.getBody().getLinearVelocity().x != 0){
 						generateGroundSegment();
-						System.out.println("GROUND generuje");
+						
 					}
 				}
-				releaseUselessObstacles();
+				if(player.isAlive())
+					releaseUselessObstacles(false);
+				else
+					releaseUselessObstacles(true);
 			}
 
 			@Override
@@ -663,6 +667,7 @@ private void generateWhatTheSmackSequence(float distance){
 	private void generateGroundSegment(){
 		GroundSegment ground = obstaclesPoolManager.groundSegmentPool.pop();
 		ground.getSprite().setX(nextGroundPosition);
+		System.out.println("GROUND generuje na: " + nextGroundPosition);
 		usedObstacles.add(ground);
 		nextGroundPosition += 800-1;
 	}
@@ -686,14 +691,52 @@ private void generateWhatTheSmackSequence(float distance){
 		}
 	}	
 
+	public void resetPools(){
+		for(Obstacle obstacle : obstaclesPoolManager.bottom_1_Pool){
+			obstacle.resetPosition();
+		}
+		for(Obstacle obstacle : obstaclesPoolManager.bottom_2_Pool){
+			obstacle.resetPosition();
+		}
+		for(Obstacle obstacle : obstaclesPoolManager.bottom_3_Pool){
+			obstacle.resetPosition();
+		}
+		for(Obstacle obstacle : obstaclesPoolManager.bottom_4_Pool){
+			obstacle.resetPosition();
+		}
+		for(Obstacle obstacle : obstaclesPoolManager.upper_1_Pool){
+			obstacle.resetPosition();
+		}
+		for(Obstacle obstacle : obstaclesPoolManager.upper_2_Pool){
+			obstacle.resetPosition();
+		}
+		for(Obstacle obstacle : obstaclesPoolManager.upper_3_Pool){
+			obstacle.resetPosition();
+		}
+		for(Obstacle obstacle : obstaclesPoolManager.upper_4_Pool){
+			obstacle.resetPosition();
+		}
+		for(Obstacle obstacle : obstaclesPoolManager.crateUpperPool){
+			obstacle.resetPosition();
+		}
+		for(Obstacle obstacle : obstaclesPoolManager.ballUpperPool){
+			obstacle.resetPosition();
+		}
+		for(Obstacle obstacle : obstaclesPoolManager.ballBottomPool){
+			obstacle.resetPosition();
+		}
+		for(Obstacle obstacle : obstaclesPoolManager.groundSegmentPool){
+			obstacle.resetPosition();
+		}
+	}
 	
-	private void releaseUselessObstacles()
+	private void releaseUselessObstacles(boolean force)
 	{
 		for(int u = 0; u < usedObstacles.size(); u++) //tu byl problem z concurrency - uzywalismy foreach z iteratorem i on robil problemy UWAGA NA TO MOZE BYC DZIURAWE
 		{                                             //nawet nie probowac synchronizowac :P probowalem synchronizowac metody/bloki ponad godzine i lipa a tak dziala
 			Obstacle obstacle = usedObstacles.get(u);
 			
-			if(!((String)obstacle.getSprite().getUserData()).contains("ball") && !((String)obstacle.getSprite().getUserData()).equals("ground") && obstacle.getSprite().getX() < (player.getX() - 300)) //- 10 zeby znikaly juz poza ekranem
+			if(!((String)obstacle.getSprite().getUserData()).contains("ball") && !((String)obstacle.getSprite().getUserData()).equals("ground") && (force || obstacle.getSprite().getX() < (player.getX() - 300))) //- 10 zeby znikaly juz poza ekranem
 			{
 				usedObstacles.remove(obstacle);
 				if(obstacle.getSprite().getUserData().equals("crateUpper"))
@@ -733,20 +776,20 @@ private void generateWhatTheSmackSequence(float distance){
 					obstaclesPoolManager.upper_4_Pool.push((Upper_4)obstacle);
 				}
 			}
-			if(obstacle.getSprite().getUserData().equals("ballUpper") && ((BallUpper)obstacle).getAnchorPositionX() < (player.getX() -100)){
+			if(obstacle.getSprite().getUserData().equals("ballUpper") && (force || ((BallUpper)obstacle).getAnchorPositionX() < (player.getX() -100))){
 				usedObstacles.remove(obstacle);
 				System.out.println("POOL usuwam uipper");
 				obstaclesPoolManager.ballUpperPool.push((BallUpper)obstacle);
 			}
-			if(obstacle.getSprite().getUserData().equals("ballBottom") && ((BallBottom)obstacle).getAnchorPositionX() < (player.getX() -100)){
+			if(obstacle.getSprite().getUserData().equals("ballBottom") && (force || ((BallBottom)obstacle).getAnchorPositionX() < (player.getX() -100))){
 				usedObstacles.remove(obstacle);
 				System.out.println("POOL usuwam bottom");
 				obstaclesPoolManager.ballBottomPool.push((BallBottom)obstacle);
 			}
-			if(obstacle.getSprite().getUserData().equals("ground") && obstacle.getSprite().getX() < player.getX() - 800-1){
+			if(obstacle.getSprite().getUserData().equals("ground") && ((force && player.getBody().getLinearVelocity().x == 0) || obstacle.getSprite().getX() < player.getX() - 800-1)){
 				usedObstacles.remove(obstacle);
-				System.out.println("GROUND usuwam");
 				obstaclesPoolManager.groundSegmentPool.push((GroundSegment)obstacle);
+				System.out.println("GROUND usuwam na stosie jest: " + obstaclesPoolManager.groundSegmentPool.size());
 			}
 
 		}

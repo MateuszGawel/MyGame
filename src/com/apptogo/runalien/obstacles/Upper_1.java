@@ -46,5 +46,10 @@ public class Upper_1 extends Obstacle{
 	{
 		return null;
 	}
+	@Override
+	public void resetPosition() {
+		sprite.setPosition(-1000, 90);
+		
+	}
 
 }

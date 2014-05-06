@@ -42,4 +42,9 @@ public class CrateUpper extends Obstacle{
 	{
 		return body;
 	}
+	@Override
+	public void resetPosition() {
+		sprite.setPosition(-1000, 100);
+		
+	}
 }
