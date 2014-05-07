@@ -22,6 +22,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import com.apptogo.runalien.scenes.GameScene;
 import com.apptogo.runalien.utils.GameHelper;
 import com.apptogo.runalien.utils.GoogleBaseGameActivity;
+import com.crosspromotionclub.crosspromotionsdk.CrossPromote;
+import com.crosspromotionclub.crosspromotionsdk.CrossPromote.Loader.ShowAdEventsCallback;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
@@ -39,6 +41,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.IntentSender.SendIntentException;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -165,6 +168,7 @@ public class GameActivity extends GoogleBaseGameActivity implements ConnectionCa
         //INTERSTITIAL
         loadInterstitial();
         loadInterstitialMiddleGame();
+        preloadCrossPromote();
 	}
 	 
 	public void loadGameBanner(){
@@ -264,30 +268,44 @@ public class GameActivity extends GoogleBaseGameActivity implements ConnectionCa
 		});
 	}
 	
-	public void displayInterstitialAndExit() {
-		this.runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				interstitial.setAdListener(new AdListener() {
+	private void preloadCrossPromote(){
+		CrossPromote.preLoadAds(this, new String[] {
+				"http://xdebugx.net/CrossPromoting",
+				"http://techcookies.net/CrossPromoting" }, false,
+				new CrossPromote.Loader.PreLoadAdsEventsCallback() {
+
 					@Override
-					public void onAdClosed() {
-						super.onAdClosed();
-						finish();
-						System.exit(0);
+					public void adsLoaded() {
+						
 					}
 				});
-					
-				if (interstitial.isLoaded()) {
-					interstitial.show();
-				}
-				else{
-					System.out.println("No interestitial loaded");
-					finish();
-					System.exit(0);
-			 	}
-		 		
-		     }
-		});
+		//CrossPromote.resetLastDayAd();
+	}
+	private void showCrossPromote() {
+		if (CrossPromote.showAd(this, new ShowAdEventsCallback() {
+
+			@Override
+			public void downloadClicked() {
+				System.out.println("Download clicked!");
+			}
+
+			@Override
+			public void closeClicked() {
+				System.out.println("Close clicked!");
+				finish();
+				System.exit(0);
+			}
+		})) {
+			System.out.println("Modal Showed!");
+		} else {
+			System.out.println("Ad not loaded or no more ads available for today!");
+			finish();
+			System.exit(0);
+		}
+	}
+	
+	public void displayInterstitialAndExit() {
+		showCrossPromote();
 	}
 	
 	public void displayInterstitialIfReadyAndReplay() {
