@@ -168,7 +168,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		ObstaclesPoolManager.getInstance().initializePoolManager(physicsWorld, foregroundLayer, backgroundLayer);
 		obstacleGenerator = new ObstacleGenerator(this, player);
 		//backgroundLayer.attachChild(new DebugRenderer(physicsWorld, vbom));
-		obstacleGenerator.resetPools();
+		//obstacleGenerator.resetPools();
 		
 	}
 
@@ -214,7 +214,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 		camera.setBoundsEnabled(false);
 		camera.setCenter(400, 240);
 		activity.setgameBannerAdViewInvisibile();
-		//ObstaclesPoolManager.getInstance().clearPools();
+		ObstaclesPoolManager.getInstance().clearPools();
 		//obstacleGenerator.resetPools();
 	}
 

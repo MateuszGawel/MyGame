@@ -117,5 +117,4 @@ public class BallUpper extends Obstacle{
 		setTransformX(-1000);
 		
 	}
-
 }
