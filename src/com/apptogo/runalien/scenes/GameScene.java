@@ -580,7 +580,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	}
 	
 	public void pauseGame(boolean displayPause){
-		setOnSceneTouchListener(null);
+		//setOnSceneTouchListener(null);
 		if(displayPause) showPause();
 		gamePaused = true;
 		camera.setChaseEntity(null);
@@ -592,7 +592,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	
 	public void resumeGame(){
 		hidePause();
-		setOnSceneTouchListener(this);	
+		//setOnSceneTouchListener(this);	
 		//firstTouch = true;
 		gamePaused = false;
 		camera.setChaseEntity(player);
@@ -643,7 +643,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	// LISTENERS
 	@Override
 	public boolean onSceneTouchEvent(Scene pScene, TouchEvent pSceneTouchEvent) {
-		if (pSceneTouchEvent.isActionDown()) {
+		if (pSceneTouchEvent.isActionDown() && !gamePaused) {
 			if(gamePaused) 
 			{
 				resumeGame();
@@ -697,6 +697,8 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 			else if(!partOfTutorialCompleted[3])
 				nextTutorialPartDelay = player.getBody().getPosition().x + 10;
 		}
+		else
+			resumeGame();
 		return false;
 	}
 	

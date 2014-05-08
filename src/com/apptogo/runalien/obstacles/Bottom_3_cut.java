@@ -16,9 +16,9 @@ public class Bottom_3_cut extends Obstacle{
 	private Body body;
 	
 	public Bottom_3_cut(PhysicsWorld physicsWorld, Entity foregroundLayer){
-		sprite = new Sprite(-1000, 110, ResourcesManager.getInstance().bottom_3_region, ResourcesManager.getInstance().vbom);
+		sprite = new Sprite(-1000, 110, ResourcesManager.getInstance().bottom_3_cut_region, ResourcesManager.getInstance().vbom);
 		//narazie pozycja x jest zero ale ostateznie musi byc minus wpizdu zeby na poczatku ich nie bylo widac
-		sprite.setUserData("bottom3");
+		sprite.setUserData("bottom3_cut");
 		sprite.setCullingEnabled(true);
 		while(true){
 			if(ObstaclesPoolManager.getInstance()!=null && ObstaclesPoolManager.getInstance().spriteGroup!=null){

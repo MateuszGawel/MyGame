@@ -7,6 +7,9 @@ import java.util.Stack;
 
 import org.andengine.engine.handler.IUpdateHandler;
 import org.andengine.entity.Entity;
+import org.andengine.entity.modifier.DelayModifier;
+import org.andengine.entity.modifier.RotationModifier;
+import org.andengine.entity.modifier.SequenceEntityModifier;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.debugdraw.DebugRenderer;
@@ -190,7 +193,7 @@ public class ObstacleGenerator {
 							break;
 						case 4:
 							System.out.println("PRZESZKODA 5");
-							generateSmallLeftPyramid(-1);
+							generateBottomCut();
 							break;
 						case 5:
 							System.out.println("PRZESZKODA 6");
@@ -198,12 +201,11 @@ public class ObstacleGenerator {
 							break;
 						case 6:
 							System.out.println("PRZESZKODA 7");
-							generateMuchJumpingSequence(INSEQUENCEDISTANCE);
-							
+							generateSmallLeftPyramid(-1);
 							break;
 						case 7:
 							System.out.println("PRZESZKODA 8");
-							generateBottomCut();
+							generateMuchJumpingSequence(INSEQUENCEDISTANCE);
 							break;
 						case 8:
 							System.out.println("PRZESZKODA 8");
@@ -288,10 +290,19 @@ public class ObstacleGenerator {
 				if(!obstaclesPoolManager.bottom_3_cut_Pool.isEmpty())
 				{
 					obstacle = obstaclesPoolManager.bottom_3_cut_Pool.pop();
-					obstacle.getSprite().setX(nextObstaclePosition);
+					obstacle.getSprite().setX(nextObstaclePosition+100);
 					usedObstacles.add(obstacle);
 					
 					nextObstaclePosition = calculateObstaclePosition(); 
+					
+				    obstacle.getSprite().setRotationCenterY(obstacle.getSprite().getY());
+				    obstacle.getSprite().setRotation(0);
+				    //obstacle.getSprite().setRotationCenterX(obstacle.getSprite().getX() + obstacle.getSprite().getWidth()/2);
+				    SequenceEntityModifier modifierSequence = new SequenceEntityModifier(
+				    		new DelayModifier(0.7f),
+				    		new RotationModifier(2f, 0, -90, org.andengine.util.modifier.ease.EaseBounceOut.getInstance())
+				    );
+				    obstacle.getSprite().registerEntityModifier(modifierSequence);			    			    
 
 				} else System.out.println("POOL zabrak³o bottom3");
 								
@@ -778,6 +789,10 @@ private void generateWhatTheSmackSequence(float distance){
 				if("bottom4".equals(obstacle.getSprite().getUserData()))
 				{
 					obstaclesPoolManager.bottom_4_Pool.push((Bottom_4)obstacle);
+				}
+				if("bottom3_cut".equals(obstacle.getSprite().getUserData()))
+				{
+					obstaclesPoolManager.bottom_3_cut_Pool.push((Bottom_3_cut)obstacle);
 				}
 				if("upper1".equals(obstacle.getSprite().getUserData()))
 				{
