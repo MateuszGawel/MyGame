@@ -57,7 +57,7 @@ public class ObstaclesPoolManager
 	public SpriteGroup groundSpriteGroup;
 	private Entity foregroundLayer;
 	private Entity backgroundLayer;
-	private boolean initialized = false;
+	//private boolean initialized = false;
 	
 	public ObstaclesPoolManager(){
 
@@ -80,12 +80,12 @@ public class ObstaclesPoolManager
 	}
 	
 	public void initializePoolManager(PhysicsWorld physicsWorld, Entity foregroundLayer, Entity backgroundLayer){
-		if(!initialized){
+		//if(!initialized){
 			spriteGroup = new SpriteGroup(ResourcesManager.getInstance().gameTextureAtlas, 100, ResourcesManager.getInstance().vbom);
-			//foregroundLayer.attachChild(spriteGroup);
+			foregroundLayer.attachChild(spriteGroup);
 			
 			groundSpriteGroup = new SpriteGroup(ResourcesManager.getInstance().gameTextureAtlas, 3, ResourcesManager.getInstance().vbom);
-			//backgroundLayer.attachChild(groundSpriteGroup);
+			backgroundLayer.attachChild(groundSpriteGroup);
 	
 			for(int i=bottom_1_Ammount; i>0; i--){
 				bottom_1_Pool.push(new Bottom_1(physicsWorld, foregroundLayer));
@@ -123,13 +123,13 @@ public class ObstaclesPoolManager
 			for(int i=groundSegmentAmmount; i>0; i--){
 				groundSegmentPool.push(new GroundSegment(physicsWorld, backgroundLayer));
 			}
-			this.initialized = true;
+			//this.initialized = true;
 			this.foregroundLayer = foregroundLayer;
-		}
-		spriteGroup.detachSelf();
-		foregroundLayer.attachChild(spriteGroup);
-		groundSpriteGroup.detachSelf();
-		backgroundLayer.attachChild(groundSpriteGroup);
+		//}
+		//spriteGroup.detachSelf();
+		//foregroundLayer.attachChild(spriteGroup);
+		//groundSpriteGroup.detachSelf();
+		//backgroundLayer.attachChild(groundSpriteGroup);
 	}
 	
 	public void clearPools(){

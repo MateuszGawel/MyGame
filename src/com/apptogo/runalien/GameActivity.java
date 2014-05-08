@@ -22,8 +22,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import com.apptogo.runalien.scenes.GameScene;
 import com.apptogo.runalien.utils.GameHelper;
 import com.apptogo.runalien.utils.GoogleBaseGameActivity;
-//import com.crosspromotionclub.crosspromotionsdk.CrossPromote;
-//import com.crosspromotionclub.crosspromotionsdk.CrossPromote.Loader.ShowAdEventsCallback;
+import com.crosspromotionclub.crosspromotionsdk.CrossPromote;
+import com.crosspromotionclub.crosspromotionsdk.CrossPromote.Loader.ShowAdEventsCallback;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
@@ -168,7 +168,7 @@ public class GameActivity extends GoogleBaseGameActivity implements ConnectionCa
         //INTERSTITIAL
         loadInterstitial();
         loadInterstitialMiddleGame();
-        //preloadCrossPromote();
+        preloadCrossPromote();
 	}
 	 
 	public void loadGameBanner(){
@@ -267,7 +267,6 @@ public class GameActivity extends GoogleBaseGameActivity implements ConnectionCa
 	         }
 		});
 	}
-	/* JESZCZE LINIA 171 !!!!
 	private void preloadCrossPromote(){
 		CrossPromote.preLoadAds(this, new String[] {
 				"http://xdebugx.net/CrossPromoting",
@@ -307,7 +306,7 @@ public class GameActivity extends GoogleBaseGameActivity implements ConnectionCa
 	public void displayInterstitialAndExit() {
 		showCrossPromote();
 	}
-	*/
+	
 	public void displayInterstitialIfReadyAndReplay() {
 		this.runOnUiThread(new Runnable() {
 			@Override

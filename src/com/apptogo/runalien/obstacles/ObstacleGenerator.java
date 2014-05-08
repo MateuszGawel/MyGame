@@ -268,15 +268,13 @@ public class ObstacleGenerator {
 							break;
 						}
 					}
-					if(player.getX() + 800-1 > nextGroundPosition && player.getBody().getLinearVelocity().x != 0){
+					if(player.getX() + 800-1 > nextGroundPosition){
 						generateGroundSegment();
 						
 					}
 				}
-				if(player.isAlive())
-					releaseUselessObstacles(false);
-				else
-					releaseUselessObstacles(true);
+				
+				releaseUselessObstacles();
 			}
 
 			@Override
@@ -691,6 +689,7 @@ private void generateWhatTheSmackSequence(float distance){
 		}
 	}	
 
+	/*
 	public void resetPools(){
 		for(Obstacle obstacle : obstaclesPoolManager.bottom_1_Pool){
 			obstacle.resetPosition();
@@ -729,14 +728,15 @@ private void generateWhatTheSmackSequence(float distance){
 			obstacle.resetPosition();
 		}
 	}
+	*/
 	
-	private void releaseUselessObstacles(boolean force)
+	private void releaseUselessObstacles()
 	{
 		for(int u = 0; u < usedObstacles.size(); u++) //tu byl problem z concurrency - uzywalismy foreach z iteratorem i on robil problemy UWAGA NA TO MOZE BYC DZIURAWE
 		{                                             //nawet nie probowac synchronizowac :P probowalem synchronizowac metody/bloki ponad godzine i lipa a tak dziala
 			Obstacle obstacle = usedObstacles.get(u);
 			
-			if(!((String)obstacle.getSprite().getUserData()).contains("ball") && !((String)obstacle.getSprite().getUserData()).equals("ground") && (force || obstacle.getSprite().getX() < (player.getX() - 300))) //- 10 zeby znikaly juz poza ekranem
+			if(!((String)obstacle.getSprite().getUserData()).contains("ball") && !((String)obstacle.getSprite().getUserData()).equals("ground") && obstacle.getSprite().getX() < (player.getX() - 300)) //- 10 zeby znikaly juz poza ekranem
 			{
 				usedObstacles.remove(obstacle);
 				if(obstacle.getSprite().getUserData().equals("crateUpper"))
@@ -776,17 +776,17 @@ private void generateWhatTheSmackSequence(float distance){
 					obstaclesPoolManager.upper_4_Pool.push((Upper_4)obstacle);
 				}
 			}
-			if(obstacle.getSprite().getUserData().equals("ballUpper") && (force || ((BallUpper)obstacle).getAnchorPositionX() < (player.getX() -100))){
+			if(obstacle.getSprite().getUserData().equals("ballUpper") && ((BallUpper)obstacle).getAnchorPositionX() < (player.getX() -100)){
 				usedObstacles.remove(obstacle);
 				System.out.println("POOL usuwam uipper");
 				obstaclesPoolManager.ballUpperPool.push((BallUpper)obstacle);
 			}
-			if(obstacle.getSprite().getUserData().equals("ballBottom") && (force || ((BallBottom)obstacle).getAnchorPositionX() < (player.getX() -100))){
+			if(obstacle.getSprite().getUserData().equals("ballBottom") && ((BallBottom)obstacle).getAnchorPositionX() < (player.getX() -100)){
 				usedObstacles.remove(obstacle);
 				System.out.println("POOL usuwam bottom");
 				obstaclesPoolManager.ballBottomPool.push((BallBottom)obstacle);
 			}
-			if(obstacle.getSprite().getUserData().equals("ground") && ((force && player.getBody().getLinearVelocity().x == 0) || obstacle.getSprite().getX() < player.getX() - 800-1)){
+			if(obstacle.getSprite().getUserData().equals("ground") && obstacle.getSprite().getX() < player.getX() - 800-1){
 				usedObstacles.remove(obstacle);
 				obstaclesPoolManager.groundSegmentPool.push((GroundSegment)obstacle);
 				System.out.println("GROUND usuwam na stosie jest: " + obstaclesPoolManager.groundSegmentPool.size());

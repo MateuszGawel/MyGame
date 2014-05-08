@@ -21,18 +21,12 @@ public class Bottom_4 extends Obstacle{
 		//narazie pozycja x jest zero ale ostateznie musi byc minus wpizdu zeby na poczatku ich nie bylo widac
 		sprite.setUserData("bottom4");
 		sprite.setCullingEnabled(true);
-		ObstaclesPoolManager.getInstance().spriteGroup.attachChild(sprite);
-		//sprite.setCullingEnabled(false);
-		//body = PhysicsFactory.createBoxBody(physicsWorld, sprite, BodyType.StaticBody, PhysicsFactory.createFixtureDef(10.0f, 0, 0));
-		//body.setUserData("bottom4");
-		//foregroundLayer.attachChild(sprite);
-		//ObstaclesPoolManager.getInstance().ignoreCollisions(this);
-		/*physicsWorld.registerPhysicsConnector(new PhysicsConnector(sprite, body, true, false) {
-			@Override
-			public void onUpdate(float pSecondsElapsed) {
-				super.onUpdate(pSecondsElapsed);
+		while(true){
+			if(ObstaclesPoolManager.getInstance()!=null && ObstaclesPoolManager.getInstance().spriteGroup!=null){
+				ObstaclesPoolManager.getInstance().spriteGroup.attachChild(sprite);
+				break;
 			}
-		});*/
+		}
 	}
 	
 	@Override

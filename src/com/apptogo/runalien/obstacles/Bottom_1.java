@@ -2,6 +2,7 @@ package com.apptogo.runalien.obstacles;
 
 import org.andengine.entity.Entity;
 import org.andengine.entity.sprite.Sprite;
+import org.andengine.entity.sprite.batch.SpriteGroup;
 import org.andengine.extension.physics.box2d.PhysicsConnector;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
@@ -21,7 +22,12 @@ public class Bottom_1 extends Obstacle{
 		//narazie pozycja x jest zero ale ostateznie musi byc minus wpizdu zeby na poczatku ich nie bylo widac
 		sprite.setUserData("bottom1");
 		sprite.setCullingEnabled(true);
-		ObstaclesPoolManager.getInstance().spriteGroup.attachChild(sprite);
+		while(true){
+			if(ObstaclesPoolManager.getInstance()!=null && ObstaclesPoolManager.getInstance().spriteGroup!=null){
+				ObstaclesPoolManager.getInstance().spriteGroup.attachChild(sprite);
+				break;
+			}
+		}
 	}
 	
 	@Override
