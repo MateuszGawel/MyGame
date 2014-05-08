@@ -138,7 +138,7 @@ public class ObstacleGenerator {
 								break;
 							default:
 								minRand = 13;
-								maxRand = 21;
+								maxRand = 22;
 								break;
 						}
 						
@@ -203,64 +203,68 @@ public class ObstacleGenerator {
 							break;
 						case 7:
 							System.out.println("PRZESZKODA 8");
-							generateSmallPyramid(-1);
+							//generateBottomCut();
 							break;
 						case 8:
+							System.out.println("PRZESZKODA 8");
+							generateSmallPyramid(-1);
+							break;
+						case 9:
 							System.out.println("PRZESZKODA 9");
 							generateRightBigPyramid();				
-						case 9:
+						case 10:
 							System.out.println("PRZESZKODA 10");
 							generateInvertedSmallPyramid(calculateObstaclePosition()+50);
 							break;
-						case 10:
+						case 11:
 							System.out.println("PRZESZKODA 11");
 							generateJumpThenSlideSequence(INSEQUENCEDISTANCE);	
 							break;
-						case 11:
+						case 12:
 							System.out.println("PRZESZKODA 12");
 							double x = player.runningSpeed;
 							double ballOffset = ((-(5.0/98.0))*(((13.0*x)*((19.0*x)-753.0))+85220.0));
 							generateBallUpper((int)ballOffset);
 							break;
-						case 12:
+						case 13:
 							System.out.println("PRZESZKODA 13");
 							x = player.runningSpeed;
 							ballOffset = ((-(5.0/98.0))*(((13.0*x)*((19.0*x)-753.0))+85220.0));
 							generateBallBottom((int)ballOffset);
 							break;
-						case 13:
+						case 14:
 							System.out.println("PRZESZKODA 14");
 							generateUpDownSequence();	
 							break;
-						case 14:
+						case 15:
 							System.out.println("PRZESZKODA 15");
 							generateSmallRightBigPyramid();
 							break;
-						case 15:
+						case 16:
 							System.out.println("PRZESZKODA 16");
 							mustDoubleJump(-1);				
 							break;
-						case 16:
+						case 17:
 							System.out.println("PRZESZKODA 17");
 							generateRightVeryBigPyramid();
 							break;
-						case 17:
+						case 18:
 							System.out.println("PRZESZKODA 18");
 							generateEgyptSequence(INSEQUENCEDISTANCE);
 							break;
-						case 18:
+						case 19:
 							System.out.println("PRZESZKODA 19");
 							generateMadWallOpenedSequence(INSEQUENCEDISTANCE);
 							break;
-						case 19: 
+						case 20: 
 							System.out.println("PRZESZKODA 20");
 							generateWhatTheSmackSequence(INSEQUENCEDISTANCE);
 							break;
-						case 20:
+						case 21:
 							System.out.println("PRZESZKODA 21");
 							generateLongJumpThenSlideSequence(INSEQUENCEDISTANCE);
 							break;
-						case 21:
+						case 22:
 							System.out.println("PRZESZKODA 22");
 							generateLoongPyramid(-1);
 							break;

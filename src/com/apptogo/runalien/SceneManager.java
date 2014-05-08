@@ -89,13 +89,13 @@ public class SceneManager {
 	public void replayGameScene(){
 		setScene(loadingScene);
 		gameScene.disposeScene();
-		resourcesManager.unloadGameResources();
+		//resourcesManager.unloadGameResources();
 		resourcesManager.engine.registerUpdateHandler(new TimerHandler(0.1f, new ITimerCallback()
 		{
 			public void onTimePassed(final TimerHandler pTimerHandler)
 			{
 				resourcesManager.engine.unregisterUpdateHandler(pTimerHandler);
-				resourcesManager.loadGameResources();
+				//resourcesManager.loadGameResources();
 				gameScene = new GameScene();
 				setScene(gameScene);
 			}

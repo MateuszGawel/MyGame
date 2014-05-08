@@ -24,6 +24,8 @@ public class ObstaclesPoolManager
 	private final int bottom_3_Ammount = 12;
 	private final int bottom_4_Ammount = 12;
 	
+	private final int bottom_3_cut_Ammount = 5;
+	
 	private final int upper_1_Ammount = 12;
 	private final int upper_2_Ammount = 12;
 	private final int upper_3_Ammount = 12;
@@ -40,6 +42,8 @@ public class ObstaclesPoolManager
 	public Stack<Bottom_2> bottom_2_Pool;
 	public Stack<Bottom_3> bottom_3_Pool;
 	public Stack<Bottom_4> bottom_4_Pool;
+	
+	public Stack<Bottom_3_cut> bottom_3_cut_Pool;
 	
 	public Stack<Upper_1> upper_1_Pool;
 	public Stack<Upper_2> upper_2_Pool;
@@ -65,6 +69,8 @@ public class ObstaclesPoolManager
 		bottom_2_Pool = new Stack<Bottom_2>();
 		bottom_3_Pool = new Stack<Bottom_3>();
 		bottom_4_Pool = new Stack<Bottom_4>();
+		
+		bottom_3_cut_Pool = new Stack<Bottom_3_cut>();
 		
 		upper_1_Pool = new Stack<Upper_1>();
 		upper_2_Pool = new Stack<Upper_2>();
@@ -98,6 +104,9 @@ public class ObstaclesPoolManager
 			}
 			for(int i=bottom_4_Ammount; i>0; i--){
 				bottom_4_Pool.push(new Bottom_4(physicsWorld, foregroundLayer));
+			}
+			for(int i=bottom_3_cut_Ammount; i>0; i--){
+				bottom_3_cut_Pool.push(new Bottom_3_cut(physicsWorld, foregroundLayer));
 			}
 			for(int i=upper_1_Ammount; i>0; i--){
 				upper_1_Pool.push(new Upper_1(physicsWorld, foregroundLayer));
@@ -141,6 +150,8 @@ public class ObstaclesPoolManager
 		bottom_3_Pool.clear();
 		bottom_4_Pool.clear();
 		
+		bottom_3_cut_Pool.clear();
+		
 		upper_1_Pool.clear();
 		upper_2_Pool.clear();
 		upper_3_Pool.clear();
@@ -160,7 +171,7 @@ public class ObstaclesPoolManager
 	}
 
 	public boolean isNotEmpty() {
-		if( bottom_1_Pool.isEmpty() && bottom_2_Pool.isEmpty() && bottom_3_Pool.isEmpty() && bottom_4_Pool.isEmpty() && upper_1_Pool.isEmpty() && upper_2_Pool.isEmpty() && upper_3_Pool.isEmpty() && upper_4_Pool.isEmpty() && crateUpperPool.isEmpty() && groundSegmentPool.isEmpty())
+		if( bottom_1_Pool.isEmpty() && bottom_2_Pool.isEmpty() && bottom_3_Pool.isEmpty() && bottom_4_Pool.isEmpty() && bottom_3_cut_Pool.isEmpty() && upper_1_Pool.isEmpty() && upper_2_Pool.isEmpty() && upper_3_Pool.isEmpty() && upper_4_Pool.isEmpty() && crateUpperPool.isEmpty() && groundSegmentPool.isEmpty())
 		{
 			return false;
 		}

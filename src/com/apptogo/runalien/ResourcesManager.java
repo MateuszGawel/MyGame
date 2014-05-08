@@ -68,6 +68,7 @@ public class ResourcesManager {
 	public ITextureRegion upper_2_region;
 	public ITextureRegion upper_3_region;
 	public ITextureRegion upper_4_region;
+	public ITextureRegion bottom_3_cut_region;
 	public ITextureRegion crate_region;
 	public ITextureRegion ball_region;
 	public ITextureRegion tutorialTable_region;
@@ -230,7 +231,7 @@ public class ResourcesManager {
 		//doubleJumpTutorial_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(tutorialTextureAtlas, activity, "tutorial/doubleJump.png", 1, 41);
 		//slideTutorial_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(tutorialTextureAtlas, activity, "tutorial/slide.png", 1, 81);
 		//chargeDownTutorial_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(tutorialTextureAtlas, activity, "tutorial/chargeDown.png", 1, 121);
-		gameTextureAtlas = new BitmapTextureAtlas(activity.getTextureManager(), 1024, 1280, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+		gameTextureAtlas = new BitmapTextureAtlas(activity.getTextureManager(), 1024, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 	    gameTextureAtlas.addEmptyTextureAtlasSource(0, 0, 1024, 1280);
 	    
 	    playerTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 2048, 2048, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
@@ -245,8 +246,9 @@ public class ResourcesManager {
 	    upper_2_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"upper2.png", 244, 1);
 	    upper_3_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"upper3.png", 282, 1);
 	    upper_4_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"upper4.png", 320, 1);
-	    crate_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"crate.png", 366, 1);
-	    sign_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"sign.png", 561, 1);	
+	    crate_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"crate.png", 366, 1);	
+	    sign_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"sign.png", 561, 1);
+	    bottom_3_cut_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"bottom3_cut.png", 757, 1);
 	    ball_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"ball.png", 1, 296 );
 	    replay_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "replay.png", 76, 296);
 	    menu_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "menu.png", 280, 296);
@@ -263,7 +265,6 @@ public class ResourcesManager {
 		slideTutorial_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "tutorial/slide.png", 1, 723);
 		chargeDownTutorial_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "tutorial/chargeDown.png", 1, 769);
 		tutorialTable_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "tutorial/tutorialTable.png", 1, 817);
-		sun_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"sun.png", 1, 1100);
 		
 	    player_region = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(playerTextureAtlas, activity, gameCatalog+"player.png", 12, 11);
 	    
