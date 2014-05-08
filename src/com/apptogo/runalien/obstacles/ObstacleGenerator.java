@@ -203,7 +203,7 @@ public class ObstacleGenerator {
 							break;
 						case 7:
 							System.out.println("PRZESZKODA 8");
-							//generateBottomCut();
+							generateBottomCut();
 							break;
 						case 8:
 							System.out.println("PRZESZKODA 8");
@@ -279,6 +279,22 @@ public class ObstacleGenerator {
 				}
 				
 				releaseUselessObstacles();
+			}
+
+			private void generateBottomCut() {
+				
+				Obstacle obstacle = null;
+				
+				if(!obstaclesPoolManager.bottom_3_cut_Pool.isEmpty())
+				{
+					obstacle = obstaclesPoolManager.bottom_3_cut_Pool.pop();
+					obstacle.getSprite().setX(nextObstaclePosition);
+					usedObstacles.add(obstacle);
+					
+					nextObstaclePosition = calculateObstaclePosition(); 
+
+				} else System.out.println("POOL zabrak³o bottom3");
+								
 			}
 
 			@Override
