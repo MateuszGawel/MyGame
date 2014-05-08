@@ -48,7 +48,7 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 
 	@Override
 	public void onBackKeyPressed() {
-		ResourcesManager.getInstance().activity.displayInterstitialAndExit();
+		//ResourcesManager.getInstance().activity.displayInterstitialAndExit();
         //activity.finish();
         //System.exit(0);
 	}

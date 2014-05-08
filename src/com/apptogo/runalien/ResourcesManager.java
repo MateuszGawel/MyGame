@@ -59,6 +59,7 @@ public class ResourcesManager {
 	
 	//GAME RESOURCES
 	public ITextureRegion coin_region;
+	public ITextureRegion sun_region;
 	public ITextureRegion bottom_1_region;
 	public ITextureRegion bottom_2_region;
 	public ITextureRegion bottom_3_region;
@@ -113,6 +114,8 @@ public class ResourcesManager {
 	public Sound doubleJumpSound;
 	public Sound chargeDownSound;
 	public Sound bellHit;
+	
+	public String gameCatalog;
 	
 
 	
@@ -211,6 +214,13 @@ public class ResourcesManager {
 	}
 	
 	public void loadGameGraphics(){
+		
+		int randTime = (int)(Math.random() * 4);
+		if(randTime == 0) gameCatalog = "sunrise/";
+		else if(randTime == 1) gameCatalog = "daytime/";
+		else if(randTime == 2) gameCatalog = "sunset/";
+		else gameCatalog = "night/";
+		
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/game/");
 	    
 		//tutorialTextureAtlas =  new BitmapTextureAtlas(activity.getTextureManager(), 1024, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
@@ -220,29 +230,29 @@ public class ResourcesManager {
 		//doubleJumpTutorial_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(tutorialTextureAtlas, activity, "tutorial/doubleJump.png", 1, 41);
 		//slideTutorial_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(tutorialTextureAtlas, activity, "tutorial/slide.png", 1, 81);
 		//chargeDownTutorial_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(tutorialTextureAtlas, activity, "tutorial/chargeDown.png", 1, 121);
-		gameTextureAtlas = new BitmapTextureAtlas(activity.getTextureManager(), 1024, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-	    gameTextureAtlas.addEmptyTextureAtlasSource(0, 0, 1024, 1024);
+		gameTextureAtlas = new BitmapTextureAtlas(activity.getTextureManager(), 1024, 1280, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+	    gameTextureAtlas.addEmptyTextureAtlasSource(0, 0, 1024, 1280);
 	    
 	    playerTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 2048, 2048, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 	    
 	    //obstacle_top_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "obstacle_top.png");
 	    coin_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "coin.png", 1, 1);
-	    bottom_1_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "bottom1.png", 22, 1);
-	    bottom_2_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "bottom2.png", 68, 1);
-	    bottom_3_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "bottom3.png", 114, 1);
-	    bottom_4_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "bottom4.png", 160, 1);
-	    upper_1_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "upper1.png", 206, 1);
-	    upper_2_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "upper2.png", 244, 1);
-	    upper_3_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "upper3.png", 282, 1);
-	    upper_4_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "upper4.png", 320, 1);
-	    crate_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "crate.png", 366, 1);
-	    sign_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "sign.png", 561, 1);	
-	    ball_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "ball.png", 1, 296 );
+	    bottom_1_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"bottom1.png", 22, 1);
+	    bottom_2_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"bottom2.png", 68, 1);
+	    bottom_3_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"bottom3.png", 114, 1);
+	    bottom_4_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"bottom4.png", 160, 1);
+	    upper_1_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"upper1.png", 206, 1);
+	    upper_2_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"upper2.png", 244, 1);
+	    upper_3_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"upper3.png", 282, 1);
+	    upper_4_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"upper4.png", 320, 1);
+	    crate_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"crate.png", 366, 1);
+	    sign_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"sign.png", 561, 1);	
+	    ball_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"ball.png", 1, 296 );
 	    replay_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "replay.png", 76, 296);
 	    menu_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "menu.png", 280, 296);
 	    submit_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "submit.png", 452, 296);
 	    //grass_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "grass.png", 1, 374);
-	    ground_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "dirt.png", 1, 374);
+	    ground_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"dirt.png", 1, 374);
 	    game_over_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "game_over.png", 1, 510);
 	    pause_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "pause.png", 1, 570);
 	    
@@ -253,8 +263,9 @@ public class ResourcesManager {
 		slideTutorial_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "tutorial/slide.png", 1, 723);
 		chargeDownTutorial_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "tutorial/chargeDown.png", 1, 769);
 		tutorialTable_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "tutorial/tutorialTable.png", 1, 817);
+		sun_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"sun.png", 1, 1100);
 		
-	    player_region = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(playerTextureAtlas, activity, "player.png", 12, 11);
+	    player_region = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(playerTextureAtlas, activity, gameCatalog+"player.png", 12, 11);
 	    
         //dirtRepeatingAtlas = new BitmapTextureAtlas(activity.getTextureManager(), 311, 120, TextureOptions.REPEATING_BILINEAR_PREMULTIPLYALPHA);
         //dirt_texture_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(dirtRepeatingAtlas, activity, "dirt.png", 0, 0);
@@ -263,9 +274,9 @@ public class ResourcesManager {
 		mAutoParallaxBackgroundTexture = new BitmapTextureAtlas(activity.getTextureManager(), 1024, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		mAutoParallaxBackgroundTexture.addEmptyTextureAtlasSource(0, 0, 1024, 1024);
 		//mParallaxLayerGrass = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mAutoParallaxBackgroundTexture, activity, "grass.png", 0, 0);
-		mParallaxLayerFront = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mAutoParallaxBackgroundTexture, activity, "parallax_background_layer_front.png", 1, 15);
-		mParallaxLayerBack = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mAutoParallaxBackgroundTexture, activity, "parallax_background_layer_back.png", 1, 200);
-		mParallaxLayerMid = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mAutoParallaxBackgroundTexture, activity, "parallax_background_layer_mid.png", 1, 689);
+		mParallaxLayerFront = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mAutoParallaxBackgroundTexture, activity, gameCatalog+"parallax_background_layer_front.png", 1, 15);
+		mParallaxLayerBack = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mAutoParallaxBackgroundTexture, activity, gameCatalog+"parallax_background_layer_back.png", 1, 200);
+		mParallaxLayerMid = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mAutoParallaxBackgroundTexture, activity, gameCatalog+"parallax_background_layer_mid.png", 1, 689);
 		mAutoParallaxBackgroundTexture.load();
 		
 	    try 
