@@ -232,7 +232,7 @@ public class ResourcesManager {
 		//slideTutorial_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(tutorialTextureAtlas, activity, "tutorial/slide.png", 1, 81);
 		//chargeDownTutorial_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(tutorialTextureAtlas, activity, "tutorial/chargeDown.png", 1, 121);
 		gameTextureAtlas = new BitmapTextureAtlas(activity.getTextureManager(), 1024, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-	    gameTextureAtlas.addEmptyTextureAtlasSource(0, 0, 1024, 1280);
+	    gameTextureAtlas.addEmptyTextureAtlasSource(0, 0, 1024, 1024);
 	    
 	    playerTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 2048, 2048, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 	    
