@@ -166,7 +166,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 
 		createPlayer();
 		ObstaclesPoolManager.getInstance().initializePoolManager(physicsWorld, foregroundLayer, backgroundLayer);
-		obstacleGenerator = new ObstacleGenerator(this, player);
+		obstacleGenerator = new ObstacleGenerator(this, player, activity.preferences.getBoolean(activity.SOUNDS_LABEL, false));
 		//backgroundLayer.attachChild(new DebugRenderer(physicsWorld, vbom));
 		//obstacleGenerator.resetPools();
 		

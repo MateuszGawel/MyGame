@@ -41,13 +41,17 @@ public class ObstacleGenerator {
 	private boolean startGeneratingObstacles = false;
 	private int offsetAfterTutorial;
 	
-	public ObstacleGenerator(Scene scene, Player player)
+	private boolean playSounds = false;
+	
+	public ObstacleGenerator(Scene scene, Player player, boolean playSounds)
 	{
 		this.obstaclesPoolManager = ObstaclesPoolManager.getInstance();
 		this.scene = scene;
 		this.player = player;
 		usedObstacles = new ArrayList();
 		lastRandoms = new ArrayList<Integer>();
+		
+		this.playSounds = playSounds;
 	}
 	
 	private float getPlayerPositionX()
@@ -152,7 +156,7 @@ public class ObstacleGenerator {
 						//if(minRand < 0 || ctr % 4 == 0) minRand = 0;
 						int random;
 						if(startGeneratingObstacles)
-							random = 6;//minRand + (int)(Math.random() * ((maxRand - minRand) + 1));
+							random = minRand + (int)(Math.random() * ((maxRand - minRand) + 1));
 						else
 							random = -1;
 						
@@ -306,7 +310,7 @@ public class ObstacleGenerator {
 					weasel.getSprite().setY(240);
 					usedObstacles.add(weasel);
 					
-					ResourcesManager.getInstance().weaselSound.play();
+					if( playSounds ) ResourcesManager.getInstance().weaselSound.play();
 					
 					SequenceEntityModifier modifierSequence_moleHill = new SequenceEntityModifier(
 				    		new DelayModifier(0.5f),
@@ -339,7 +343,7 @@ public class ObstacleGenerator {
 					
 					//if(ResourcesManager.getInstance() == null) System.out.println("RES");
 					//if(ResourcesManager.getInstance().fallingTreeSound == null) System.out.println("SOUND");
-					ResourcesManager.getInstance().fallingTreeSound.play();
+					if( playSounds ) ResourcesManager.getInstance().fallingTreeSound.play();
 					
 				    obstacle.getSprite().setRotationCenterY(obstacle.getSprite().getY());
 				    obstacle.getSprite().setRotation(0);
