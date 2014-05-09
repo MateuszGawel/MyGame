@@ -18,13 +18,14 @@ import org.andengine.extension.physics.box2d.PhysicsConnector;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
-
+import com.apptogo.runalien.utils.GoogleBaseGameActivity;
 import android.content.Context;
 import android.os.Vibrator;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.google.android.gms.games.Games;
 
 public abstract class Player extends AnimatedSprite {
 
@@ -145,7 +146,10 @@ public abstract class Player extends AnimatedSprite {
 		});
 	}
 
-
+	public boolean isRunning(){
+		return canRun;
+	}
+	
 	public void setRunning() {
 		canRun = true;
 		runSound.play();
@@ -246,6 +250,9 @@ public abstract class Player extends AnimatedSprite {
 		PLAYER_ANIMATE[12]=5000;
 		animate(PLAYER_ANIMATE, 49, 61, false);
 		body.setLinearVelocity(new Vector2(body.getLinearVelocity().x, -30));
+		if(((GoogleBaseGameActivity)ResourcesManager.getInstance().activity).isSignedIn()){
+			Games.Achievements.increment(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQNA", 1);
+		}
 	}
 	
 	public void doubleJump(){
@@ -349,6 +356,9 @@ public abstract class Player extends AnimatedSprite {
 	                standUp();
 		        }
 		    });
+			if(((GoogleBaseGameActivity)ResourcesManager.getInstance().activity).isSignedIn()){
+				Games.Achievements.increment(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQNQ", 1);
+			}
 	    }
 	    else{
 	    	playerCover.unregisterEntityModifier(playerCoverModifier);

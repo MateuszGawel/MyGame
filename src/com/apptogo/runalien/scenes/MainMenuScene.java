@@ -22,6 +22,7 @@ import com.apptogo.runalien.ResourcesManager;
 import com.apptogo.runalien.SceneManager;
 import com.apptogo.runalien.SceneManager.SceneType;
 import com.apptogo.runalien.obstacles.ObstaclesPoolManager;
+import com.apptogo.runalien.utils.AppRater;
 import com.apptogo.runalien.utils.GoogleBaseGameActivity;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.plus.PlusShare;
@@ -124,6 +125,14 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 			ResourcesManager.getInstance().menuMusic.setLooping(true);
 			musicIsPlaying = true;
 		}
+		activity.runOnUiThread(new Runnable() {
+			public void run() {
+				//AppRater.showRateDialog(ResourcesManager.getInstance().activity, null);
+				AppRater.app_launched(ResourcesManager.getInstance().activity);
+			}
+		});
+
+		
 	}
 	
 	private void createBackground(){

@@ -371,6 +371,12 @@ public class ObstacleGenerator {
 			if(player.isAlive() && obstacle.getSprite().collidesWith(player.playerCover)){
 				if(obstacle.getSprite().getUserData().toString().contains("bottom")){
 					player.dieBottom();
+					if(((GoogleBaseGameActivity)ResourcesManager.getInstance().activity).isSignedIn()){
+						if(obstacle.getSprite().getUserData().toString().equals("bottom_weasel") || obstacle.getSprite().getUserData().toString().equals("bottom_moleHill"))
+							Games.Achievements.increment(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQLg", 1);
+						if(obstacle.getSprite().getUserData().toString().contains("bottom3_cut"))
+							Games.Achievements.increment(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQLw", 1);
+					}
 					if(obstacle.getSprite().getX() < 1000){
 						System.out.println("DIE ON FIRST");
 						if(((GoogleBaseGameActivity)ResourcesManager.getInstance().activity).isSignedIn()){

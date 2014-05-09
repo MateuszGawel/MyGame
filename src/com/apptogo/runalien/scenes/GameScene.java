@@ -526,7 +526,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 				Games.Achievements.unlock(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQAw");	
 			else if(score == 100)
 				Games.Achievements.unlock(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQBA");	
-			else if(score == 300)
+			else if(score == 200)
 				Games.Achievements.unlock(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQBQ");	
 		}
 	}
@@ -580,24 +580,33 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	}
 	
 	public void pauseGame(boolean displayPause){
-		//setOnSceneTouchListener(null);
-		if(displayPause) showPause();
-		gamePaused = true;
-		camera.setChaseEntity(null);
-		this.setIgnoreUpdate(true);
-		player.runSound.pause();
-		player.screamSound.pause();
-		//ResourcesManager.getInstance().gameMusic.pause();
+		if(player.isAlive()){
+			//setOnSceneTouchListener(null);
+			if(displayPause) showPause();
+			gamePaused = true;
+			camera.setChaseEntity(null);
+			this.setIgnoreUpdate(true);
+			player.runSound.pause();
+			player.screamSound.pause();
+			//ResourcesManager.getInstance().gameMusic.pause();
+		}
 	}
 	
 	public void resumeGame(){
-		hidePause();
-		//setOnSceneTouchListener(this);	
-		//firstTouch = true;
-		gamePaused = false;
-		camera.setChaseEntity(player);
-		this.setIgnoreUpdate(false);
-		//ResourcesManager.getInstance().gameMusic.resume();
+		if(player.isAlive()){
+			System.out.println("RESUME");
+			hidePause();
+			//setOnSceneTouchListener(this);	
+			//firstTouch = true;
+			gamePaused = false;
+			camera.setChaseEntity(player);
+			this.setIgnoreUpdate(false);
+			if(player.isRunning()){
+				player.runSound.resume();
+				player.screamSound.resume();
+			}
+			//ResourcesManager.getInstance().gameMusic.resume();
+		}
 	}
 	
 	private void generateTutorial(){
@@ -644,10 +653,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 	@Override
 	public boolean onSceneTouchEvent(Scene pScene, TouchEvent pSceneTouchEvent) {
 		if (pSceneTouchEvent.isActionDown() && !gamePaused) {
-			if(gamePaused) 
-			{
-				resumeGame();
-			}
 			if (!firstTouch) {
 				player.setRunning();
 				obstacleGenerator.startObstacleGenerationAlgorithm();
@@ -697,7 +702,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener {
 			else if(!partOfTutorialCompleted[3])
 				nextTutorialPartDelay = player.getBody().getPosition().x + 10;
 		}
-		else
+		else if(gamePaused)
 			resumeGame();
 		return false;
 	}

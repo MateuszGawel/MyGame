@@ -25,7 +25,9 @@ import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.debug.Debug;
 
+import com.apptogo.runalien.utils.GoogleBaseGameActivity;
 import com.apptogo.runalien.utils.GameHelper;
+import com.google.android.gms.games.Games;
 
 import android.graphics.Color;
 
@@ -221,10 +223,26 @@ public class ResourcesManager {
 	public void loadGameGraphics(){
 		
 		int randTime = (int)(Math.random() * 4);
-		if(randTime == 0) gameCatalog = "sunrise/";
-		else if(randTime == 1) gameCatalog = "daytime/";
-		else if(randTime == 2) gameCatalog = "sunset/";
-		else gameCatalog = "night/";
+		if(randTime == 0){
+			gameCatalog = "sunrise/";
+			if(((GoogleBaseGameActivity)ResourcesManager.getInstance().activity).isSignedIn())
+				Games.Achievements.unlock(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQMg");	
+		}
+		else if(randTime == 1){
+			gameCatalog = "daytime/";
+			if(((GoogleBaseGameActivity)ResourcesManager.getInstance().activity).isSignedIn())
+				Games.Achievements.unlock(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQMQ");	
+		}
+		else if(randTime == 2){
+			gameCatalog = "sunset/";
+			if(((GoogleBaseGameActivity)ResourcesManager.getInstance().activity).isSignedIn())
+				Games.Achievements.unlock(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQMw");	
+		}
+		else{
+			gameCatalog = "night/";
+			if(((GoogleBaseGameActivity)ResourcesManager.getInstance().activity).isSignedIn())
+				Games.Achievements.unlock(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQMA");	
+		}
 		
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/game/");
 	    
@@ -305,6 +323,7 @@ public class ResourcesManager {
 	private void unloadGameGraphics(){
 		//tutorialTextureAtlas.unload();
 		gameTextureAtlas.unload();
+		playerTextureAtlas.unload();
 		mAutoParallaxBackgroundTexture.unload();
 		//activity.getTextureManager().unloadTexture(tutorialTextureAtlas);
 		activity.getTextureManager().unloadTexture(gameTextureAtlas);
