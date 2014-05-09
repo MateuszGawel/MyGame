@@ -320,7 +320,7 @@ public class GameActivity extends GoogleBaseGameActivity implements ConnectionCa
 					}
 				});
 				gameCounter++;
-				if (interstitialMiddleGame.isLoaded() && gameCounter % 10 == 0) {
+				if (interstitialMiddleGame.isLoaded() && gameCounter % 7 == 0) {
 					interstitialMiddleGame.show();
 				}
 				else{
