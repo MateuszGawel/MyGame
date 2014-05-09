@@ -22,7 +22,7 @@ public class Bottom_moleHill extends Obstacle{
 		sprite.setCullingEnabled(true);
 		while(true){
 			if(ObstaclesPoolManager.getInstance()!=null && ObstaclesPoolManager.getInstance().spriteGroup!=null){
-				ObstaclesPoolManager.getInstance().spriteGroup.attachChild(sprite);
+				ObstaclesPoolManager.getInstance().groundSpriteGroup.attachChild(sprite);
 				break;
 			}
 		}

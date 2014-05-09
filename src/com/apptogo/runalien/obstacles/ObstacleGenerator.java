@@ -152,7 +152,7 @@ public class ObstacleGenerator {
 						//if(minRand < 0 || ctr % 4 == 0) minRand = 0;
 						int random;
 						if(startGeneratingObstacles)
-							random = minRand + (int)(Math.random() * ((maxRand - minRand) + 1));
+							random = 6;//minRand + (int)(Math.random() * ((maxRand - minRand) + 1));
 						else
 							random = -1;
 						

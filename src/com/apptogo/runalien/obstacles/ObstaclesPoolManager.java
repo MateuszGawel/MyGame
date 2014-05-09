@@ -96,10 +96,10 @@ public class ObstaclesPoolManager
 	
 	public void initializePoolManager(PhysicsWorld physicsWorld, Entity foregroundLayer, Entity backgroundLayer){
 		//if(!initialized){
-			spriteGroup = new SpriteGroup(ResourcesManager.getInstance().gameTextureAtlas, 115, ResourcesManager.getInstance().vbom);
+			spriteGroup = new SpriteGroup(ResourcesManager.getInstance().gameTextureAtlas, 105, ResourcesManager.getInstance().vbom);
 			foregroundLayer.attachChild(spriteGroup);
 			
-			groundSpriteGroup = new SpriteGroup(ResourcesManager.getInstance().gameTextureAtlas, 3, ResourcesManager.getInstance().vbom);
+			groundSpriteGroup = new SpriteGroup(ResourcesManager.getInstance().gameTextureAtlas, 13, ResourcesManager.getInstance().vbom);
 			backgroundLayer.attachChild(groundSpriteGroup);
 			
 			for(int i=bottom_1_Ammount; i>0; i--){
