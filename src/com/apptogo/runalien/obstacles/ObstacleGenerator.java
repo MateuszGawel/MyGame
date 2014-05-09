@@ -8,6 +8,7 @@ import java.util.Stack;
 import org.andengine.engine.handler.IUpdateHandler;
 import org.andengine.entity.Entity;
 import org.andengine.entity.modifier.DelayModifier;
+import org.andengine.entity.modifier.MoveYModifier;
 import org.andengine.entity.modifier.RotationModifier;
 import org.andengine.entity.modifier.SequenceEntityModifier;
 import org.andengine.entity.scene.Scene;
@@ -141,7 +142,7 @@ public class ObstacleGenerator {
 								break;
 							default:
 								minRand = 13;
-								maxRand = 22;
+								maxRand = 23;
 								break;
 						}
 						
@@ -200,73 +201,77 @@ public class ObstacleGenerator {
 							generatePyramidWithoutBell(INSEQUENCEDISTANCE);
 							break;
 						case 6:
+							System.out.println("PRZESZKODA 7");	
+							generateWeasel();
+							break;
+						case 7:
 							System.out.println("PRZESZKODA 7");
 							generateSmallLeftPyramid(-1);
 							break;
-						case 7:
+						case 8:
 							System.out.println("PRZESZKODA 8");
 							generateMuchJumpingSequence(INSEQUENCEDISTANCE);
 							break;
-						case 8:
+						case 9:
 							System.out.println("PRZESZKODA 8");
 							generateSmallPyramid(-1);
 							break;
-						case 9:
+						case 10:
 							System.out.println("PRZESZKODA 9");
 							generateRightBigPyramid();				
-						case 10:
+						case 11:
 							System.out.println("PRZESZKODA 10");
 							generateInvertedSmallPyramid(calculateObstaclePosition()+50);
 							break;
-						case 11:
+						case 12:
 							System.out.println("PRZESZKODA 11");
 							generateJumpThenSlideSequence(INSEQUENCEDISTANCE);	
 							break;
-						case 12:
+						case 13:
 							System.out.println("PRZESZKODA 12");
 							double x = player.runningSpeed;
 							double ballOffset = ((-(5.0/98.0))*(((13.0*x)*((19.0*x)-753.0))+85220.0));
 							generateBallUpper((int)ballOffset);
 							break;
-						case 13:
+						case 14:
 							System.out.println("PRZESZKODA 13");
 							x = player.runningSpeed;
 							ballOffset = ((-(5.0/98.0))*(((13.0*x)*((19.0*x)-753.0))+85220.0));
 							generateBallBottom((int)ballOffset);
 							break;
-						case 14:
+						case 15:
 							System.out.println("PRZESZKODA 14");
 							generateUpDownSequence();	
 							break;
-						case 15:
+						case 16:
 							System.out.println("PRZESZKODA 15");
 							generateSmallRightBigPyramid();
 							break;
-						case 16:
+						case 17:
 							System.out.println("PRZESZKODA 16");
 							mustDoubleJump(-1);				
 							break;
-						case 17:
+						case 18:
 							System.out.println("PRZESZKODA 17");
 							generateRightVeryBigPyramid();
 							break;
-						case 18:
+						case 19:
 							System.out.println("PRZESZKODA 18");
 							generateEgyptSequence(INSEQUENCEDISTANCE);
 							break;
-						case 19:
+						case 20:
 							System.out.println("PRZESZKODA 19");
 							generateMadWallOpenedSequence(INSEQUENCEDISTANCE);
 							break;
-						case 20: 
+						case 21: 
 							System.out.println("PRZESZKODA 20");
 							generateWhatTheSmackSequence(INSEQUENCEDISTANCE);
 							break;
-						case 21:
+						case 22:
 							System.out.println("PRZESZKODA 21");
 							generateLongJumpThenSlideSequence(INSEQUENCEDISTANCE);
 							break;
-						case 22:
+						case 23:
 							System.out.println("PRZESZKODA 22");
 							generateLoongPyramid(-1);
 							break;
@@ -282,6 +287,43 @@ public class ObstacleGenerator {
 				
 				releaseUselessObstacles();
 			}
+			
+			private void generateWeasel() {
+				
+				Obstacle moleHill = null;
+				Obstacle weasel = null;
+				
+				if(!obstaclesPoolManager.bottom_moleHill_Pool.isEmpty() || !obstaclesPoolManager.bottom_weasel_Pool.isEmpty())
+				{
+					moleHill = obstaclesPoolManager.bottom_moleHill_Pool.pop();
+					weasel = obstaclesPoolManager.bottom_weasel_Pool.pop();
+					
+					moleHill.getSprite().setX(nextObstaclePosition+100);
+					moleHill.getSprite().setY(240);
+					usedObstacles.add(moleHill);
+					
+					weasel.getSprite().setX(nextObstaclePosition+107);
+					weasel.getSprite().setY(240);
+					usedObstacles.add(weasel);
+					
+					ResourcesManager.getInstance().weaselSound.play();
+					
+					SequenceEntityModifier modifierSequence_moleHill = new SequenceEntityModifier(
+				    		new DelayModifier(0.5f),
+				    		new MoveYModifier(0.3f, moleHill.getSprite().getY(), 215)
+				    );
+					moleHill.getSprite().registerEntityModifier(modifierSequence_moleHill);	
+				    
+				    SequenceEntityModifier modifierSequence_weasel = new SequenceEntityModifier(
+				    		new DelayModifier(0.8f),
+				    		new MoveYModifier(0.9f, weasel.getSprite().getY(), 170, org.andengine.util.modifier.ease.EaseBounceOut.getInstance())
+				    );
+				    weasel.getSprite().registerEntityModifier(modifierSequence_weasel);	
+					
+					nextObstaclePosition = calculateObstaclePosition(); 
+				}
+				else System.out.println("POOL zabrak³o bottom_moleHill i weasel");
+			}
 
 			private void generateBottomCut() {
 				
@@ -295,6 +337,10 @@ public class ObstacleGenerator {
 					
 					nextObstaclePosition = calculateObstaclePosition(); 
 					
+					//if(ResourcesManager.getInstance() == null) System.out.println("RES");
+					//if(ResourcesManager.getInstance().fallingTreeSound == null) System.out.println("SOUND");
+					ResourcesManager.getInstance().fallingTreeSound.play();
+					
 				    obstacle.getSprite().setRotationCenterY(obstacle.getSprite().getY());
 				    obstacle.getSprite().setRotation(0);
 				    //obstacle.getSprite().setRotationCenterX(obstacle.getSprite().getX() + obstacle.getSprite().getWidth()/2);
@@ -304,7 +350,7 @@ public class ObstacleGenerator {
 				    );
 				    obstacle.getSprite().registerEntityModifier(modifierSequence);			    			    
 
-				} else System.out.println("POOL zabrak³o bottom3");
+				} else System.out.println("POOL zabrak³o bottom3_cut");
 								
 			}
 
@@ -793,6 +839,14 @@ private void generateWhatTheSmackSequence(float distance){
 				if("bottom3_cut".equals(obstacle.getSprite().getUserData()))
 				{
 					obstaclesPoolManager.bottom_3_cut_Pool.push((Bottom_3_cut)obstacle);
+				}
+				if("bottom_moleHill".equals(obstacle.getSprite().getUserData()))
+				{
+					obstaclesPoolManager.bottom_moleHill_Pool.push((Bottom_moleHill)obstacle);
+				}
+				if("bottom_weasel".equals(obstacle.getSprite().getUserData()))
+				{
+					obstaclesPoolManager.bottom_weasel_Pool.push((Bottom_weasel)obstacle);
 				}
 				if("upper1".equals(obstacle.getSprite().getUserData()))
 				{

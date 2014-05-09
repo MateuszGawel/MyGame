@@ -59,7 +59,8 @@ public class ResourcesManager {
 	
 	//GAME RESOURCES
 	public ITextureRegion coin_region;
-	public ITextureRegion sun_region;
+	public ITextureRegion moleHill_region;
+	public ITextureRegion weasel_region;
 	public ITextureRegion bottom_1_region;
 	public ITextureRegion bottom_2_region;
 	public ITextureRegion bottom_3_region;
@@ -115,6 +116,9 @@ public class ResourcesManager {
 	public Sound doubleJumpSound;
 	public Sound chargeDownSound;
 	public Sound bellHit;
+	
+	public Sound fallingTreeSound;
+	public Sound weaselSound;
 	
 	public String gameCatalog;
 	
@@ -266,6 +270,9 @@ public class ResourcesManager {
 		chargeDownTutorial_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "tutorial/chargeDown.png", 1, 769);
 		tutorialTable_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "tutorial/tutorialTable.png", 1, 817);
 		
+		moleHill_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"moleHill.png", 1, 908);
+		weasel_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"weasel.png", 1, 939);
+		
 	    player_region = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(playerTextureAtlas, activity, gameCatalog+"player.png", 12, 11);
 	    
         //dirtRepeatingAtlas = new BitmapTextureAtlas(activity.getTextureManager(), 311, 120, TextureOptions.REPEATING_BILINEAR_PREMULTIPLYALPHA);
@@ -319,6 +326,9 @@ public class ResourcesManager {
 		    doubleJumpSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/doubleJumpSound.ogg");
 		    chargeDownSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/chargeDownSound.ogg");
 		    bellHit = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/bell.ogg");
+		    
+		    fallingTreeSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/fallingTreeSound.ogg");
+		    weaselSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/weaselSound.ogg");
 		}
 		catch (IOException e)
 		{
@@ -343,7 +353,9 @@ public class ResourcesManager {
 		doubleJumpSound.stop();
 		chargeDownSound.stop();
 		bellHit.stop();
-
+		
+		fallingTreeSound.stop();
+		weaselSound.stop();
 		
 
 		runSound.release();
@@ -357,6 +369,9 @@ public class ResourcesManager {
 		doubleJumpSound.release();
 		chargeDownSound.release();
 		bellHit.release();
+		
+		fallingTreeSound.release();
+		weaselSound.release();
 	}
 	
 	//OTHERS

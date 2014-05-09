@@ -26,6 +26,9 @@ public class ObstaclesPoolManager
 	
 	private final int bottom_3_cut_Ammount = 5;
 	
+	private final int bottom_moleHill_Ammount = 5;
+	private final int bottom_weasel_Ammount = 5;
+	
 	private final int upper_1_Ammount = 12;
 	private final int upper_2_Ammount = 12;
 	private final int upper_3_Ammount = 12;
@@ -44,6 +47,9 @@ public class ObstaclesPoolManager
 	public Stack<Bottom_4> bottom_4_Pool;
 	
 	public Stack<Bottom_3_cut> bottom_3_cut_Pool;
+	
+	public Stack<Bottom_moleHill> bottom_moleHill_Pool;
+	public Stack<Bottom_weasel> bottom_weasel_Pool;
 	
 	public Stack<Upper_1> upper_1_Pool;
 	public Stack<Upper_2> upper_2_Pool;
@@ -72,6 +78,9 @@ public class ObstaclesPoolManager
 		
 		bottom_3_cut_Pool = new Stack<Bottom_3_cut>();
 		
+		bottom_moleHill_Pool = new Stack<Bottom_moleHill>();
+		bottom_weasel_Pool = new Stack<Bottom_weasel>();
+		
 		upper_1_Pool = new Stack<Upper_1>();
 		upper_2_Pool = new Stack<Upper_2>();
 		upper_3_Pool = new Stack<Upper_3>();
@@ -87,12 +96,12 @@ public class ObstaclesPoolManager
 	
 	public void initializePoolManager(PhysicsWorld physicsWorld, Entity foregroundLayer, Entity backgroundLayer){
 		//if(!initialized){
-			spriteGroup = new SpriteGroup(ResourcesManager.getInstance().gameTextureAtlas, 105, ResourcesManager.getInstance().vbom);
+			spriteGroup = new SpriteGroup(ResourcesManager.getInstance().gameTextureAtlas, 115, ResourcesManager.getInstance().vbom);
 			foregroundLayer.attachChild(spriteGroup);
 			
 			groundSpriteGroup = new SpriteGroup(ResourcesManager.getInstance().gameTextureAtlas, 3, ResourcesManager.getInstance().vbom);
 			backgroundLayer.attachChild(groundSpriteGroup);
-	
+			
 			for(int i=bottom_1_Ammount; i>0; i--){
 				bottom_1_Pool.push(new Bottom_1(physicsWorld, foregroundLayer));
 			}
@@ -107,6 +116,13 @@ public class ObstaclesPoolManager
 			}
 			for(int i=bottom_3_cut_Ammount; i>0; i--){
 				bottom_3_cut_Pool.push(new Bottom_3_cut(physicsWorld, foregroundLayer));
+			}
+			//taka kolejnosc zeby lasice byly pod kopcami - przesylam tez back jako fore - brzydkie ale nie chce mi sie zmieniac :P
+			for(int i=bottom_weasel_Ammount; i>0; i--){
+				bottom_weasel_Pool.push(new Bottom_weasel(physicsWorld, backgroundLayer));
+			}
+			for(int i=bottom_moleHill_Ammount; i>0; i--){
+				bottom_moleHill_Pool.push(new Bottom_moleHill(physicsWorld, backgroundLayer));
 			}
 			for(int i=upper_1_Ammount; i>0; i--){
 				upper_1_Pool.push(new Upper_1(physicsWorld, foregroundLayer));
@@ -132,6 +148,7 @@ public class ObstaclesPoolManager
 			for(int i=groundSegmentAmmount; i>0; i--){
 				groundSegmentPool.push(new GroundSegment(physicsWorld, backgroundLayer));
 			}
+			
 			//this.initialized = true;
 			this.foregroundLayer = foregroundLayer;
 		//}
@@ -152,6 +169,9 @@ public class ObstaclesPoolManager
 		
 		bottom_3_cut_Pool.clear();
 		
+		bottom_moleHill_Pool.clear();
+		bottom_weasel_Pool.clear();
+		
 		upper_1_Pool.clear();
 		upper_2_Pool.clear();
 		upper_3_Pool.clear();
@@ -171,7 +191,7 @@ public class ObstaclesPoolManager
 	}
 
 	public boolean isNotEmpty() {
-		if( bottom_1_Pool.isEmpty() && bottom_2_Pool.isEmpty() && bottom_3_Pool.isEmpty() && bottom_4_Pool.isEmpty() && bottom_3_cut_Pool.isEmpty() && upper_1_Pool.isEmpty() && upper_2_Pool.isEmpty() && upper_3_Pool.isEmpty() && upper_4_Pool.isEmpty() && crateUpperPool.isEmpty() && groundSegmentPool.isEmpty())
+		if( bottom_1_Pool.isEmpty() && bottom_2_Pool.isEmpty() && bottom_3_Pool.isEmpty() && bottom_4_Pool.isEmpty() && bottom_3_cut_Pool.isEmpty() && bottom_moleHill_Pool.isEmpty() && bottom_weasel_Pool.isEmpty() && upper_1_Pool.isEmpty() && upper_2_Pool.isEmpty() && upper_3_Pool.isEmpty() && upper_4_Pool.isEmpty() && crateUpperPool.isEmpty() && groundSegmentPool.isEmpty())
 		{
 			return false;
 		}
