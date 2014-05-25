@@ -183,7 +183,8 @@ public class ObstacleGenerator {
 						switch(random){
 						case 0:
 							System.out.println("PRZESZKODA 1");
-							generateBottomObstacle(1, -1, 0);
+							//generateBottomObstacle(1, -1, 0);
+							generateStorm();
 							break;
 						case 1:
 							System.out.println("PRZESZKODA 2");
@@ -355,25 +356,26 @@ public class ObstacleGenerator {
 					thunder = obstaclesPoolManager.thunder_Pool.pop();
 					
 					stormcloud.getSprite().setX(nextObstaclePosition+100);
-					stormcloud.getSprite().setY(-200);
+					stormcloud.getSprite().setY(-400);
 					usedObstacles.add(stormcloud);
 					
 					thunder.getSprite().setX(nextObstaclePosition+155);
-					thunder.getSprite().setY(-170);
+					thunder.getSprite().setY(-300);
 					usedObstacles.add(thunder);
 					
-					if( playSounds ) ResourcesManager.getInstance().thunderSound.play();
-					
+					if( playSounds ){ 
+						ResourcesManager.getInstance().thunderSound.play();
+					}
 					SequenceEntityModifier modifierSequence_stormcloud = new SequenceEntityModifier(
 				    		new DelayModifier(0.5f),
-				    		new MoveYModifier(0.3f, stormcloud.getSprite().getY(), -25)
+				    		new MoveYModifier(0.3f, stormcloud.getSprite().getY(), -150)
 				    );
 					stormcloud.getSprite().registerEntityModifier(modifierSequence_stormcloud);	
 				    
 				    SequenceEntityModifier modifierSequence_thunder = new SequenceEntityModifier(
 				    		new DelayModifier(0.5f),
-				    		new MoveYModifier(0.3f, thunder.getSprite().getY(), -20),
-				    		new MoveYModifier(1.5f, -20, 20, org.andengine.util.modifier.ease.EaseBounceOut.getInstance())
+				    		new MoveYModifier(0.3f, thunder.getSprite().getY(), -300),
+				    		new MoveYModifier(1.5f, -300, -50, org.andengine.util.modifier.ease.EaseBounceOut.getInstance())
 				    );
 				    thunder.getSprite().registerEntityModifier(modifierSequence_thunder);	
 					

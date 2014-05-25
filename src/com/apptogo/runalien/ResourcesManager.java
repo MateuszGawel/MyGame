@@ -300,7 +300,7 @@ public class ResourcesManager {
 		tire_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"tire.png", 400, 908);
 		
 		stormcloud_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"stormcloud.png", 600, 817);
-		thunder_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"thunder.png", 850, 817);
+		thunder_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"thunder.png", 850, 600);
 			
 	    player_region = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(playerTextureAtlas, activity, gameCatalog+"player.png", 12, 11);
 	    
