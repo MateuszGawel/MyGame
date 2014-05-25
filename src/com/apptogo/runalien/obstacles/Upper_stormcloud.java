@@ -18,7 +18,7 @@ public class Upper_stormcloud extends Obstacle{
 	public Upper_stormcloud(PhysicsWorld physicsWorld, Entity foregroundLayer){
 		sprite = new Sprite(-1000, 110, ResourcesManager.getInstance().stormcloud_region, ResourcesManager.getInstance().vbom);
 		//narazie pozycja x jest zero ale ostateznie musi byc minus wpizdu zeby na poczatku ich nie bylo widac
-		sprite.setUserData("stormcloud");
+		sprite.setUserData("upper_stormcloud");
 		sprite.setCullingEnabled(true);
 		while(true){
 			if(ObstaclesPoolManager.getInstance()!=null && ObstaclesPoolManager.getInstance().spriteGroup!=null){

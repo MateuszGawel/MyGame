@@ -474,6 +474,14 @@ public class ObstacleGenerator {
 						}
 					}
 				}
+				else if(obstacle.getSprite().getUserData().toString().contains("thunder") || obstacle.getSprite().getUserData().toString().contains("stormcloud")){
+					player.dieTop(false);
+					Games.Achievements.increment(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQOA", 1);
+				}
+				else if(obstacle.getSprite().getUserData().toString().contains("tire")){
+					player.dieTop(false);
+					Games.Achievements.increment(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQNw", 1);
+				}
 				else if(obstacle.getSprite().getUserData().toString().contains("upper")){
 					player.dieTop(true);
 					if(obstacle.getSprite().getX() < 1000){
