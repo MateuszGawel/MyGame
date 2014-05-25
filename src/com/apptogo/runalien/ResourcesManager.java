@@ -61,6 +61,9 @@ public class ResourcesManager {
 	
 	//GAME RESOURCES
 	public ITextureRegion coin_region;
+	public ITextureRegion tire_region;
+	public ITextureRegion stormcloud_region;
+	public ITextureRegion thunder_region;
 	public ITextureRegion moleHill_region;
 	public ITextureRegion weasel_region;
 	public ITextureRegion bottom_1_region;
@@ -287,10 +290,15 @@ public class ResourcesManager {
 		slideTutorial_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "tutorial/slide.png", 1, 723);
 		chargeDownTutorial_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "tutorial/chargeDown.png", 1, 769);
 		tutorialTable_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "tutorial/tutorialTable.png", 1, 817);
-		
+				
 		moleHill_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"moleHill.png", 1, 908);
 		weasel_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"weasel.png", 1, 939);
 		
+		tire_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"tire.png", 400, 908);
+		
+		stormcloud_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"stormcloud.png", 600, 817);
+		thunder_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, gameCatalog+"thunder.png", 850, 817);
+			
 	    player_region = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(playerTextureAtlas, activity, gameCatalog+"player.png", 12, 11);
 	    
         //dirtRepeatingAtlas = new BitmapTextureAtlas(activity.getTextureManager(), 311, 120, TextureOptions.REPEATING_BILINEAR_PREMULTIPLYALPHA);

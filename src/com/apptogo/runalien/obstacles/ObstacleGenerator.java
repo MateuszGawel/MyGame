@@ -8,6 +8,7 @@ import java.util.Stack;
 import org.andengine.engine.handler.IUpdateHandler;
 import org.andengine.entity.Entity;
 import org.andengine.entity.modifier.DelayModifier;
+import org.andengine.entity.modifier.MoveXModifier;
 import org.andengine.entity.modifier.MoveYModifier;
 import org.andengine.entity.modifier.RotationModifier;
 import org.andengine.entity.modifier.SequenceEntityModifier;
@@ -202,19 +203,19 @@ public class ObstacleGenerator {
 							break;
 						case 5:
 							System.out.println("PRZESZKODA 6");
-							generatePyramidWithoutBell(INSEQUENCEDISTANCE);
+							generateWeasel();
 							break;
 						case 6:
 							System.out.println("PRZESZKODA 7");	
-							generateWeasel();
+							generateTire();
 							break;
 						case 7:
 							System.out.println("PRZESZKODA 7");
-							generateSmallLeftPyramid(-1);
+							generatePyramidWithoutBell(INSEQUENCEDISTANCE);
 							break;
 						case 8:
 							System.out.println("PRZESZKODA 8");
-							generateMuchJumpingSequence(INSEQUENCEDISTANCE);
+							generateStorm();
 							break;
 						case 9:
 							System.out.println("PRZESZKODA 8");
@@ -225,11 +226,11 @@ public class ObstacleGenerator {
 							generateRightBigPyramid();				
 						case 11:
 							System.out.println("PRZESZKODA 10");
-							generateInvertedSmallPyramid(calculateObstaclePosition()+50);
+							generateUpDownSequence();
 							break;
 						case 12:
 							System.out.println("PRZESZKODA 11");
-							generateJumpThenSlideSequence(INSEQUENCEDISTANCE);	
+							generateTire();
 							break;
 						case 13:
 							System.out.println("PRZESZKODA 12");
@@ -245,7 +246,7 @@ public class ObstacleGenerator {
 							break;
 						case 15:
 							System.out.println("PRZESZKODA 14");
-							generateUpDownSequence();	
+							generateInvertedSmallPyramid(calculateObstaclePosition()+50);	
 							break;
 						case 16:
 							System.out.println("PRZESZKODA 15");
@@ -292,12 +293,90 @@ public class ObstacleGenerator {
 				releaseUselessObstacles();
 			}
 			
+			private void generateTire()
+			{
+				Obstacle tire = null;
+				if( !obstaclesPoolManager.tire_Pool.isEmpty() )
+				{
+					tire = obstaclesPoolManager.tire_Pool.pop();
+					tire.getSprite().setX(nextObstaclePosition + 400);
+					tire.getSprite().setY(-50);
+					usedObstacles.add(tire);
+					
+					float speedX = 2.5f;
+					float suspend = 1f;
+					float playerSpeed = player.runningSpeed;
+					
+					if( playerSpeed > 20 ) { speedX = 8f; suspend = 0.7f; }
+					else if( playerSpeed > 17 ) { speedX = 3.75f; suspend = 0.7f; } 
+					else if( playerSpeed > 14 ) { speedX = 3f; suspend = 0.85f; } 
+					
+					SequenceEntityModifier modifierSequence_tire_moveY = new SequenceEntityModifier(
+							new DelayModifier(suspend),
+				    		new MoveYModifier(1.5f, tire.getSprite().getY(), 155, org.andengine.util.modifier.ease.EaseBounceOut.getInstance())
+				    );
+					tire.getSprite().registerEntityModifier(modifierSequence_tire_moveY);
+
+					SequenceEntityModifier modifierSequence_tire_moveX = new SequenceEntityModifier(
+							new DelayModifier(suspend),
+				    		new MoveXModifier(speedX, tire.getSprite().getX(), tire.getSprite().getX() - 1000, org.andengine.util.modifier.ease.EaseLinear.getInstance())
+				    );
+					tire.getSprite().registerEntityModifier(modifierSequence_tire_moveX);
+					
+					SequenceEntityModifier modifierSequence_tire_rotate = new SequenceEntityModifier(
+							new DelayModifier(suspend),
+				    		new RotationModifier(3f, tire.getSprite().getRotation(), tire.getSprite().getRotation() - 1080 )
+				    );
+					tire.getSprite().registerEntityModifier(modifierSequence_tire_rotate);	
+					
+					nextObstaclePosition = calculateObstaclePosition() + 400;
+				}
+			}
+			
+			private void generateStorm() {
+				
+				Obstacle stormcloud = null;
+				Obstacle thunder = null;
+				
+				if(!obstaclesPoolManager.stormcloud_Pool.isEmpty() && !obstaclesPoolManager.thunder_Pool.isEmpty())
+				{
+					stormcloud = obstaclesPoolManager.stormcloud_Pool.pop();
+					thunder = obstaclesPoolManager.thunder_Pool.pop();
+					
+					stormcloud.getSprite().setX(nextObstaclePosition+100);
+					stormcloud.getSprite().setY(-200);
+					usedObstacles.add(stormcloud);
+					
+					thunder.getSprite().setX(nextObstaclePosition+155);
+					thunder.getSprite().setY(-170);
+					usedObstacles.add(thunder);
+					
+					//if( playSounds ) ResourcesManager.getInstance().weaselSound.play();
+					
+					SequenceEntityModifier modifierSequence_stormcloud = new SequenceEntityModifier(
+				    		new DelayModifier(0.5f),
+				    		new MoveYModifier(0.3f, stormcloud.getSprite().getY(), -40)
+				    );
+					stormcloud.getSprite().registerEntityModifier(modifierSequence_stormcloud);	
+				    
+				    SequenceEntityModifier modifierSequence_thunder = new SequenceEntityModifier(
+				    		new DelayModifier(0.5f),
+				    		new MoveYModifier(0.3f, thunder.getSprite().getY(), -20),
+				    		new MoveYModifier(1.5f, -20, 15, org.andengine.util.modifier.ease.EaseBounceOut.getInstance())
+				    );
+				    thunder.getSprite().registerEntityModifier(modifierSequence_thunder);	
+					
+					nextObstaclePosition = calculateObstaclePosition() + 100 + getVelocityOffset(); 
+				}
+				else System.out.println("POOL zabrak³o bottom_stormcloud i thunder");
+			}
+
 			private void generateWeasel() {
 				
 				Obstacle moleHill = null;
 				Obstacle weasel = null;
 				
-				if(!obstaclesPoolManager.bottom_moleHill_Pool.isEmpty() || !obstaclesPoolManager.bottom_weasel_Pool.isEmpty())
+				if(!obstaclesPoolManager.bottom_moleHill_Pool.isEmpty() && !obstaclesPoolManager.bottom_weasel_Pool.isEmpty())
 				{
 					moleHill = obstaclesPoolManager.bottom_moleHill_Pool.pop();
 					weasel = obstaclesPoolManager.bottom_weasel_Pool.pop();
@@ -324,7 +403,7 @@ public class ObstacleGenerator {
 				    );
 				    weasel.getSprite().registerEntityModifier(modifierSequence_weasel);	
 					
-					nextObstaclePosition = calculateObstaclePosition(); 
+					nextObstaclePosition = calculateObstaclePosition() + 100 + getVelocityOffset(); 
 				}
 				else System.out.println("POOL zabrak³o bottom_moleHill i weasel");
 			}
@@ -339,7 +418,7 @@ public class ObstacleGenerator {
 					obstacle.getSprite().setX(nextObstaclePosition+100);
 					usedObstacles.add(obstacle);
 					
-					nextObstaclePosition = calculateObstaclePosition(); 
+					nextObstaclePosition = calculateObstaclePosition() + getVelocityOffset(); 
 					
 					//if(ResourcesManager.getInstance() == null) System.out.println("RES");
 					//if(ResourcesManager.getInstance().fallingTreeSound == null) System.out.println("SOUND");
@@ -826,6 +905,8 @@ private void generateWhatTheSmackSequence(float distance){
 			if(!((String)obstacle.getSprite().getUserData()).contains("ball") && !((String)obstacle.getSprite().getUserData()).equals("ground") && obstacle.getSprite().getX() < (player.getX() - 300)) //- 10 zeby znikaly juz poza ekranem
 			{
 				usedObstacles.remove(obstacle);
+				obstacle.getSprite().clearEntityModifiers();
+				
 				if(obstacle.getSprite().getUserData().equals("crateUpper"))
 				{
 					obstaclesPoolManager.crateUpperPool.push((CrateUpper)obstacle);
@@ -849,6 +930,18 @@ private void generateWhatTheSmackSequence(float distance){
 				if("bottom3_cut".equals(obstacle.getSprite().getUserData()))
 				{
 					obstaclesPoolManager.bottom_3_cut_Pool.push((Bottom_3_cut)obstacle);
+				}
+				if("upper_tire".equals(obstacle.getSprite().getUserData()))
+				{
+					obstaclesPoolManager.tire_Pool.push((Tire)obstacle);
+				}
+				if("upper_thunder".equals(obstacle.getSprite().getUserData()))
+				{
+					obstaclesPoolManager.thunder_Pool.push((Upper_thunder)obstacle);
+				}
+				if("upper_stormcloud".equals(obstacle.getSprite().getUserData()))
+				{
+					obstaclesPoolManager.stormcloud_Pool.push((Upper_stormcloud)obstacle);
 				}
 				if("bottom_moleHill".equals(obstacle.getSprite().getUserData()))
 				{
