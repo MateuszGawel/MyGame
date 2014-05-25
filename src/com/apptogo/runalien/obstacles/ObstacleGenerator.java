@@ -178,13 +178,12 @@ public class ObstacleGenerator {
 						}
 						
 						lastRandoms.add(random);
-						
+						System.out.println("ODLEGLOSC: "+nextObstaclePosition+ "R: "+random);
 						int INSEQUENCEDISTANCE = 250;
 						switch(random){
 						case 0:
 							System.out.println("PRZESZKODA 1");
-							//generateBottomObstacle(1, -1, 0);
-							generateStorm();
+							generateBottomObstacle(1, -1, 0);
 							break;
 						case 1:
 							System.out.println("PRZESZKODA 2");
@@ -208,11 +207,11 @@ public class ObstacleGenerator {
 							break;
 						case 6:
 							System.out.println("PRZESZKODA 6");
-							generateSmallLeftPyramid(INSEQUENCEDISTANCE);
+							generateSmallLeftPyramid(-1);
 							break;
 						case 7:
 							System.out.println("PRZESZKODA 7");	
-							generatePyramidWithoutBell(INSEQUENCEDISTANCE);
+							generatePyramidWithoutBell(-1);
 							break;
 						case 8:
 							System.out.println("PRZESZKODA 7");
@@ -356,26 +355,25 @@ public class ObstacleGenerator {
 					thunder = obstaclesPoolManager.thunder_Pool.pop();
 					
 					stormcloud.getSprite().setX(nextObstaclePosition+100);
-					stormcloud.getSprite().setY(-400);
+					stormcloud.getSprite().setY(-200);
 					usedObstacles.add(stormcloud);
 					
-					thunder.getSprite().setX(nextObstaclePosition+155);
-					thunder.getSprite().setY(-300);
+					thunder.getSprite().setX(nextObstaclePosition+145);
+					thunder.getSprite().setY(-170);
 					usedObstacles.add(thunder);
 					
-					if( playSounds ){ 
-						ResourcesManager.getInstance().thunderSound.play();
-					}
+					if( playSounds ) ResourcesManager.getInstance().thunderSound.play();
+					
 					SequenceEntityModifier modifierSequence_stormcloud = new SequenceEntityModifier(
 				    		new DelayModifier(0.5f),
-				    		new MoveYModifier(0.3f, stormcloud.getSprite().getY(), -150)
+				    		new MoveYModifier(0.3f, stormcloud.getSprite().getY(), -90)
 				    );
 					stormcloud.getSprite().registerEntityModifier(modifierSequence_stormcloud);	
 				    
 				    SequenceEntityModifier modifierSequence_thunder = new SequenceEntityModifier(
 				    		new DelayModifier(0.5f),
-				    		new MoveYModifier(0.3f, thunder.getSprite().getY(), -300),
-				    		new MoveYModifier(1.5f, -300, -50, org.andengine.util.modifier.ease.EaseBounceOut.getInstance())
+				    		new MoveYModifier(0.3f, thunder.getSprite().getY(), -85),
+				    		new MoveYModifier(1f, -85, -20, org.andengine.util.modifier.ease.EaseElasticOut.getInstance())
 				    );
 				    thunder.getSprite().registerEntityModifier(modifierSequence_thunder);	
 					
@@ -475,14 +473,6 @@ public class ObstacleGenerator {
 							Games.Achievements.unlock(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQAg");						
 						}
 					}
-				}
-				else if(obstacle.getSprite().getUserData().toString().contains("thunder") || obstacle.getSprite().getUserData().toString().contains("stormcloud")){
-					player.dieTop(false);
-					Games.Achievements.increment(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQOA", 1);
-				}
-				else if(obstacle.getSprite().getUserData().toString().contains("tire")){
-					player.dieTop(false);
-					Games.Achievements.increment(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQNw", 1);
 				}
 				else if(obstacle.getSprite().getUserData().toString().contains("upper")){
 					player.dieTop(true);
@@ -762,13 +752,12 @@ public class ObstacleGenerator {
 	}
 	
 	private void generatePyramidWithoutBell(float distance){
-		if(obstaclesPoolManager.bottom_1_Pool.size() >= 2 && obstaclesPoolManager.bottom_2_Pool.size() >= 1 && obstaclesPoolManager.upper_1_Pool.size() >= 2 && obstaclesPoolManager.upper_2_Pool.size() >= 1)
+		if(obstaclesPoolManager.bottom_1_Pool.size() >= 2 && obstaclesPoolManager.bottom_2_Pool.size() >= 1)
 		{
-			int t_offset = getVelocityOffset();
-	
-			generateUpperObstacle(1, nextObstaclePosition + distance + t_offset + 50);
-			generateSmallPyramid(distance + t_offset);
-			generateUpperObstacle(1, -1);
+			generateBottomObstacle(1, nextObstaclePosition+45, 0);			
+			generateBottomObstacle(2, nextObstaclePosition+45, 0);
+			if(distance > 0) generateBottomObstacle(1, nextObstaclePosition + distance, 0);
+			else             generateBottomObstacle(1, -1, 0); 
 		}
 
 	}
