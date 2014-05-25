@@ -125,6 +125,9 @@ public class ResourcesManager {
 	public Sound fallingTreeSound;
 	public Sound weaselSound;
 	
+	public Sound thunderSound;
+	public Sound tireSound;
+	
 	public String gameCatalog;
 	
 
@@ -356,6 +359,9 @@ public class ResourcesManager {
 		    
 		    fallingTreeSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/fallingTreeSound.ogg");
 		    weaselSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/weaselSound.ogg");
+		    
+		    thunderSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/thunderSound.ogg");
+		    tireSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/tireSound.ogg");
 		}
 		catch (IOException e)
 		{
@@ -384,6 +390,9 @@ public class ResourcesManager {
 		fallingTreeSound.stop();
 		weaselSound.stop();
 		
+		thunderSound.stop();
+		tireSound.stop();
+		
 
 		runSound.release();
 		screamSound.release();
@@ -399,6 +408,9 @@ public class ResourcesManager {
 		
 		fallingTreeSound.release();
 		weaselSound.release();
+		
+		thunderSound.release();
+		tireSound.release();
 	}
 	
 	//OTHERS
