@@ -474,8 +474,7 @@ public class ObstacleGenerator {
 						}
 					}
 				}
-<<<<<<< HEAD
-=======
+
 				else if(obstacle.getSprite().getUserData().toString().contains("thunder") || obstacle.getSprite().getUserData().toString().contains("stormcloud")){
 					player.dieTop(false);
 					if(((GoogleBaseGameActivity)ResourcesManager.getInstance().activity).isSignedIn())
@@ -486,7 +485,7 @@ public class ObstacleGenerator {
 					if(((GoogleBaseGameActivity)ResourcesManager.getInstance().activity).isSignedIn())
 						Games.Achievements.increment(ResourcesManager.getInstance().activity.getGoogleApiClient(), "CgkIpZ2MjMkXEAIQNw", 1);
 				}
->>>>>>> 586e45e0b00ce41d0d09cf46ea655b0312dd0a28
+
 				else if(obstacle.getSprite().getUserData().toString().contains("upper")){
 					player.dieTop(true);
 					if(obstacle.getSprite().getX() < 1000){
